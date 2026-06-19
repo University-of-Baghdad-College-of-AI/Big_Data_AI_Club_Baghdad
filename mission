@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Mission - Big Data Artificial Intelligence Club</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <header>
+    <img src="coai-english-logo.png" alt="Club Logo" class="club-logo">
+    <h1>Big Data Artificial Intelligence Club</h1>
+  </header>
+
+  <nav>
+    <a href="index.html">Home</a>
+    <a href="mission.html">Mission</a>
+    <a href="projects.html">Projects</a>
+    <a href="members.html">Members</a>
+    <a href="contact.html">Contact</a>
+  </nav>
+
+  <section>
+    <h2>Our Mission</h2>
+    <p>
+      We aim to empower students in the College of AI in Baghdad to learn, experiment, and innovate in the fields of Big Data and Artificial Intelligence through workshops, collaborative projects, and research initiatives.
+    </p>
+  </section>
+
+  <footer>
+    <p>&copy; 2026 Big Data Artificial Intelligence Club</p>
+  </footer>
+</body>
+</html>
