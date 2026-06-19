@@ -1,15 +1,50 @@
-<form action="https://formspree.io/f/yourFormID" method="POST">
-  <label for="title">Title:</label>
-  <input type="text" id="title" name="title" required>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Submit Project - Big Data Artificial Intelligence Club</title>
+  <link rel="stylesheet" href="style.css">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+</head>
+<body>
+  <header>
+    <img src="coai-english-logo.png" alt="Club Logo" class="club-logo">
+    <h1>Big Data Artificial Intelligence Club</h1>
+  </header>
 
-  <label for="description">Description:</label>
-  <textarea id="description" name="description" rows="6" required></textarea>
+  <nav>
+    <a href="index.html">Home</a>
+    <a href="mission.html">Mission</a>
+    <a href="projects.html">Projects</a>
+    <a href="members.html">Members</a>
+    <a href="contact.html">Contact</a>
+    <a href="submit.html">Submit</a>
+  </nav>
 
-  <label for="code">Code Snippet:</label>
-  <textarea id="code" name="code" rows="6"></textarea>
+  <section>
+    <h2>Submit Your Workshop or Project</h2>
+    <p>Fill out the form below to share your work. Submissions will be reviewed before being published on the website.</p>
 
-  <label for="image">Image URL:</label>
-  <input type="url" id="image" name="image">
+    <!-- Submission Form -->
+    <form action="mailto:jalal.hameed@uobaghdad.edu.iq" method="post" enctype="text/plain">
+      <label for="title">Title:</label>
+      <input type="text" id="title" name="title" required>
 
-  <button type="submit">Submit</button>
-</form>
+      <label for="description">Description:</label>
+      <textarea id="description" name="description" rows="6" required></textarea>
+
+      <label for="code">Code Snippet (optional):</label>
+      <textarea id="code" name="code" rows="6"></textarea>
+
+      <label for="image">Image URL (optional):</label>
+      <input type="url" id="image" name="image">
+
+      <button type="submit">Submit</button>
+    </form>
+  </section>
+
+  <footer>
+    <p>&copy; 2026 Big Data Artificial Intelligence Club</p>
+  </footer>
+</body>
+</html>
