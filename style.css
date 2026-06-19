@@ -25,18 +25,24 @@ header p {
   margin-top: 5px;
 }
 
-/* Logo container for two logos */
+/* Logo container for left and right logos */
 .logo-container {
   display: flex;
-  justify-content: center;   /* center both logos */
+  justify-content: center;   /* center the group */
   align-items: center;
-  gap: 20px;                 /* space between logos */
+  gap: 40px;                 /* space between logos */
   margin-bottom: 15px;
 }
 .club-logo {
-  width: 120px;
+  width: 140px;
   max-width: 100%;
   height: auto;
+}
+.left-logo {
+  order: 1;   /* English logo on the left */
+}
+.right-logo {
+  order: 2;   /* Arabic logo on the right */
 }
 
 /* Navigation */
@@ -172,6 +178,6 @@ footer {
   /* Stack logos vertically on small screens */
   .logo-container {
     flex-direction: column;
-    gap: 10px;
+    gap: 15px;
   }
 }
