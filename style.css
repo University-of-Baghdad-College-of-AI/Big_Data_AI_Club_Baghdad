@@ -18,16 +18,16 @@ header {
 }
 header h1 {
   margin: 10px 0 5px;
-  font-size: 2em;
+  font-size: 2.2em;
 }
 header p {
-  font-size: 1em;
+  font-size: 1.1em;
   margin-top: 5px;
 }
 header .club-logo {
   display: block;
-  margin: 0 auto 12px;
-  width: 120px; /* slightly bigger logo */
+  margin: 0 auto 10px;
+  width: 150px; /* bigger logo */
 }
 
 /* Navigation */
@@ -59,6 +59,13 @@ section h2 {
 section ul {
   list-style: square;
   padding-left: 20px;
+}
+blockquote {
+  font-style: italic;
+  background: #e9ecef;
+  padding: 15px;
+  margin: 10px 0;
+  border-left: 5px solid #2c3e50;
 }
 
 /* Footer */
