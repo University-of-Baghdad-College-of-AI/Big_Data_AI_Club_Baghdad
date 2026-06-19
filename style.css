@@ -28,6 +28,8 @@ header .club-logo {
   display: block;
   margin: 0 auto 15px;
   width: 150px; /* bigger logo */
+  max-width: 100%;
+  height: auto;
 }
 
 /* Navigation */
@@ -76,4 +78,48 @@ footer {
   text-align: center;
   padding: 20px;
   margin-top: 50px;
+}
+
+/* ========================= */
+/* Responsive Design */
+/* ========================= */
+
+/* Tablets and smaller screens */
+@media (max-width: 768px) {
+  header h1 {
+    font-size: 2em;
+  }
+  header p {
+    font-size: 1em;
+  }
+  nav a {
+    display: inline-block;
+    margin: 10px;
+  }
+  section {
+    padding: 30px;
+  }
+}
+
+/* Phones */
+@media (max-width: 480px) {
+  header h1 {
+    font-size: 1.6em;
+  }
+  header p {
+    font-size: 0.9em;
+  }
+  nav {
+    padding: 8px;
+  }
+  nav a {
+    display: block;
+    margin: 8px 0;
+  }
+  section {
+    padding: 20px;
+  }
+  section h2 {
+    font-size: 1.4em;
+  }
 }
