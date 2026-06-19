@@ -2,27 +2,59 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Submit Project - Big Data Artificial Intelligence Club</title>
+  <title>Submit Project - Big Data AI Club</title>
   <link rel="stylesheet" href="style.css">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
 </head>
 <body>
+  <!-- Header -->
   <header>
-    <img src="coai-english-logo.png" alt="Club Logo" class="club-logo">
+    <div class="logo-container">
+      <img src="logo-ar-white-with-text.png" alt="Arabic Logo" class="club-logo left-logo">
+      <img src="coai-english-logo.png" alt="English Logo" class="club-logo right-logo">
+    </div>
     <h1>Big Data Artificial Intelligence Club</h1>
+    <p>A student-led community exploring Big Data and Artificial Intelligence</p>
   </header>
 
+  <!-- Navigation -->
   <nav>
     <a href="index.html">Home</a>
     <a href="mission.html">Mission</a>
     <a href="projects.html">Projects</a>
     <a href="members.html">Members</a>
-    <a href="contact.html">Contact</a>
     <a href="submit.html">Submit</a>
+    <a href="contact.html">Contact</a>
   </nav>
 
-  <section>
-    <h2>Submit Your Workshop or Project</h2>
-    <p>Fill out the form below to share your work. Submissions will be reviewed before being published on the website.</p>
+  <!-- Submit Section -->
+  <section id="submit">
+    <h2>Submit Your Project</h2>
+    <p>We welcome contributions from all members. Share your project, research, or idea with the club!</p>
 
-    <form action="mailto:jalal.hameed@uobaghdad
+    <form action="#" method="post">
+      <label for="name">Your Name</label>
+      <input type="text" id="name" name="name" required>
+
+      <label for="email">Your Email</label>
+      <input type="email" id="email" name="email" required>
+
+      <label for="title">Project Title</label>
+      <input type="text" id="title" name="title" required>
+
+      <label for="description">Project Description</label>
+      <textarea id="description" name="description" required></textarea>
+
+      <label for="file">Upload File (optional)</label>
+      <input type="file" id="file" name="file">
+
+      <button type="submit">Submit Project</button>
+    </form>
+  </section>
+
+  <!-- Footer -->
+  <footer>
+    <p>&copy; 2026 Big Data Artificial Intelligence Club</p>
+  </footer>
+</body>
+</html>
