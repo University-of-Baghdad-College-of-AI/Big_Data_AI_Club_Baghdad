@@ -1,6 +1,6 @@
 /* General page styling */
 body {
-  font-family: "Segoe UI", Arial, sans-serif;
+  font-family: "Aptos", "Segoe UI", Arial, sans-serif;
   margin: 0;
   padding: 0;
   background: #f4f4f9;
@@ -24,10 +24,17 @@ header p {
   font-size: 1.2em;
   margin-top: 5px;
 }
-header .club-logo {
-  display: block;
-  margin: 0 auto 15px;
-  width: 150px; /* bigger logo */
+
+/* Logo container for two logos */
+.logo-container {
+  display: flex;
+  justify-content: center;   /* center both logos */
+  align-items: center;
+  gap: 20px;                 /* space between logos */
+  margin-bottom: 15px;
+}
+.club-logo {
+  width: 120px;
   max-width: 100%;
   height: auto;
 }
@@ -92,6 +99,7 @@ form input, form textarea {
   border: 1px solid #ccc;
   border-radius: 5px;
   font-size: 1em;
+  font-family: "Aptos", "Segoe UI", Arial, sans-serif;
 }
 form textarea {
   min-height: 150px; /* big field for message or code */
@@ -104,6 +112,7 @@ form button {
   border-radius: 5px;
   cursor: pointer;
   font-size: 1em;
+  font-family: "Aptos", "Segoe UI", Arial, sans-serif;
 }
 form button:hover {
   background: #2c3e50;
@@ -159,5 +168,10 @@ footer {
   }
   section h2 {
     font-size: 1.4em;
+  }
+  /* Stack logos vertically on small screens */
+  .logo-container {
+    flex-direction: column;
+    gap: 10px;
   }
 }
