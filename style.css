@@ -3,90 +3,95 @@ body {
   font-family: "Aptos", "Segoe UI", Arial, sans-serif;
   margin: 0;
   padding: 0;
-  background: #f4f4f9;
-  color: #333;
+  background: #f9fafc;
+  color: #2c3e50;
   line-height: 1.6;
 }
 
 /* Header */
 header {
-  background: #ffffff;
-  color: #2c3e50;
-  padding: 25px 20px;
+  background: linear-gradient(135deg, #34495e, #2c3e50);
+  color: #fff;
+  padding: 40px 20px;
   text-align: center;
-  border-bottom: 3px solid #2c3e50;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.1);
 }
 header h1 {
   margin: 10px 0 5px;
-  font-size: 2.4em;
-  font-family: "Aptos", "Segoe UI", Arial, sans-serif;
+  font-size: 2.6em;
+  font-weight: 600;
 }
 header p {
   font-size: 1.2em;
-  margin-top: 5px;
-  font-family: "Aptos", "Segoe UI", Arial, sans-serif;
+  opacity: 0.9;
 }
 
 /* Logo container */
 .logo-container {
   display: flex;
-  justify-content: center;   /* center both logos together */
+  justify-content: center;
   align-items: center;
-  gap: 40px;                 /* space between logos */
-  margin-bottom: 15px;
+  gap: 40px;
+  margin-bottom: 20px;
 }
 .club-logo {
-  width: 140px;   /* same size for both logos */
-  max-width: 100%;
+  width: 140px;
   height: auto;
+  transition: transform 0.3s ease;
 }
-.left-logo {
-  order: 1;   /* Arabic logo on the left */
-}
-.right-logo {
-  order: 2;   /* English logo on the right */
+.club-logo:hover {
+  transform: scale(1.05);
 }
 
 /* Navigation */
 nav {
-  background: #34495e;
-  padding: 12px;
+  background: #fff;
+  padding: 15px;
   text-align: center;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.05);
 }
 nav a {
-  color: #fff;
-  margin: 0 18px;
+  color: #34495e;
+  margin: 0 20px;
   text-decoration: none;
-  font-weight: bold;
-  font-family: "Aptos", "Segoe UI", Arial, sans-serif;
+  font-weight: 600;
+  transition: color 0.3s ease;
 }
 nav a:hover {
-  text-decoration: underline;
+  color: #2c3e50;
 }
 
 /* Sections */
 section {
-  padding: 50px;
+  padding: 60px 30px;
   max-width: 1000px;
   margin: auto;
 }
 section h2 {
-  color: #2c3e50;
-  margin-bottom: 20px;
-  font-size: 1.8em;
-  font-family: "Aptos", "Segoe UI", Arial, sans-serif;
+  color: #34495e;
+  margin-bottom: 25px;
+  font-size: 2em;
+  font-weight: 600;
 }
 section ul {
-  list-style: square;
-  padding-left: 25px;
+  list-style: none;
+  padding-left: 0;
+}
+section ul li {
+  background: #fff;
+  margin: 10px 0;
+  padding: 12px 18px;
+  border-radius: 8px;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.05);
 }
 blockquote {
   font-style: italic;
-  background: #e9ecef;
-  padding: 15px;
-  margin: 15px 0;
-  border-left: 5px solid #2c3e50;
-  font-family: "Aptos", "Segoe UI", Arial, sans-serif;
+  background: #fff;
+  padding: 20px;
+  margin: 20px 0;
+  border-left: 5px solid #34495e;
+  border-radius: 8px;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.05);
 }
 
 /* Forms */
@@ -94,24 +99,28 @@ form {
   max-width: 700px;
   margin: auto;
   background: #fff;
-  padding: 25px;
-  border: 1px solid #ccc;
-  border-radius: 8px;
+  padding: 30px;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.08);
 }
 form label {
-  font-weight: bold;
+  font-weight: 600;
   display: block;
-  margin-bottom: 5px;
-  font-family: "Aptos", "Segoe UI", Arial, sans-serif;
+  margin-bottom: 8px;
 }
 form input, form textarea {
   width: 100%;
-  padding: 10px;
+  padding: 12px;
   margin-bottom: 20px;
-  border: 1px solid #ccc;
-  border-radius: 5px;
+  border: 1px solid #ddd;
+  border-radius: 8px;
   font-size: 1em;
   font-family: "Aptos", "Segoe UI", Arial, sans-serif;
+  transition: border 0.3s ease;
+}
+form input:focus, form textarea:focus {
+  border-color: #34495e;
+  outline: none;
 }
 form textarea {
   min-height: 150px;
@@ -119,15 +128,17 @@ form textarea {
 form button {
   background: #34495e;
   color: #fff;
-  padding: 12px 25px;
+  padding: 14px 28px;
   border: none;
-  border-radius: 5px;
+  border-radius: 8px;
   cursor: pointer;
   font-size: 1em;
-  font-family: "Aptos", "Segoe UI", Arial, sans-serif;
+  font-weight: 600;
+  transition: background 0.3s ease, transform 0.2s ease;
 }
 form button:hover {
   background: #2c3e50;
+  transform: translateY(-2px);
 }
 
 /* Footer */
@@ -135,51 +146,31 @@ footer {
   background: #2c3e50;
   color: #fff;
   text-align: center;
-  padding: 20px;
-  margin-top: 50px;
-  font-family: "Aptos", "Segoe UI", Arial, sans-serif;
+  padding: 25px;
+  margin-top: 60px;
+  font-size: 0.9em;
 }
 
 /* Responsive Design */
 @media (max-width: 768px) {
   header h1 {
-    font-size: 2em;
-  }
-  header p {
-    font-size: 1em;
-  }
-  nav a {
-    display: inline-block;
-    margin: 10px;
+    font-size: 2.2em;
   }
   section {
-    padding: 30px;
+    padding: 40px 20px;
   }
 }
 
 @media (max-width: 480px) {
   header h1 {
-    font-size: 1.6em;
-  }
-  header p {
-    font-size: 0.9em;
-  }
-  nav {
-    padding: 8px;
+    font-size: 1.8em;
   }
   nav a {
     display: block;
-    margin: 8px 0;
+    margin: 10px 0;
   }
-  section {
-    padding: 20px;
-  }
-  section h2 {
-    font-size: 1.4em;
-  }
-  /* Stack logos vertically on small screens */
   .logo-container {
     flex-direction: column;
-    gap: 15px;
+    gap: 20px;
   }
 }
