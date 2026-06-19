@@ -27,7 +27,7 @@ header p {
 header .club-logo {
   display: block;
   margin: 0 auto 10px;
-  width: 70px; /* smaller, balanced size */
+  width: 90px; /* slightly bigger logo */
 }
 
 /* Navigation */
