@@ -35,7 +35,7 @@ header p {
   margin-bottom: 20px;
 }
 .club-logo {
-  width: 140px;
+  width: 140px;   /* unified size for both logos */
   height: auto;
   transition: transform 0.3s ease;
 }
