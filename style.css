@@ -12,36 +12,35 @@ body {
 header {
   background: #ffffff; /* clean white header */
   color: #2c3e50;
-  padding: 40px 20px;
+  padding: 20px 15px;   /* reduced padding for narrower height */
   text-align: center;
   box-shadow: 0 4px 10px rgba(0,0,0,0.05);
 }
 header h1 {
-  margin: 10px 0 5px;
-  font-size: 2.6em;
+  margin: 8px 0 4px;
+  font-size: 2.2em;     /* slightly smaller font */
   font-weight: 600;
 }
 header p {
-  font-size: 1.2em;
+  font-size: 1em;       /* reduced size for subtitle */
   opacity: 0.9;
 }
-
-/* Logo container */
 .logo-container {
   display: flex;
   justify-content: center;
   align-items: center;
-  gap: 40px;
-  margin-bottom: 20px;
+  gap: 30px;            /* slightly smaller gap between logos */
+  margin-bottom: 15px;  /* reduced spacing below logos */
 }
 .club-logo {
-  width: 140px;   /* unified size for both logos */
+  width: 120px;         /* slightly smaller logos */
   height: auto;
   transition: transform 0.3s ease;
 }
 .club-logo:hover {
   transform: scale(1.05);
 }
+
 
 /* Modern Navigation Bar */
 nav {
