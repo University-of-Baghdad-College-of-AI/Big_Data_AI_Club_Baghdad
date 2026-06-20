@@ -41,7 +41,7 @@ header p {
   transform: scale(1.05);
 }
 
-/* Modern News Slider */
+/* Continuous Scrolling News Slider */
 .news-slider {
   position: relative;
   max-width: 1000px;
@@ -54,7 +54,8 @@ header p {
 
 .news-slider .slide-track {
   display: flex;
-  transition: transform 0.6s ease;
+  width: calc(200%); /* double width for looping */
+  animation: scrollNews 15s linear infinite; /* speed up here */
 }
 
 .news-slider .slide {
@@ -69,6 +70,12 @@ header p {
 .news-slider .slide p {
   font-size: 1.05em;
   line-height: 1.5;
+}
+
+/* Keyframes for infinite scroll */
+@keyframes scrollNews {
+  0% { transform: translateX(0); }
+  100% { transform: translateX(-50%); } /* scroll halfway (because of duplicates) */
 }
 
 
