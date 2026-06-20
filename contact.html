@@ -9,6 +9,53 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+  <script src="access-codes.js"></script>
+  <style>
+    .gate {
+      max-width: 480px;
+      margin: 60px auto;
+      padding: 40px;
+      background: var(--white);
+      border-radius: var(--radius, 12px);
+      box-shadow: 0 6px 24px rgba(15,31,61,0.12);
+      border: 1px solid var(--border);
+      border-top: 4px solid var(--indigo);
+      text-align: center;
+    }
+    .gate-icon { font-size: 2.8em; margin-bottom: 16px; }
+    .gate h2 { font-family: 'Plus Jakarta Sans', sans-serif; font-size: 1.35em; font-weight: 800; color: var(--navy); margin-bottom: 8px; }
+    .gate p { font-size: 0.9em; color: var(--text-muted); margin-bottom: 24px; line-height: 1.6; }
+    .gate-input-row { display: flex; gap: 8px; }
+    .gate-input-row input {
+      flex: 1;
+      font-family: 'Inter', monospace;
+      font-size: 0.95em;
+      padding: 11px 14px;
+      border: 1.5px solid var(--border);
+      border-radius: 8px;
+      outline: none;
+      transition: border-color 0.2s, box-shadow 0.2s;
+      letter-spacing: 0.04em;
+    }
+    .gate-input-row input:focus { border-color: var(--indigo); box-shadow: 0 0 0 3px rgba(67,97,238,0.12); }
+    .gate-btn {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      font-weight: 700;
+      font-size: 0.92em;
+      padding: 11px 20px;
+      background: var(--indigo);
+      color: #fff;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: background 0.2s, transform 0.15s;
+      white-space: nowrap;
+    }
+    .gate-btn:hover { background: #3350D0; transform: translateY(-1px); }
+    .gate-error { margin-top: 10px; font-size: 0.83em; color: #C62828; display: none; }
+    .gate-contact { margin-top: 20px; font-size: 0.82em; color: var(--text-muted); }
+    #formWrapper { display: none; }
+  </style>
 </head>
 <body>
 
@@ -64,23 +111,44 @@
     </div>
   </nav>
 
-  <section>
-    <h2>&#128235; Contact Us</h2>
-    <form action="https://formspree.io/f/xqevzekb" method="POST">
-      <label for="name">Your Name
-        <input type="text" id="name" name="name" placeholder="e.g. Ahmed Ali" required>
-      </label>
-      <label for="email">Your Email
-        <input type="email" id="email" name="email" placeholder="e.g. ahmed@uobaghdad.edu.iq" required>
-      </label>
-      <label for="message">Message
-        <textarea id="message" name="message" placeholder="Write your message here..." required></textarea>
-      </label>
-      <input type="hidden" name="_replyto" value="jalal.hameed@uobaghdad.edu.iq">
-      <input type="hidden" name="_subject" value="New Contact Message - Big Data AI Club">
-      <button type="submit">Send Message</button>
-    </form>
-  </section>
+  <!-- ── GATE ── -->
+  <div id="gateWrapper">
+    <div class="gate">
+      <div class="gate-icon">&#128274;</div>
+      <h2>Access Required</h2>
+      <p>This page is restricted to approved members only.<br>Enter your access code to continue.</p>
+      <div class="gate-input-row">
+        <input type="text" id="codeInput" placeholder="e.g. BDAI-STU-a7k9x2@" autocomplete="off" spellcheck="false">
+        <button class="gate-btn" onclick="checkCode()">Unlock</button>
+      </div>
+      <div class="gate-error" id="gateError">&#9888; Invalid or unrecognised code. Please check and try again.</div>
+      <div class="gate-contact">
+        Don't have a code? Contact Dr. Jalal to request access.
+      </div>
+    </div>
+  </div>
+
+  <!-- ── FORM ── -->
+  <div id="formWrapper">
+    <section>
+      <h2>&#128235; Contact Us</h2>
+      <form action="https://formspree.io/f/xqevzekb" method="POST">
+        <input type="hidden" name="_subject" value="New Contact Message - Big Data AI Club">
+        <input type="hidden" name="role" id="roleInput" value="">
+
+        <label for="name">Your Name
+          <input type="text" id="name" name="name" placeholder="e.g. Ahmed Ali" required>
+        </label>
+        <label for="email">Your Email
+          <input type="email" id="email" name="email" placeholder="e.g. ahmed@uobaghdad.edu.iq" required>
+        </label>
+        <label for="message">Message
+          <textarea id="message" name="message" placeholder="Write your message here..." required></textarea>
+        </label>
+        <button type="submit">Send Message</button>
+      </form>
+    </section>
+  </div>
 
   <footer>
     <p>&copy; 2026 <strong>Big Data Artificial Intelligence Club</strong> | Students Scientific Community</p>
@@ -88,6 +156,36 @@
   </footer>
 
   <script>
+    function checkCode() {
+      var code = document.getElementById('codeInput').value.trim();
+      var role = APPROVED_CODES[code];
+      if (!role) {
+        document.getElementById('gateError').style.display = 'block';
+        return;
+      }
+      sessionStorage.setItem('bdai_code', code);
+      sessionStorage.setItem('bdai_role', role);
+      unlockForm(code, role);
+    }
+
+    function unlockForm(code, role) {
+      document.getElementById('gateWrapper').style.display = 'none';
+      document.getElementById('formWrapper').style.display = 'block';
+      document.getElementById('roleInput').value = role;
+    }
+
+    document.getElementById('codeInput').addEventListener('keydown', function(e) {
+      if (e.key === 'Enter') checkCode();
+    });
+
+    // Restore session
+    var savedCode = sessionStorage.getItem('bdai_code');
+    var savedRole = sessionStorage.getItem('bdai_role');
+    if (savedCode && savedRole && APPROVED_CODES[savedCode] === savedRole) {
+      unlockForm(savedCode, savedRole);
+    }
+
+    // Mobile nav
     var toggle = document.querySelector('.nav-toggle');
     var navLinks = document.querySelector('.nav-links');
     if (toggle && navLinks) {
@@ -102,5 +200,6 @@
       });
     }
   </script>
+
 </body>
 </html>
