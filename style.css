@@ -100,6 +100,55 @@ blockquote {
   box-shadow: 0 2px 6px rgba(0,0,0,0.05);
 }
 
+/* Dropdown Menu */
+.dropdown {
+  display: inline-block;
+  position: relative;
+}
+
+.dropbtn {
+  background: none;
+  border: none;
+  color: #fff;
+  font-weight: 600;
+  font-family: "Aptos", "Segoe UI", Arial, sans-serif;
+  padding: 10px 15px;
+  cursor: pointer;
+  border-radius: 6px;
+  transition: background 0.3s ease;
+}
+
+.dropbtn:hover {
+  background: #1abc9c;
+  color: #fff;
+}
+
+.dropdown-content {
+  display: none;
+  position: absolute;
+  background: #2c3e50;
+  min-width: 200px;
+  box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+  border-radius: 6px;
+  z-index: 1;
+}
+
+.dropdown-content a {
+  color: #fff;
+  padding: 12px 16px;
+  text-decoration: none;
+  display: block;
+  border-bottom: 1px solid rgba(255,255,255,0.1);
+}
+
+.dropdown-content a:hover {
+  background: #1abc9c;
+}
+
+.dropdown:hover .dropdown-content {
+  display: block;
+}
+
 /* Forms */
 form {
   max-width: 700px;
