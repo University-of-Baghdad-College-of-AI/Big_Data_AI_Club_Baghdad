@@ -41,6 +41,67 @@ header p {
   transform: scale(1.05);
 }
 
+/* Modern News Slider */
+.news-slider {
+  position: relative;
+  max-width: 1000px;
+  margin: 20px auto;
+  overflow: hidden;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+  background: #fff;
+}
+
+.news-slider .slide-track {
+  display: flex;
+  transition: transform 0.5s ease;
+}
+
+.news-slider .slide {
+  flex: 0 0 33.33%; /* show 3 slides at once */
+  box-sizing: border-box;
+  padding: 20px;
+  border-right: 1px solid #eee;
+}
+
+.news-slider .slide:last-child {
+  border-right: none;
+}
+
+.news-slider .slide p {
+  font-size: 1.05em;
+  line-height: 1.5;
+}
+
+/* Controls */
+.news-slider .prev,
+.news-slider .next {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  background: #34495e;
+  color: #fff;
+  border: none;
+  padding: 10px 15px;
+  cursor: pointer;
+  border-radius: 50%;
+  font-size: 1.2em;
+  transition: background 0.3s ease;
+}
+
+.news-slider .prev:hover,
+.news-slider .next:hover {
+  background: #1abc9c;
+}
+
+.news-slider .prev {
+  left: 10px;
+}
+.news-slider .next {
+  right: 10px;
+}
+
+
 /* Navigation Bar */
 nav {
   background: linear-gradient(90deg, #34495e, #2c3e50);
