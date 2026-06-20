@@ -12,7 +12,7 @@
   <header>
     <div class="logo-container">
       <a href="https://uobaghdad.edu.iq/" target="_blank">
-        <img src="logo3.png" alt="Arabic Logo" class="club-logo">
+        <img src="logo-ar-white-with-text.png" alt="Arabic Logo" class="club-logo">
       </a>
       <a href="https://ai.uobaghdad.edu.iq/" target="_blank">
         <img src="coai-english-logo.png" alt="English Logo" class="club-logo">
@@ -22,77 +22,73 @@
     <p>A student-led community exploring Big Data and Artificial Intelligence</p>
   </header>
 
- <!-- Navigation -->
+  <!-- Navigation -->
   <nav>
-  <a href="index.html">Home</a>
-  <a href="mission.html">Mission</a>
-
-  <!-- Activities dropdown -->
-  <div class="dropdown">
-    <button class="dropbtn">Activities</button>
-    <div class="dropdown-content">
-      <a href="workshops.html">Workshops</a>
-      <a href="researches.html">Researches</a>
-      <a href="projects.html">Projects</a>
-      <a href="lectures.html">Lectures</a>
-      <a href="presentations.html">Presentations</a>
-      <a href="seminars.html">Seminars</a>
-      <a href="conferences.html">Conferences</a>
-      <a href="field-visits.html">Field Visits</a>
+    <a href="index.html">Home</a>
+    <a href="mission.html">Mission</a>
+    <div class="dropdown">
+      <button class="dropbtn">Activities</button>
+      <div class="dropdown-content">
+        <a href="workshops.html">Workshops</a>
+        <a href="researches.html">Researches</a>
+        <a href="projects.html">Projects</a>
+        <a href="lectures.html">Lectures</a>
+        <a href="presentations.html">Presentations</a>
+        <a href="seminars.html">Seminars</a>
+        <a href="conferences.html">Conferences</a>
+        <a href="field-visits.html">Field Visits</a>
+      </div>
     </div>
-  </div>
-  <a href="members.html">Members</a>
-  <a href="announcements.html">Announcements</a>
-  <a href="news.html">News</a>
-  <a href="submit.html">Submit</a>
-  <a href="contact.html">Contact</a>
-</nav>
+    <a href="members.html">Members</a>
+    <a href="submit.html">Submit</a>
+    <a href="announcements.html">Announcements</a>
+    <a href="news.html">News</a>
+    <a href="contact.html">Contact</a>
+  </nav>
 
- <section id="news">
-  <h2>📰 Club News</h2>
-  <div class="news-slider-vertical">
-    <div class="slide-track">
-      <div class="slide"><p><strong>June 18, 2026:</strong> Our team won 2nd place in the National AI Hackathon.</p></div>
-      <div class="slide"><p><strong>June 10, 2026:</strong> New research paper published on Big Data clustering techniques.</p></div>
-      <div class="slide"><p><strong>May 30, 2026:</strong> Collaboration announced with the Computer Science Department for joint projects.</p></div>
-      <div class="slide"><p><strong>May 20, 2026:</strong> Guest lecture on AI ethics by Dr. Rana.</p></div>
-      <div class="slide"><p><strong>May 10, 2026:</strong> Field visit to Baghdad Tech Hub.</p></div>
+  <!-- News Section -->
+  <section id="news">
+    <h2>📰 Club News</h2>
+    <div class="news-slider-vertical">
+      <div class="slide-track">
+        <div class="slide"><p><strong>June 18, 2026:</strong> Our team won 2nd place in the National AI Hackathon.</p></div>
+        <div class="slide"><p><strong>June 10, 2026:</strong> New research paper published on Big Data clustering techniques.</p></div>
+        <div class="slide"><p><strong>May 30, 2026:</strong> Collaboration announced with the Computer Science Department for joint projects.</p></div>
+        <div class="slide"><p><strong>May 20, 2026:</strong> Guest lecture on AI ethics by Dr. Rana.</p></div>
+        <div class="slide"><p><strong>May 10, 2026:</strong> Field visit to Baghdad Tech Hub.</p></div>
+      </div>
     </div>
-  </div>
-</section>
-
-
-
-
-
-
+  </section>
 
   <!-- Footer -->
   <footer>
-    <p>&copy; 2026 Big Data Artificial Intelligence Club</p>
-    <p>Scientific Student Community</p>
-    <p>Big Data Department - College of Artificial Intelligence</p>
-    <p>University of Baghdad</p>
+    <p>&copy; 2026 Big Data Artificial Intelligence Club | University of Baghdad</p>
   </footer>
 
-  <!-- JavaScript for News Slider -->
+  <!-- JavaScript for Vertical News Slider -->
   <script>
-    let slides = document.querySelectorAll('.news-slider .slide');
-    let current = 0;
+    const track = document.querySelector('.news-slider-vertical .slide-track');
+    const slides = document.querySelectorAll('.news-slider-vertical .slide');
+    let index = 0;
 
-    function showSlide(index) {
-      slides.forEach((slide, i) => {
-        slide.classList.toggle('active', i === index);
-      });
+    function updateSlider() {
+      const slideHeight = slides[0].offsetHeight;
+      track.style.transform = `translateY(-${index * slideHeight}px)`;
     }
 
     function nextSlide() {
-      current = (current + 1) % slides.length;
-      showSlide(current);
+      index++;
+      if (index >= slides.length) {
+        index = 0; // loop back to start
+      }
+      updateSlider();
     }
 
-    // Change slide every 5 seconds
-    setInterval(nextSlide, 5000);
+    // Start immediately
+    updateSlider();
+
+    // Auto-scroll one news item every 2 seconds
+    setInterval(nextSlide, 2000);
   </script>
 </body>
 </html>
