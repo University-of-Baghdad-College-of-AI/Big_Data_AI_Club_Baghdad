@@ -50,6 +50,37 @@
       .cards-grid { grid-template-columns:1fr; }
       .filter-row { gap:16px; }
     }
+  
+    /* ── Pagination ── */
+    .pagination {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      margin-top: 28px;
+      flex-wrap: wrap;
+    }
+    .page-btn {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      font-size: 0.88em;
+      font-weight: 600;
+      width: 36px;
+      height: 36px;
+      border-radius: 8px;
+      border: 1.5px solid var(--border, #E2E7F0);
+      background: var(--white, #fff);
+      color: var(--text-muted, #5E6E8A);
+      cursor: pointer;
+      transition: all 0.18s;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .page-btn:hover { border-color: var(--indigo, #4361EE); color: var(--indigo, #4361EE); }
+    .page-btn.active { background: var(--indigo, #4361EE); color: #fff; border-color: var(--indigo, #4361EE); }
+    .page-btn.prev-next { width: auto; padding: 0 14px; }
+    .page-btn:disabled { opacity: 0.35; cursor: not-allowed; }
+
   </style>
 </head>
 <body>
@@ -333,6 +364,99 @@
         a.addEventListener('click', function() { navLinks.classList.remove('open'); });
       });
     }
+
+    // ── Pagination ──
+    var ITEMS_PER_PAGE = 9;
+    var currentPage = 1;
+
+    function getVisibleCards() {
+      return Array.from(document.querySelectorAll('.card')).filter(function(c) {
+        return c.style.display !== 'none';
+      });
+    }
+
+    function renderPage(page) {
+      currentPage = page;
+      var visible = getVisibleCards();
+      var total = visible.length;
+      var totalPages = Math.max(1, Math.ceil(total / ITEMS_PER_PAGE));
+      if (currentPage > totalPages) currentPage = totalPages;
+
+      var start = (currentPage - 1) * ITEMS_PER_PAGE;
+      var end   = start + ITEMS_PER_PAGE;
+
+      // Show/hide cards for this page
+      visible.forEach(function(card, i) {
+        card.style.display = (i >= start && i < end) ? '' : 'none';
+      });
+
+      // Update results count
+      var rc = document.getElementById('resultsCount');
+      if (rc) rc.innerHTML = '<strong>' + total + '</strong> result' + (total !== 1 ? 's' : '') + ' found' +
+        (totalPages > 1 ? ' &nbsp;|&nbsp; Page ' + currentPage + ' of ' + totalPages : '');
+
+      // Render pagination buttons
+      renderPagination(totalPages);
+
+      // No results
+      var nr = document.getElementById('noResults');
+      if (nr) nr.style.display = total === 0 ? 'block' : 'none';
+    }
+
+    function renderPagination(totalPages) {
+      var container = document.getElementById('pagination');
+      if (!container) return;
+      container.innerHTML = '';
+      if (totalPages <= 1) return;
+
+      // Prev button
+      var prev = document.createElement('button');
+      prev.className = 'page-btn prev-next';
+      prev.innerHTML = '&#8592; Prev';
+      prev.disabled = currentPage === 1;
+      prev.onclick = function() { renderPage(currentPage - 1); window.scrollTo({top:0,behavior:'smooth'}); };
+      container.appendChild(prev);
+
+      // Page number buttons
+      for (var i = 1; i <= totalPages; i++) {
+        (function(p) {
+          var btn = document.createElement('button');
+          btn.className = 'page-btn' + (p === currentPage ? ' active' : '');
+          btn.textContent = p;
+          btn.onclick = function() { renderPage(p); window.scrollTo({top:0,behavior:'smooth'}); };
+          container.appendChild(btn);
+        })(i);
+      }
+
+      // Next button
+      var next = document.createElement('button');
+      next.className = 'page-btn prev-next';
+      next.innerHTML = 'Next &#8594;';
+      next.disabled = currentPage === totalPages;
+      next.onclick = function() { renderPage(currentPage + 1); window.scrollTo({top:0,behavior:'smooth'}); };
+      container.appendChild(next);
+    }
+
+    // Override applyFilters to reset to page 1 after filtering
+    var _origApplyFilters = applyFilters;
+    applyFilters = function() {
+      // Restore all cards to their natural display first
+      document.querySelectorAll('.card').forEach(function(c) {
+        c.style.display = '';
+      });
+      // Apply type/year filters
+      document.querySelectorAll('.card').forEach(function(card) {
+        var typeMatch = activeType === 'all' || card.dataset.type === activeType;
+        var yearMatch = activeYear === 'all' || card.dataset.year === activeYear;
+        if (!typeMatch || !yearMatch) card.style.display = 'none';
+      });
+      currentPage = 1;
+      renderPage(1);
+    };
+
+    // Init on load
+    renderPage(1);
+
   </script>
 </body>
 </html>
