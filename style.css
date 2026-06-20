@@ -10,30 +10,30 @@ body {
 
 /* Header */
 header {
-  background: #ffffff; /* clean white header */
+  background: #ffffff;
   color: #2c3e50;
-  padding: 20px 15px;   /* reduced padding for narrower height */
+  padding: 20px 15px;   /* narrower header */
   text-align: center;
   box-shadow: 0 4px 10px rgba(0,0,0,0.05);
 }
 header h1 {
   margin: 8px 0 4px;
-  font-size: 2.2em;     /* slightly smaller font */
+  font-size: 2.2em;
   font-weight: 600;
 }
 header p {
-  font-size: 1em;       /* reduced size for subtitle */
+  font-size: 1em;
   opacity: 0.9;
 }
 .logo-container {
   display: flex;
   justify-content: center;
   align-items: center;
-  gap: 30px;            /* slightly smaller gap between logos */
-  margin-bottom: 15px;  /* reduced spacing below logos */
+  gap: 30px;
+  margin-bottom: 15px;
 }
 .club-logo {
-  width: 120px;         /* slightly smaller logos */
+  width: 120px;
   height: auto;
   transition: transform 0.3s ease;
 }
@@ -41,10 +41,9 @@ header p {
   transform: scale(1.05);
 }
 
-
-/* Modern Navigation Bar */
+/* Navigation Bar */
 nav {
-  background: linear-gradient(90deg, #34495e, #2c3e50); /* gradient bar */
+  background: linear-gradient(90deg, #34495e, #2c3e50);
   padding: 15px;
   text-align: center;
   box-shadow: 0 2px 6px rgba(0,0,0,0.1);
@@ -63,8 +62,51 @@ nav a {
   transition: background 0.3s ease, color 0.3s ease;
 }
 nav a:hover {
-  background: #1abc9c; /* accent color highlight */
+  background: #1abc9c;
   color: #fff;
+}
+
+/* Dropdown Menu */
+.dropdown {
+  display: inline-block;
+  position: relative;
+}
+.dropbtn {
+  background: none;
+  border: none;
+  color: #fff;
+  font-weight: 600;
+  font-family: "Aptos", "Segoe UI", Arial, sans-serif;
+  padding: 10px 15px;
+  cursor: pointer;
+  border-radius: 6px;
+  transition: background 0.3s ease;
+}
+.dropbtn:hover {
+  background: #1abc9c;
+  color: #fff;
+}
+.dropdown-content {
+  display: none;
+  position: absolute;
+  background: #2c3e50;
+  min-width: 200px;
+  box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+  border-radius: 6px;
+  z-index: 1;
+}
+.dropdown-content a {
+  color: #fff;
+  padding: 12px 16px;
+  text-decoration: none;
+  display: block;
+  border-bottom: 1px solid rgba(255,255,255,0.1);
+}
+.dropdown-content a:hover {
+  background: #1abc9c;
+}
+.dropdown:hover .dropdown-content {
+  display: block;
 }
 
 /* Sections */
@@ -98,55 +140,6 @@ blockquote {
   border-left: 5px solid #34495e;
   border-radius: 8px;
   box-shadow: 0 2px 6px rgba(0,0,0,0.05);
-}
-
-/* Dropdown Menu */
-.dropdown {
-  display: inline-block;
-  position: relative;
-}
-
-.dropbtn {
-  background: none;
-  border: none;
-  color: #fff;
-  font-weight: 600;
-  font-family: "Aptos", "Segoe UI", Arial, sans-serif;
-  padding: 10px 15px;
-  cursor: pointer;
-  border-radius: 6px;
-  transition: background 0.3s ease;
-}
-
-.dropbtn:hover {
-  background: #1abc9c;
-  color: #fff;
-}
-
-.dropdown-content {
-  display: none;
-  position: absolute;
-  background: #2c3e50;
-  min-width: 200px;
-  box-shadow: 0 4px 8px rgba(0,0,0,0.15);
-  border-radius: 6px;
-  z-index: 1;
-}
-
-.dropdown-content a {
-  color: #fff;
-  padding: 12px 16px;
-  text-decoration: none;
-  display: block;
-  border-bottom: 1px solid rgba(255,255,255,0.1);
-}
-
-.dropdown-content a:hover {
-  background: #1abc9c;
-}
-
-.dropdown:hover .dropdown-content {
-  display: block;
 }
 
 /* Forms */
@@ -196,6 +189,7 @@ form button:hover {
   background: #2c3e50;
   transform: translateY(-2px);
 }
+
 /* Announcements Section */
 #announcements {
   background: #fff;
@@ -219,7 +213,7 @@ form button:hover {
   background: #f9fafc;
   margin: 10px 0;
   padding: 12px 18px;
-  border-left: 4px solid #1abc9c; /* accent line */
+  border-left: 4px solid #1abc9c;
   border-radius: 6px;
   font-weight: 500;
 }
@@ -227,14 +221,45 @@ form button:hover {
   color: #2c3e50;
 }
 
-/* Modern Gradient Footer */
+/* News Section */
+#news {
+  background: #fff;
+  padding: 40px 30px;
+  margin: 40px auto;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+  max-width: 1000px;
+}
+#news h2 {
+  color: #34495e;
+  margin-bottom: 20px;
+  font-size: 2em;
+  font-weight: 600;
+}
+#news ul {
+  list-style: none;
+  padding-left: 0;
+}
+#news ul li {
+  background: #f9fafc;
+  margin: 10px 0;
+  padding: 12px 18px;
+  border-left: 4px solid #1abc9c;
+  border-radius: 6px;
+  font-weight: 500;
+}
+#news ul li strong {
+  color: #2c3e50;
+}
+
+/* Footer */
 footer {
-  background: linear-gradient(90deg, #34495e, #2c3e50); /* same as nav */
-  text-align: center;  /* centered text */
+  background: linear-gradient(90deg, #34495e, #2c3e50);
+  text-align: center;
   padding: 35px 20px;
   margin-top: 60px;
   font-size: 0.95em;
-  border-top: 3px solid #1abc9c; /* accent line */
+  border-top: 3px solid #1abc9c;
   font-family: "Aptos", "Segoe UI", Arial, sans-serif;
 }
 footer p {
@@ -242,28 +267,27 @@ footer p {
   font-weight: 600;
   letter-spacing: 0.5px;
   line-height: 1.5;
-  color: #fff; /* same as nav links */
+  color: #fff;
 }
 footer p:first-child {
   font-weight: 700;
-  color: #ffffff; /* copyright stands out */
+  color: #ffffff;
 }
 
 /* Responsive Design */
 @media (max-width: 768px) {
   header h1 {
-    font-size: 2.2em;
+    font-size: 2em;
   }
   section {
     padding: 40px 20px;
   }
 }
-
 @media (max-width: 480px) {
   header h1 {
-    font-size: 1.8em;
+    font-size: 1.6em;
   }
-  nav a {
+  nav a, .dropbtn {
     display: block;
     margin: 10px 0;
   }
