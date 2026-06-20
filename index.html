@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Big Data Artificial Intelligence Club</title>
+  <title>Big Data AI Club - Home</title>
   <link rel="stylesheet" href="style.css">
   <link rel="icon" type="image/png" href="favicon.png">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -22,68 +22,76 @@
     <p>A student-led community exploring Big Data and Artificial Intelligence</p>
   </header>
 
-  <!-- Navigation -->
-  <nav>
-  <a href="index.html">Home</a>
-  <a href="mission.html">Mission</a>
-
-  <!-- Activities dropdown -->
-  <div class="dropdown">
-    <button class="dropbtn">Activities</button>
-    <div class="dropdown-content">
-      <a href="workshops.html">Workshops</a>
-      <a href="researches.html">Researches</a>
-      <a href="projects.html">Projects</a>
-      <a href="lectures.html">Lectures</a>
-      <a href="presentations.html">Presentations</a>
-      <a href="seminars.html">Seminars</a>
-      <a href="conferences.html">Conferences</a>
-      <a href="field-visits.html">Field Visits</a>
+  <!-- News Ticker ABOVE Navigation -->
+  <div class="news-slider-vertical">
+    <div class="slide-track">
+      <div class="slide"><p><strong>June 18, 2026:</strong> Our team won 2nd place in the National AI Hackathon.</p></div>
+      <div class="slide"><p><strong>June 10, 2026:</strong> New research paper published on Big Data clustering techniques.</p></div>
+      <div class="slide"><p><strong>May 30, 2026:</strong> Collaboration announced with the Computer Science Department for joint projects.</p></div>
+      <div class="slide"><p><strong>May 20, 2026:</strong> Guest lecture on AI ethics by Dr. Rana.</p></div>
+      <div class="slide"><p><strong>May 10, 2026:</strong> Field visit to Baghdad Tech Hub.</p></div>
     </div>
   </div>
-  <a href="members.html">Members</a>
-  <a href="announcements.html">Announcements</a>
-  <a href="news.html">News</a>
-  <a href="submit.html">Submit</a>
-  <a href="contact.html">Contact</a>
-</nav>
 
+  <!-- Navigation -->
+  <nav>
+    <a href="index.html">Home</a>
+    <a href="mission.html">Mission</a>
+    <div class="dropdown">
+      <button class="dropbtn">Activities</button>
+      <div class="dropdown-content">
+        <a href="workshops.html">Workshops</a>
+        <a href="researches.html">Researches</a>
+        <a href="projects.html">Projects</a>
+        <a href="lectures.html">Lectures</a>
+        <a href="presentations.html">Presentations</a>
+        <a href="seminars.html">Seminars</a>
+        <a href="conferences.html">Conferences</a>
+        <a href="field-visits.html">Field Visits</a>
+      </div>
+    </div>
+    <a href="members.html">Members</a>
+    <a href="submit.html">Submit</a>
+    <a href="announcements.html">Announcements</a>
+    <a href="news.html">News</a>
+    <a href="contact.html">Contact</a>
+  </nav>
 
-
-  <!-- Main Section -->
-  <section id="home">
+  <!-- Main Content -->
+  <section id="welcome">
     <h2>Welcome to the Big Data AI Club</h2>
-    <p>
-      We are a student-led scientific community dedicated to exploring the fields of Big Data and Artificial Intelligence.
-      Our mission is to foster innovation, collaboration, and knowledge sharing among students and researchers.
-    </p>
-    <ul>
-      <li>Collaborative research projects</li>
-      <li>Workshops and seminars</li>
-      <li>Hands-on training in AI tools</li>
-      <li>Community-driven innovation</li>
-    </ul>
-    <blockquote>
-      "Empowering students to lead the future of Artificial Intelligence and Big Data."
-    </blockquote>
-  </section>
-
-  <!-- Important Announcements Section -->
-  <section id="announcements">
-    <h2>📢 Important Announcements</h2>
-    <ul>
-      <li><strong>September 25, 2026:</strong> Workshop on Machine Learning at Room BD10, College of AI.</li>
-      <li><strong>November 11, 2026:</strong> Deadline for project submissions for 2026 Research Program.</li>
-      <li><strong>November 15, 2026:</strong> A Workshop by Dr. Jalal on Big Data and AI.</li>
-    </ul>
+    <p>We are a student-led community dedicated to exploring the fields of Big Data and Artificial Intelligence through workshops, projects, and research collaborations.</p>
   </section>
 
   <!-- Footer -->
   <footer>
-    <p>&copy; 2026 Big Data Artificial Intelligence Club</p>
-    <p>Scientific Student Community</p>
-    <p>Big Data Department - College of Artificial Intelligence</p>
-    <p>University of Baghdad</p>
+    <p>&copy; 2026 Big Data Artificial Intelligence Club | University of Baghdad</p>
   </footer>
+
+  <!-- JavaScript for Vertical News Slider -->
+  <script>
+    const track = document.querySelector('.news-slider-vertical .slide-track');
+    const slides = document.querySelectorAll('.news-slider-vertical .slide');
+    let index = 0;
+
+    function updateSlider() {
+      const slideHeight = slides[0].offsetHeight;
+      track.style.transform = `translateY(-${index * slideHeight}px)`;
+    }
+
+    function nextSlide() {
+      index++;
+      if (index >= slides.length) {
+        index = 0; // loop back to start
+      }
+      updateSlider();
+    }
+
+    // Start immediately
+    updateSlider();
+
+    // Auto-scroll one news item every 2 seconds
+    setInterval(nextSlide, 2000);
+  </script>
 </body>
 </html>
