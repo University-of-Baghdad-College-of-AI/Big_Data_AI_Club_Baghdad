@@ -41,6 +41,28 @@ header p {
   transform: scale(1.05);
 }
 
+/* News Slider */
+.news-slider {
+  position: relative;
+  max-width: 800px;
+  margin: 20px auto;
+  overflow: hidden;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+  background: #fff;
+}
+
+.news-slider .slide {
+  display: none;
+  padding: 20px;
+  font-size: 1.1em;
+  line-height: 1.5;
+}
+
+.news-slider .slide.active {
+  display: block;
+}
+
 /* Navigation Bar */
 nav {
   background: linear-gradient(90deg, #34495e, #2c3e50);
