@@ -78,23 +78,23 @@ header p {
   display: flex;
   align-items: center;
   max-width: 1000px;
-  margin: 5px auto;
+  margin: 0 auto;       /* remove extra vertical space */
+  padding: 2px 8px;     /* very narrow padding */
   background: #f9f9f9;
   border-bottom: 1px solid #ddd;
-  padding: 5px 10px;
-  font-size: 0.85em; /* smaller font */
+  font-size: 0.8em;     /* smaller font */
 }
 
 .news-label {
   font-weight: bold;
   color: #1abc9c;
-  margin-right: 10px;
+  margin-right: 8px;
 }
 
 /* Vertical News Ticker */
 .news-slider-vertical {
   position: relative;
-  height: 30px; /* very narrow */
+  height: 24px; /* very narrow height */
   overflow: hidden;
   flex: 1;
 }
@@ -106,16 +106,17 @@ header p {
 }
 
 .news-slider-vertical .slide {
-  height: 30px;
+  height: 24px;
   display: flex;
   align-items: center;
 }
 
 .news-slider-vertical .slide p {
   margin: 0;
-  font-size: 0.85em;
+  font-size: 0.8em;
   line-height: 1.2;
 }
+
 
 
 
