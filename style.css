@@ -149,22 +149,26 @@ form button:hover {
   transform: translateY(-2px);
 }
 
-* Footer */
+/* Modern Dark Footer */
 footer {
-  background: #f9fafc; /* light background for scientific/academic feel */
-  color: #2c3e50;
-  text-align: center;
-  padding: 25px;
+  background: #121212; /* deep modern dark background */
+  color: #e0e0e0;      /* light gray text */
+  text-align: center;  /* centered text */
+  padding: 35px 20px;
   margin-top: 60px;
-  font-size: 0.9em;
-  border-top: 2px solid #34495e; /* thin line for structure */
+  font-size: 0.95em;
+  border-top: 3px solid #1abc9c; /* accent line */
   font-family: "Aptos", "Segoe UI", Arial, sans-serif;
 }
-
 footer p {
-  margin: 5px 0;
+  margin: 8px 0;
   font-weight: 500;
   letter-spacing: 0.5px;
+  line-height: 1.5;
+}
+footer p:first-child {
+  font-weight: 600;
+  color: #ffffff; /* copyright stands out */
 }
 
 /* Responsive Design */
