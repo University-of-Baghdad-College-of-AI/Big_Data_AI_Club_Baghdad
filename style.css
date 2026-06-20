@@ -73,6 +73,49 @@ header p {
   line-height: 1.4;
 }
 
+/* Compact News Bar */
+.news-bar {
+  display: flex;
+  align-items: center;
+  max-width: 1000px;
+  margin: 5px auto;
+  background: #f9f9f9;
+  border-bottom: 1px solid #ddd;
+  padding: 5px 10px;
+  font-size: 0.85em; /* smaller font */
+}
+
+.news-label {
+  font-weight: bold;
+  color: #1abc9c;
+  margin-right: 10px;
+}
+
+/* Vertical News Ticker */
+.news-slider-vertical {
+  position: relative;
+  height: 30px; /* very narrow */
+  overflow: hidden;
+  flex: 1;
+}
+
+.news-slider-vertical .slide-track {
+  display: flex;
+  flex-direction: column;
+  transition: transform 0.6s ease;
+}
+
+.news-slider-vertical .slide {
+  height: 30px;
+  display: flex;
+  align-items: center;
+}
+
+.news-slider-vertical .slide p {
+  margin: 0;
+  font-size: 0.85em;
+  line-height: 1.2;
+}
 
 
 
