@@ -193,12 +193,8 @@
     <div class="news-bar-inner">
       <span class="news-label">News</span>
       <div class="news-slider-vertical">
-        <div class="slide-track">
-          <div class="slide"><p><strong>June 18, 2026:</strong> Our team won 2nd place in the National AI Hackathon.</p></div>
-          <div class="slide"><p><strong>June 10, 2026:</strong> New research paper published on Big Data clustering techniques.</p></div>
-          <div class="slide"><p><strong>May 30, 2026:</strong> Collaboration announced with the Computer Science Department for joint projects.</p></div>
-          <div class="slide"><p><strong>May 20, 2026:</strong> Guest lecture on AI ethics by Dr. Rana.</p></div>
-          <div class="slide"><p><strong>May 10, 2026:</strong> Field visit to Baghdad Tech Hub.</p></div>
+        <div class="slide-track" id="newsTrack">
+          <div class="slide"><p>Loading news...</p></div>
         </div>
       </div>
     </div>
@@ -368,14 +364,54 @@
   </footer>
 
   <script>
-    // News ticker
-    var track = document.querySelector('.news-slider-vertical .slide-track');
-    var slides = document.querySelectorAll('.news-slider-vertical .slide');
+    // News ticker — fetches live from news.html
+    var track = document.getElementById('newsTrack');
     var idx = 0;
-    function updateSlider() { track.style.transform = 'translateY(-' + (idx * slides[0].offsetHeight) + 'px)'; }
-    function nextSlide() { idx = (idx + 1) >= slides.length ? 0 : idx + 1; updateSlider(); }
-    updateSlider();
-    setInterval(nextSlide, 2500);
+    var slides = [];
+    var timer = null;
+
+    function updateSlider() {
+      if (!slides.length) return;
+      track.style.transform = 'translateY(-' + (idx * slides[0].offsetHeight) + 'px)';
+    }
+    function nextSlide() {
+      idx = (idx + 1) >= slides.length ? 0 : idx + 1;
+      updateSlider();
+    }
+    function startTicker() {
+      slides = track.querySelectorAll('.slide');
+      updateSlider();
+      if (timer) clearInterval(timer);
+      timer = setInterval(nextSlide, 2500);
+    }
+
+    fetch('news.html')
+      .then(function(r) { return r.text(); })
+      .then(function(html) {
+        var parser = new DOMParser();
+        var doc = parser.parseFromString(html, 'text/html');
+        var items = doc.querySelectorAll('section ul li');
+        if (items.length === 0) { startTicker(); return; }
+        track.innerHTML = '';
+        items.forEach(function(li) {
+          var slide = document.createElement('div');
+          slide.className = 'slide';
+          var p = document.createElement('p');
+          p.innerHTML = li.innerHTML;
+          slide.appendChild(p);
+          track.appendChild(slide);
+        });
+        startTicker();
+      })
+      .catch(function() {
+        // Fallback if fetch fails (e.g. opening file locally)
+        track.innerHTML = '<div class="slide"><p><strong>June 18, 2026:</strong> Our team won 2nd place in the National AI Hackathon.</p></div>' +
+          '<div class="slide"><p><strong>June 10, 2026:</strong> New research paper published on Big Data clustering techniques.</p></div>' +
+          '<div class="slide"><p><strong>May 30, 2026:</strong> Collaboration announced with the Computer Science Department for joint projects.</p></div>' +
+          '<div class="slide"><p><strong>May 20, 2026:</strong> Guest lecture on AI ethics by Dr. Rana.</p></div>' +
+          '<div class="slide"><p><strong>May 10, 2026:</strong> Field visit to Baghdad Tech Hub.</p></div>';
+        startTicker();
+      });
 
     // Lightbox
     function openLightbox(src, caption) {
