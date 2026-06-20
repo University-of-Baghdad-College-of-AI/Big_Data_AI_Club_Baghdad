@@ -155,6 +155,31 @@
       font-family: 'Inter', sans-serif;
     }
 
+    /* ── ANNOUNCEMENTS BAR ── */
+    .announcements-bar {
+      background: var(--gold-pale, #FFF8EC);
+      border-bottom: 2px solid #f0d080;
+    }
+    .announcements-bar .news-bar-inner {
+      /* reuses news-bar-inner layout */
+    }
+    .announcements-label {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      font-weight: 700;
+      font-size: 0.72em;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--navy);
+      background: var(--gold, #F8C200);
+      padding: 3px 11px;
+      border-radius: 20px;
+      white-space: nowrap;
+      flex-shrink: 0;
+    }
+    .announcements-bar .news-slider-vertical .slide p {
+      color: var(--navy);
+    }
+
     /* ── Responsive ── */
     @media (max-width: 900px) {
       .gallery-section { padding: 0 20px 4px; }
@@ -195,6 +220,18 @@
       <div class="news-slider-vertical">
         <div class="slide-track" id="newsTrack">
           <div class="slide"><p>Loading news...</p></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── ANNOUNCEMENTS BAR ── -->
+  <div class="news-bar announcements-bar">
+    <div class="news-bar-inner">
+      <span class="announcements-label">&#128226; Announcements</span>
+      <div class="news-slider-vertical">
+        <div class="slide-track" id="announcementsTrack">
+          <div class="slide"><p>Loading announcements...</p></div>
         </div>
       </div>
     </div>
@@ -317,12 +354,10 @@
 
   <section id="announcements">
     <h2>&#128226; Important Announcements</h2>
-    <ul>
-      <li><strong>June 25, 2026:</strong> Upcoming workshop on Machine Learning basics.</li>
-      <li><strong>June 22, 2026:</strong> Registration open for summer AI bootcamp.</li>
-      <li><strong>June 15, 2026:</strong> New members orientation held at COAI auditorium.</li>
-      <li><strong>June 5, 2026:</strong> Submission deadline for student research papers.</li>
+    <ul id="announcementsList">
+      <li>Loading announcements...</li>
     </ul>
+    <a href="announcements.html" style="display:inline-flex;align-items:center;gap:6px;margin-top:16px;font-size:0.88em;font-weight:600;color:var(--indigo);text-decoration:none;">View all announcements &#8594;</a>
   </section>
 
   <section id="submissions">
@@ -351,7 +386,7 @@
         <span style="font-size:2em;">&#128218;</span>
         <div>
           <div style="font-family:'Plus Jakarta Sans',sans-serif;font-weight:700;font-size:1.05em;margin-bottom:3px;">Professors Work</div>
-          <div style="font-size:0.83em;color:var(--text-muted);">Browse College publications &amp; resources</div>
+          <div style="font-size:0.83em;color:var(--text-muted);">Browse faculty publications &amp; resources</div>
         </div>
         <span style="margin-left:auto;color:var(--gold);font-size:1.2em;">&#8594;</span>
       </a>
@@ -427,6 +462,80 @@
     document.addEventListener('keydown', function(e) {
       if (e.key === 'Escape') document.getElementById('lightbox').classList.remove('open');
     });
+
+    // Announcements — fetch from announcements.html
+    var annTrack = document.getElementById('announcementsTrack');
+    var annList  = document.getElementById('announcementsList');
+    var annIdx = 0;
+    var annSlides = [];
+    var annTimer = null;
+
+    function updateAnnSlider() {
+      if (!annSlides.length) return;
+      annTrack.style.transform = 'translateY(-' + (annIdx * annSlides[0].offsetHeight) + 'px)';
+    }
+    function nextAnnSlide() {
+      annIdx = (annIdx + 1) >= annSlides.length ? 0 : annIdx + 1;
+      updateAnnSlider();
+    }
+    function startAnnTicker() {
+      annSlides = annTrack.querySelectorAll('.slide');
+      updateAnnSlider();
+      if (annTimer) clearInterval(annTimer);
+      annTimer = setInterval(nextAnnSlide, 3000);
+    }
+
+    fetch('announcements.html')
+      .then(function(r) { return r.text(); })
+      .then(function(html) {
+        var parser = new DOMParser();
+        var doc = parser.parseFromString(html, 'text/html');
+        var items = doc.querySelectorAll('section ul li');
+        if (!items.length) { startAnnTicker(); return; }
+
+        // Populate ticker
+        annTrack.innerHTML = '';
+        items.forEach(function(li) {
+          var slide = document.createElement('div');
+          slide.className = 'slide';
+          var p = document.createElement('p');
+          p.innerHTML = li.innerHTML;
+          slide.appendChild(p);
+          annTrack.appendChild(slide);
+        });
+        startAnnTicker();
+
+        // Populate section list
+        annList.innerHTML = '';
+        items.forEach(function(li) {
+          var item = document.createElement('li');
+          item.innerHTML = li.innerHTML;
+          annList.appendChild(item);
+        });
+      })
+      .catch(function() {
+        // Fallback
+        var fallback = [
+          '<strong>September 25, 2026:</strong> Workshop on Machine Learning at Room BD10, College of AI.',
+          '<strong>November 11, 2026:</strong> Deadline for project submissions for 2026 Research Program.',
+          '<strong>November 15, 2026:</strong> A Workshop by Dr. Jalal on Big Data and AI.',
+          '<strong>December 2, 2026:</strong> Register for the symposium online!'
+        ];
+        annTrack.innerHTML = '';
+        fallback.forEach(function(text) {
+          var slide = document.createElement('div');
+          slide.className = 'slide';
+          slide.innerHTML = '<p>' + text + '</p>';
+          annTrack.appendChild(slide);
+        });
+        startAnnTicker();
+        annList.innerHTML = '';
+        fallback.forEach(function(text) {
+          var li = document.createElement('li');
+          li.innerHTML = text;
+          annList.appendChild(li);
+        });
+      });
 
     // Mobile nav
     var toggle = document.querySelector('.nav-toggle');
