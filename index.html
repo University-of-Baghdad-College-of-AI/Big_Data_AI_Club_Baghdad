@@ -12,7 +12,7 @@
   <header>
     <div class="logo-container">
       <a href="https://uobaghdad.edu.iq/" target="_blank">
-        <img src="logo3.png" alt="Arabic Logo" class="club-logo">
+        <img src="logo-ar-white-with-text.png" alt="Arabic Logo" class="club-logo">
       </a>
       <a href="https://ai.uobaghdad.edu.iq/" target="_blank">
         <img src="coai-english-logo.png" alt="English Logo" class="club-logo">
@@ -22,20 +22,19 @@
     <p>A student-led community exploring Big Data and Artificial Intelligence</p>
   </header>
 
-  <!-- News Ticker ABOVE Navigation -->
-<div class="news-bar">
-  <span class="news-label">News:</span>
-  <div class="news-slider-vertical">
-    <div class="slide-track">
-      <div class="slide"><p><strong>June 18, 2026:</strong> Our team won 2nd place in the National AI Hackathon.</p></div>
-      <div class="slide"><p><strong>June 10, 2026:</strong> New research paper published on Big Data clustering techniques.</p></div>
-      <div class="slide"><p><strong>May 30, 2026:</strong> Collaboration announced with the Computer Science Department for joint projects.</p></div>
-      <div class="slide"><p><strong>May 20, 2026:</strong> Guest lecture on AI ethics by Dr. Rana.</p></div>
-      <div class="slide"><p><strong>May 10, 2026:</strong> Field visit to Baghdad Tech Hub.</p></div>
+  <!-- Compact News Ticker ABOVE Navigation -->
+  <div class="news-bar">
+    <span class="news-label">News:</span>
+    <div class="news-slider-vertical">
+      <div class="slide-track">
+        <div class="slide"><p><strong>June 18, 2026:</strong> Our team won 2nd place in the National AI Hackathon.</p></div>
+        <div class="slide"><p><strong>June 10, 2026:</strong> New research paper published on Big Data clustering techniques.</p></div>
+        <div class="slide"><p><strong>May 30, 2026:</strong> Collaboration announced with the Computer Science Department for joint projects.</p></div>
+        <div class="slide"><p><strong>May 20, 2026:</strong> Guest lecture on AI ethics by Dr. Rana.</p></div>
+        <div class="slide"><p><strong>May 10, 2026:</strong> Field visit to Baghdad Tech Hub.</p></div>
+      </div>
     </div>
   </div>
-</div>
-
 
   <!-- Navigation -->
   <nav>
@@ -86,16 +85,13 @@
     function nextSlide() {
       index++;
       if (index >= slides.length) {
-        index = 0; // loop back to start
+        index = 0; // loop back
       }
       updateSlider();
     }
 
-    // Start immediately
     updateSlider();
-
-    // Auto-scroll one news item every 2 seconds
-    setInterval(nextSlide, 2000);
+    setInterval(nextSlide, 2000); // scroll every 2s
   </script>
 </body>
 </html>
