@@ -152,7 +152,6 @@ form button:hover {
 /* Modern Dark Footer */
 footer {
   background: #121212; /* deep modern dark background */
-  color: #e0e0e0;      /* light gray text */
   text-align: center;  /* centered text */
   padding: 35px 20px;
   margin-top: 60px;
@@ -160,16 +159,15 @@ footer {
   border-top: 3px solid #1abc9c; /* accent line */
   font-family: "Aptos", "Segoe UI", Arial, sans-serif;
 }
+
 footer p {
   margin: 8px 0;
-  font-weight: 500;
+  font-weight: 600;
   letter-spacing: 0.5px;
   line-height: 1.5;
+  color: #fff; /* same as nav links */
 }
-footer p:first-child {
-  font-weight: 600;
-  color: #ffffff; /* copyright stands out */
-}
+
 
 /* Responsive Design */
 @media (max-width: 768px) {
