@@ -12,21 +12,19 @@
 </head>
 <body>
 
-  <!-- Header -->
   <header>
     <div class="logo-container">
       <a href="https://uobaghdad.edu.iq/" target="_blank">
-        <img src="logo3.png" alt="Arabic Logo" class="club-logo">
+        <img src="logo3.png" alt="University of Baghdad Logo" class="club-logo">
       </a>
-      <a href="https://en.coai.uobaghdad.edu.iq//" target="_blank">
-        <img src="coai-english-logo.png" alt="English Logo" class="club-logo">
+      <a href="https://en.coai.uobaghdad.edu.iq/" target="_blank">
+        <img src="coai-english-logo.png" alt="College of AI Logo" class="club-logo">
       </a>
     </div>
     <h1><a href="index.html">Big Data Artificial Intelligence Club</a></h1>
     <p>A student-led community exploring Big Data and Artificial Intelligence</p>
   </header>
 
-  <!-- Slim News Ticker -->
   <div class="news-bar">
     <div class="news-bar-inner">
       <span class="news-label">News</span>
@@ -42,12 +40,9 @@
     </div>
   </div>
 
-  <!-- Navigation -->
   <nav>
     <button class="nav-toggle" aria-label="Toggle menu">
-      <span></span>
-      <span></span>
-      <span></span>
+      <span></span><span></span><span></span>
     </button>
     <div class="nav-links">
       <a href="index.html">Home</a>
@@ -73,23 +68,16 @@
     </div>
   </nav>
 
-  <!-- Main Content -->
   <section id="welcome">
     <h2>Welcome to the Big Data AI Club</h2>
     <p>We are a student-led community dedicated to exploring the fields of Big Data and Artificial Intelligence through workshops, projects, and research collaborations.</p>
   </section>
 
-  <!-- Mission Section -->
   <section id="mission">
     <h2>🎯 Our Mission</h2>
-    <p>
-      The mission of the Big Data Artificial Intelligence Club is to foster innovation, collaboration, and knowledge-sharing among students.
-      We aim to empower members with practical skills in Big Data and AI, encourage research and projects that address real-world challenges,
-      and build a supportive community that inspires creativity and ethical responsibility in technology.
-    </p>
+    <p>The mission of the Big Data Artificial Intelligence Club is to foster innovation, collaboration, and knowledge-sharing among students. We aim to empower members with practical skills in Big Data and AI, encourage research and projects that address real-world challenges, and build a supportive community that inspires creativity and ethical responsibility in technology.</p>
   </section>
 
-  <!-- Announcements Section -->
   <section id="announcements">
     <h2>📢 Important Announcements</h2>
     <ul>
@@ -100,54 +88,32 @@
     </ul>
   </section>
 
-  <!-- Footer -->
   <footer>
     <p>&copy; 2026 <strong>Big Data Artificial Intelligence Club</strong> | Students Scientific Community</p>
     <p>Big Data Department | College of AI | University of Baghdad</p>
   </footer>
 
-  <!-- News Slider + Mobile Nav Scripts -->
   <script>
-    // ── Vertical news ticker ──
-    const track  = document.querySelector('.news-slider-vertical .slide-track');
-    const slides = document.querySelectorAll('.news-slider-vertical .slide');
-    let index = 0;
-
-    function updateSlider() {
-      const h = slides[0].offsetHeight;
-      track.style.transform = 'translateY(-' + (index * h) + 'px)';
-    }
-    function nextSlide() {
-      index = (index + 1) >= slides.length ? 0 : index + 1;
-      updateSlider();
-    }
+    // News ticker
+    var track = document.querySelector('.news-slider-vertical .slide-track');
+    var slides = document.querySelectorAll('.news-slider-vertical .slide');
+    var idx = 0;
+    function updateSlider() { track.style.transform = 'translateY(-' + (idx * slides[0].offsetHeight) + 'px)'; }
+    function nextSlide() { idx = (idx + 1) >= slides.length ? 0 : idx + 1; updateSlider(); }
     updateSlider();
-    setInterval(nextSlide, 2000);
-
-    // ── Mobile hamburger ──
-    const toggle   = document.querySelector('.nav-toggle');
-    const navLinks = document.querySelector('.nav-links');
-    toggle.addEventListener('click', function () {
-      navLinks.classList.toggle('open');
-    });
-
-    // ── Mobile Activities tap-to-expand ──
-    document.querySelectorAll('.dropdown').forEach(function (dd) {
-      dd.querySelector('.dropbtn').addEventListener('click', function (e) {
-        if (window.innerWidth <= 768) {
-          e.preventDefault();
-          dd.classList.toggle('open');
-        }
+    setInterval(nextSlide, 2500);
+    // Mobile nav
+    var toggle = document.querySelector('.nav-toggle');
+    var navLinks = document.querySelector('.nav-links');
+    toggle.addEventListener('click', function() { navLinks.classList.toggle('open'); });
+    document.querySelectorAll('.dropdown').forEach(function(dd) {
+      dd.querySelector('.dropbtn').addEventListener('click', function(e) {
+        if (window.innerWidth <= 768) { e.preventDefault(); dd.classList.toggle('open'); }
       });
     });
-
-    // ── Close nav after link tap (mobile) ──
-    document.querySelectorAll('.nav-links a').forEach(function (a) {
-      a.addEventListener('click', function () {
-        navLinks.classList.remove('open');
-      });
+    document.querySelectorAll('.nav-links a').forEach(function(a) {
+      a.addEventListener('click', function() { navLinks.classList.remove('open'); });
     });
   </script>
-
 </body>
 </html>
