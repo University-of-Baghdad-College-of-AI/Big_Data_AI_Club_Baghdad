@@ -10,122 +10,20 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
   <style>
-    /* ── Accordion ── */
-    .accordion { display: flex; flex-direction: column; gap: 12px; margin-top: 8px; }
-
-    .acc-item { border: 1px solid var(--border); border-radius: 10px; overflow: hidden; }
-
-    .acc-header {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      padding: 16px 20px;
-      background: var(--indigo-pale);
-      cursor: pointer;
-      user-select: none;
-      transition: background 0.18s;
-      border: none;
-      width: 100%;
-      text-align: left;
-      font-family: 'Plus Jakarta Sans', sans-serif;
-      font-size: 1.05em;
-      font-weight: 700;
-      color: var(--navy);
-    }
-    .acc-header:hover { background: #dce4fd; }
-    .acc-header.open { background: var(--indigo); color: var(--white); }
-
-    .acc-year-badge {
-      display: inline-flex;
-      align-items: center;
-      gap: 10px;
-    }
-    .acc-year-badge span {
-      font-size: 0.78em;
-      font-weight: 600;
-      background: rgba(67,97,238,0.15);
-      color: var(--indigo);
-      padding: 2px 10px;
-      border-radius: 20px;
-      white-space: nowrap;
-    }
-    .acc-header.open .acc-year-badge span {
-      background: rgba(255,255,255,0.2);
-      color: var(--white);
-    }
-
-    .acc-arrow {
-      flex-shrink: 0;
-      width: 20px;
-      height: 20px;
-      transition: transform 0.3s ease;
-    }
-    .acc-header.open .acc-arrow { transform: rotate(180deg); }
-
-    /* Scrollable panel — max 320px then scroll */
-    .acc-body {
-      max-height: 0;
-      overflow: hidden;
-      transition: max-height 0.35s ease;
-    }
-    .acc-body.open {
-      max-height: 340px;  /* scroll kicks in beyond this */
-      overflow-y: auto;
-    }
-
-    .acc-list {
-      list-style: none;
-      margin: 0;
-      padding: 10px 0;
-      border-top: 1px solid var(--border);
-    }
-    .acc-list li {
-      display: flex;
-      align-items: flex-start;
-      gap: 12px;
-      padding: 13px 20px;
-      border-left: none;
-      border-radius: 0;
-      background: transparent;
-      transition: background 0.15s;
-      border-bottom: 1px solid var(--border);
-    }
-    .acc-list li:last-child { border-bottom: none; }
-    .acc-list li:hover { background: var(--indigo-pale); }
-
-    .proj-num {
-      flex-shrink: 0;
-      width: 26px;
-      height: 26px;
-      border-radius: 50%;
-      background: var(--indigo);
-      color: var(--white);
-      font-size: 0.72em;
-      font-weight: 700;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      margin-top: 1px;
-    }
-
-    .proj-info { flex: 1; min-width: 0; }
-    .proj-title {
-      font-family: 'Plus Jakarta Sans', sans-serif;
-      font-weight: 600;
-      font-size: 0.95em;
-      color: var(--navy);
-      margin-bottom: 2px;
-    }
-    .proj-desc {
-      font-size: 0.84em;
-      color: var(--text-muted);
-      line-height: 1.5;
-    }
-
-    /* Scrollbar styling */
-    .acc-body::-webkit-scrollbar { width: 5px; }
-    .acc-body::-webkit-scrollbar-track { background: var(--surface); }
-    .acc-body::-webkit-scrollbar-thumb { background: var(--indigo-light); border-radius: 3px; }
+    .filter-bar { display:flex; gap:8px; flex-wrap:wrap; margin-bottom:24px; }
+    .filter-btn { font-family:'Plus Jakarta Sans',sans-serif; font-size:0.82em; font-weight:600; padding:6px 16px; border-radius:20px; border:1.5px solid var(--border); background:var(--white); color:var(--text-muted); cursor:pointer; transition:all 0.18s; }
+    .filter-btn:hover, .filter-btn.active { background:var(--indigo); color:var(--white); border-color:var(--indigo); }
+    .cards-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(280px,1fr)); gap:16px; }
+    .card { background:var(--white); border:1px solid var(--border); border-radius:10px; padding:20px; transition:box-shadow 0.2s,transform 0.2s; display:flex; flex-direction:column; gap:10px; }
+    .card:hover { box-shadow:var(--shadow-md); transform:translateY(-2px); }
+    .card-type { display:inline-block; font-size:0.72em; font-weight:700; letter-spacing:0.08em; text-transform:uppercase; padding:3px 10px; border-radius:20px; }
+    .card h3 { font-family:'Plus Jakarta Sans',sans-serif; font-size:1em; font-weight:700; color:var(--navy); line-height:1.3; }
+    .card p { font-size:0.87em; color:var(--text-muted); line-height:1.55; flex:1; }
+    .card-meta { font-size:0.78em; color:var(--text-muted); display:flex; gap:12px; flex-wrap:wrap; }
+    .card-meta span { display:flex; align-items:center; gap:4px; }
+    .card a { display:inline-flex; align-items:center; gap:6px; font-size:0.83em; font-weight:600; color:var(--indigo); text-decoration:none; margin-top:4px; transition:gap 0.2s; }
+    .card a:hover { gap:10px; }
+    @media (max-width:768px) { .cards-grid { grid-template-columns:1fr; } }
   </style>
 </head>
 <body>
@@ -184,124 +82,119 @@
 
   <section>
     <h2>&#128295; Projects</h2>
+    <p>Club projects spanning AI, Big Data, machine learning, and software development. Filter by type or year below.</p>
 
-    <div class="accordion">
+    <div class="filter-bar">
+      <button class="filter-btn active" onclick="filterCards('all', this)">All</button>
+      <button class="filter-btn" onclick="filterCards('research', this)">Research</button>
+      <button class="filter-btn" onclick="filterCards('software', this)">Software</button>
+      <button class="filter-btn" onclick="filterCards('data', this)">Data Analysis</button>
+      <button class="filter-btn" onclick="filterCards('ai', this)">AI Model</button>
+    </div>
 
-      <!-- 2026 -->
-      <div class="acc-item">
-        <button class="acc-header open" data-target="y2026">
-          <span class="acc-year-badge">
-            2026
-            <span>3 projects</span>
-          </span>
-          <svg class="acc-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round">
-            <polyline points="6 9 12 15 18 9"/>
-          </svg>
-        </button>
-        <div class="acc-body open" id="y2026">
-          <ul class="acc-list">
-            <li>
-              <span class="proj-num">1</span>
-              <div class="proj-info">
-                <div class="proj-title">AI Hackathon Baghdad</div>
-                <div class="proj-desc">Competitive project showcased at the national AI hackathon — won 2nd place.</div>
-              </div>
-            </li>
-            <li>
-              <span class="proj-num">2</span>
-              <div class="proj-info">
-                <div class="proj-title">Big Data Clustering Research</div>
-                <div class="proj-desc">Research paper published on novel clustering techniques for large-scale datasets.</div>
-              </div>
-            </li>
-            <li>
-              <span class="proj-num">3</span>
-              <div class="proj-info">
-                <div class="proj-title">CS Department Collaboration</div>
-                <div class="proj-desc">Joint research initiative with the Computer Science Department.</div>
-              </div>
-            </li>
-          </ul>
+    <div class="cards-grid">
+      <!-- ══ ADD MORE CARDS BELOW — copy a block and fill in details ══ -->
+
+      <div class="card" data-type="ai">
+        <span class="card-type" style="background:#EDF7EE;color:#2E7D32;">AI Model</span>
+        <h3>AI Hackathon Baghdad 2026</h3>
+        <p>Competitive project showcased at the National AI Hackathon — won 2nd place with an innovative ML-based solution.</p>
+        <div class="card-meta">
+          <span>&#128101; Club Team</span>
+          <span>&#128197; June 2026</span>
         </div>
+        <a href="#">View Project &#8594;</a>
       </div>
 
-      <!-- 2025 -->
-      <div class="acc-item">
-        <button class="acc-header" data-target="y2025">
-          <span class="acc-year-badge">
-            2025
-            <span>4 projects</span>
-          </span>
-          <svg class="acc-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round">
-            <polyline points="6 9 12 15 18 9"/>
-          </svg>
-        </button>
-        <div class="acc-body" id="y2025">
-          <ul class="acc-list">
-            <li>
-              <span class="proj-num">1</span>
-              <div class="proj-info">
-                <div class="proj-title">Machine Learning for Healthcare</div>
-                <div class="proj-desc">Applying ML models to medical datasets for early disease detection.</div>
-              </div>
-            </li>
-            <li>
-              <span class="proj-num">2</span>
-              <div class="proj-info">
-                <div class="proj-title">Data Analysis Toolkit</div>
-                <div class="proj-desc">Building reusable Python tools for data cleaning, visualization, and analysis.</div>
-              </div>
-            </li>
-            <li>
-              <span class="proj-num">3</span>
-              <div class="proj-info">
-                <div class="proj-title">NLP Text Classifier</div>
-                <div class="proj-desc">Arabic text classification system using transformer-based models.</div>
-              </div>
-            </li>
-            <li>
-              <span class="proj-num">4</span>
-              <div class="proj-info">
-                <div class="proj-title">Smart Campus IoT Dashboard</div>
-                <div class="proj-desc">Real-time dashboard aggregating IoT sensor data from across the campus.</div>
-              </div>
-            </li>
-          </ul>
+      <div class="card" data-type="research">
+        <span class="card-type" style="background:var(--indigo-pale);color:var(--indigo);">Research</span>
+        <h3>Big Data Clustering Research</h3>
+        <p>Research paper on novel clustering techniques for large-scale datasets, targeting Q1 journal publication.</p>
+        <div class="card-meta">
+          <span>&#128101; Dr. Jalal Hameed</span>
+          <span>&#128197; June 2026</span>
         </div>
+        <a href="#">View Paper &#8594;</a>
       </div>
 
-      <!-- 2024 -->
-      <div class="acc-item">
-        <button class="acc-header" data-target="y2024">
-          <span class="acc-year-badge">
-            2024
-            <span>2 projects</span>
-          </span>
-          <svg class="acc-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round">
-            <polyline points="6 9 12 15 18 9"/>
-          </svg>
-        </button>
-        <div class="acc-body" id="y2024">
-          <ul class="acc-list">
-            <li>
-              <span class="proj-num">1</span>
-              <div class="proj-info">
-                <div class="proj-title">Intro to AI &amp; Big Data</div>
-                <div class="proj-desc">Foundational project for new members exploring core AI and Big Data concepts.</div>
-              </div>
-            </li>
-            <li>
-              <span class="proj-num">2</span>
-              <div class="proj-info">
-                <div class="proj-title">Predictive Analytics for Student Performance</div>
-                <div class="proj-desc">Using academic data to predict and improve student outcomes.</div>
-              </div>
-            </li>
-          </ul>
+      <div class="card" data-type="research">
+        <span class="card-type" style="background:var(--indigo-pale);color:var(--indigo);">Research</span>
+        <h3>CS Department Collaboration</h3>
+        <p>Joint research initiative with the Computer Science Department exploring cross-disciplinary AI applications.</p>
+        <div class="card-meta">
+          <span>&#128101; Club Members</span>
+          <span>&#128197; May 2026</span>
         </div>
+        <a href="#">View Details &#8594;</a>
       </div>
 
-    </div><!-- /accordion -->
+      <div class="card" data-type="ai">
+        <span class="card-type" style="background:#EDF7EE;color:#2E7D32;">AI Model</span>
+        <h3>Machine Learning for Healthcare</h3>
+        <p>Applying ML models to medical datasets for early disease detection and clinical decision support.</p>
+        <div class="card-meta">
+          <span>&#128101; Student Team</span>
+          <span>&#128197; April 2025</span>
+        </div>
+        <a href="#">View Project &#8594;</a>
+      </div>
+
+      <div class="card" data-type="software">
+        <span class="card-type" style="background:#FFF3E0;color:#E65100;">Software</span>
+        <h3>Data Analysis Toolkit</h3>
+        <p>Reusable Python tools for data cleaning, transformation, visualization, and exploratory analysis.</p>
+        <div class="card-meta">
+          <span>&#128101; Club Members</span>
+          <span>&#128197; March 2025</span>
+        </div>
+        <a href="#">View Repo &#8594;</a>
+      </div>
+
+      <div class="card" data-type="ai">
+        <span class="card-type" style="background:#EDF7EE;color:#2E7D32;">AI Model</span>
+        <h3>Arabic NLP Text Classifier</h3>
+        <p>Arabic text classification system using parameter-efficient transformer fine-tuning for multi-domain classification.</p>
+        <div class="card-meta">
+          <span>&#128101; Student Team</span>
+          <span>&#128197; February 2025</span>
+        </div>
+        <a href="#">View Project &#8594;</a>
+      </div>
+
+      <div class="card" data-type="software">
+        <span class="card-type" style="background:#FFF3E0;color:#E65100;">Software</span>
+        <h3>Smart Campus IoT Dashboard</h3>
+        <p>Real-time web dashboard aggregating IoT sensor data from across the College of AI campus.</p>
+        <div class="card-meta">
+          <span>&#128101; Student Team</span>
+          <span>&#128197; January 2025</span>
+        </div>
+        <a href="#">View Project &#8594;</a>
+      </div>
+
+      <div class="card" data-type="research">
+        <span class="card-type" style="background:var(--indigo-pale);color:var(--indigo);">Research</span>
+        <h3>Intro to AI &amp; Big Data</h3>
+        <p>Foundational research project for new members exploring core AI and Big Data concepts and applications.</p>
+        <div class="card-meta">
+          <span>&#128101; Club Members</span>
+          <span>&#128197; September 2024</span>
+        </div>
+        <a href="#">View Details &#8594;</a>
+      </div>
+
+      <div class="card" data-type="data">
+        <span class="card-type" style="background:#F3E5F5;color:#6A1B9A;">Data Analysis</span>
+        <h3>Student Performance Predictive Analytics</h3>
+        <p>Using academic records and behavioral data to predict student outcomes and recommend early interventions.</p>
+        <div class="card-meta">
+          <span>&#128101; Student Team</span>
+          <span>&#128197; June 2024</span>
+        </div>
+        <a href="#">View Report &#8594;</a>
+      </div>
+
+    </div>
   </section>
 
   <footer>
@@ -310,30 +203,6 @@
   </footer>
 
   <script>
-    // ── Accordion ──
-    document.querySelectorAll('.acc-header').forEach(function(btn) {
-      btn.addEventListener('click', function() {
-        var targetId = btn.getAttribute('data-target');
-        var body = document.getElementById(targetId);
-        var isOpen = btn.classList.contains('open');
-
-        // Close all
-        document.querySelectorAll('.acc-header').forEach(function(b) { b.classList.remove('open'); });
-        document.querySelectorAll('.acc-body').forEach(function(b) { b.classList.remove('open'); });
-
-        // Open clicked (toggle: if was open, leave closed)
-        if (!isOpen) {
-          btn.classList.add('open');
-          body.classList.add('open');
-          // Smooth scroll into view
-          setTimeout(function() {
-            btn.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
-          }, 50);
-        }
-      });
-    });
-
-    // ── Mobile nav ──
     var toggle = document.querySelector('.nav-toggle');
     var navLinks = document.querySelector('.nav-links');
     if (toggle && navLinks) {
@@ -345,6 +214,13 @@
       });
       document.querySelectorAll('.nav-links a').forEach(function(a) {
         a.addEventListener('click', function() { navLinks.classList.remove('open'); });
+      });
+    }
+    function filterCards(type, btn) {
+      document.querySelectorAll('.filter-btn').forEach(function(b) { b.classList.remove('active'); });
+      btn.classList.add('active');
+      document.querySelectorAll('.card').forEach(function(card) {
+        card.style.display = (type === 'all' || card.dataset.type === type) ? '' : 'none';
       });
     }
   </script>
