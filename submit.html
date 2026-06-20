@@ -30,23 +30,34 @@
   <!-- Submit Section -->
   <section id="submit">
     <h2>Submit Your Project</h2>
-    <p>We welcome contributions from all members. Share your project, research, or idea with the club!</p>
+    <p>All fields are required. Please provide complete details about your project.</p>
 
-    <form action="#" method="post">
-      <label for="name">Name</label>
+    <!-- Formspree integration -->
+    <form action="https://formspree.io/f/YOUR_FORM_ID" method="POST" enctype="multipart/form-data">
+      <label for="name">Your Name</label>
       <input type="text" id="name" name="name" required>
 
-      <label for="email">Email</label>
-      <input type="email" id="email" name="email" required>
+      <label for="email">Your Email</label>
+      <input type="email" id="email" name="_replyto" required>
 
       <label for="title">Project Title</label>
       <input type="text" id="title" name="title" required>
 
+      <label for="type">Project Type</label>
+      <select id="type" name="type" required>
+        <option value="">-- Select Type --</option>
+        <option value="Research">Research</option>
+        <option value="Software">Software</option>
+        <option value="Data Analysis">Data Analysis</option>
+        <option value="AI Model">AI Model</option>
+        <option value="Other">Other</option>
+      </select>
+
       <label for="description">Project Description</label>
       <textarea id="description" name="description" required></textarea>
 
-      <label for="file">Upload File (optional)</label>
-      <input type="file" id="file" name="file">
+      <label for="file">Upload File</label>
+      <input type="file" id="file" name="file" required>
 
       <button type="submit">Submit Project</button>
     </form>
@@ -54,11 +65,10 @@
 
   <!-- Footer -->
   <footer>
-  <p>&copy; 2026 Big Data Artificial Intelligence Club</p>
-  <p>Scientific Student Community</p>
-  <p>Big Data Department - College of Artificial Intelligence</p>
-  <p>University of Baghdad</p>
-</footer>
-
+    <p>&copy; 2026 Big Data Artificial Intelligence Club</p>
+    <p>Scientific Student Community</p>
+    <p>Big Data Department - College of Artificial Intelligence</p>
+    <p>University of Baghdad</p>
+  </footer>
 </body>
 </html>
