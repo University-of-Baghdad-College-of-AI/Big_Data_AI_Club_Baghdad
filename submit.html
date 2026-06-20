@@ -6,96 +6,105 @@
   <link rel="stylesheet" href="style.css">
   <link rel="icon" type="image/png" href="favicon.png">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
 </head>
 <body>
-  <!-- Header -->
-    <!-- Header -->
+
   <header>
     <div class="logo-container">
-      <!-- Arabic Logo links to University of Baghdad -->
       <a href="https://uobaghdad.edu.iq/" target="_blank">
-        <img src="logo3.png" alt="Arabic Logo" class="club-logo left-logo">
+        <img src="logo3.png" alt="University of Baghdad Logo" class="club-logo">
       </a>
-
-      <!-- English Logo links to College of AI -->
       <a href="https://en.coai.uobaghdad.edu.iq/" target="_blank">
-        <img src="coai-english-logo.png" alt="English Logo" class="club-logo right-logo">
+        <img src="coai-english-logo.png" alt="College of AI Logo" class="club-logo">
       </a>
     </div>
-    <!-- Club name links back to homepage -->
-    <h1><a href="index.html" style="color:#2c3e50; text-decoration:none;">Big Data Artificial Intelligence Club</a></h1>
+    <h1><a href="index.html">Big Data Artificial Intelligence Club</a></h1>
     <p>A student-led community exploring Big Data and Artificial Intelligence</p>
   </header>
 
   <nav>
-  <a href="index.html">Home</a>
-  <a href="mission.html">Mission</a>
-
-  <!-- Activities dropdown -->
-  <div class="dropdown">
-    <button class="dropbtn">Activities</button>
-    <div class="dropdown-content">
-      <a href="workshops.html">Workshops</a>
-      <a href="researches.html">Researches</a>
-      <a href="projects.html">Projects</a>
-      <a href="lectures.html">Lectures</a>
-      <a href="presentations.html">Presentations</a>
-      <a href="seminars.html">Seminars</a>
-      <a href="conferences.html">Conferences</a>
-      <a href="field-visits.html">Field Visits</a>
+    <button class="nav-toggle" aria-label="Toggle menu">
+      <span></span><span></span><span></span>
+    </button>
+    <div class="nav-links">
+      <a href="index.html">Home</a>
+      <a href="mission.html">Mission</a>
+      <div class="dropdown">
+        <button class="dropbtn">Activities ▾</button>
+        <div class="dropdown-content">
+          <a href="workshops.html">Workshops</a>
+          <a href="researches.html">Researches</a>
+          <a href="projects.html">Projects</a>
+          <a href="lectures.html">Lectures</a>
+          <a href="presentations.html">Presentations</a>
+          <a href="seminars.html">Seminars</a>
+          <a href="conferences.html">Conferences</a>
+          <a href="field-visits.html">Field Visits</a>
+        </div>
+      </div>
+      <a href="members.html">Members</a>
+      <a href="submit.html">Submit</a>
+      <a href="announcements.html">Announcements</a>
+      <a href="news.html">News</a>
+      <a href="contact.html">Contact</a>
     </div>
-  </div>
-  <a href="members.html">Members</a>
-  <a href="announcements.html">Announcements</a>
-  <a href="news.html">News</a>
-  <a href="submit.html">Submit</a>
-  <a href="contact.html">Contact</a>
-</nav>
+  </nav>
 
-
-
-  <!-- Submit Section -->
   <section id="submit">
-    <h2>Submit Your Project</h2>
-    <p>All fields are required. Please provide complete details about your project.</p>
-
-    <!-- Formspree integration -->
+    <h2>📤 Submit Your Project</h2>
+    <p style="margin-bottom:20px; color:var(--text-muted); font-size:0.95em;">All fields are required. Please provide complete details about your project.</p>
     <form action="https://formspree.io/f/YOUR_FORM_ID" method="POST" enctype="multipart/form-data">
-      <label for="name">Your Name</label>
-      <input type="text" id="name" name="name" required>
-
-      <label for="email">Your Email</label>
-      <input type="email" id="email" name="_replyto" required>
-
-      <label for="title">Project Title</label>
-      <input type="text" id="title" name="title" required>
-
-      <label for="type">Project Type</label>
-      <select id="type" name="type" required>
-        <option value="">-- Select Type --</option>
-        <option value="Research">Research</option>
-        <option value="Software">Software</option>
-        <option value="Data Analysis">Data Analysis</option>
-        <option value="AI Model">AI Model</option>
-        <option value="Other">Other</option>
-      </select>
-
-      <label for="description">Project Description</label>
-      <textarea id="description" name="description" required></textarea>
-
-      <label for="file">Upload File</label>
-      <input type="file" id="file" name="file" required>
-
+      <label for="name">Your Name
+        <input type="text" id="name" name="name" placeholder="e.g. Sara Mohammed" required>
+      </label>
+      <label for="email">Your Email
+        <input type="email" id="email" name="_replyto" placeholder="e.g. sara@example.com" required>
+      </label>
+      <label for="title">Project Title
+        <input type="text" id="title" name="title" placeholder="e.g. AI-Based Traffic Prediction" required>
+      </label>
+      <label for="type">Project Type
+        <select id="type" name="type" required>
+          <option value="">— Select a type —</option>
+          <option value="Research">Research</option>
+          <option value="Software">Software</option>
+          <option value="Data Analysis">Data Analysis</option>
+          <option value="AI Model">AI Model</option>
+          <option value="Other">Other</option>
+        </select>
+      </label>
+      <label for="description">Project Description
+        <textarea id="description" name="description" placeholder="Describe your project goals, methods, and outcomes..." required></textarea>
+      </label>
+      <label for="file">Upload File
+        <input type="file" id="file" name="file">
+      </label>
       <button type="submit">Submit Project</button>
     </form>
   </section>
 
-  <!-- Footer -->
   <footer>
-    <p>&copy; 2026 Big Data Artificial Intelligence Club</p>
-    <p>Scientific Student Community</p>
-    <p>Big Data Department - College of Artificial Intelligence</p>
-    <p>University of Baghdad</p>
+    <p>&copy; 2026 <strong>Big Data Artificial Intelligence Club</strong> | Students Scientific Community</p>
+    <p>Big Data Department | College of AI | University of Baghdad</p>
   </footer>
+
+  <script>
+    var toggle = document.querySelector('.nav-toggle');
+    var navLinks = document.querySelector('.nav-links');
+    if (toggle && navLinks) {
+      toggle.addEventListener('click', function() { navLinks.classList.toggle('open'); });
+      document.querySelectorAll('.dropdown').forEach(function(dd) {
+        dd.querySelector('.dropbtn').addEventListener('click', function(e) {
+          if (window.innerWidth <= 768) { e.preventDefault(); dd.classList.toggle('open'); }
+        });
+      });
+      document.querySelectorAll('.nav-links a').forEach(function(a) {
+        a.addEventListener('click', function() { navLinks.classList.remove('open'); });
+      });
+    }
+  </script>
 </body>
 </html>
