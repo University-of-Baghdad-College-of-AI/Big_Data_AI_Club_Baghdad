@@ -9,6 +9,219 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+  <style>
+    /* ── HERO BANNER ── */
+    .hero {
+      position: relative;
+      width: 100%;
+      height: 380px;
+      overflow: hidden;
+      background: var(--navy);
+    }
+
+    /* Replace hero-bg.jpg with your actual image file */
+    .hero-img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      object-position: center;
+      display: block;
+      opacity: 0.72;
+      transition: opacity 0.3s;
+    }
+
+    /* Shown when image is missing / still a placeholder */
+    .hero-placeholder {
+      width: 100%;
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      background: linear-gradient(135deg, #0F1F3D 0%, #1e3a6e 60%, #4361EE 100%);
+      gap: 14px;
+      color: rgba(255,255,255,0.45);
+      font-size: 0.92em;
+      font-family: 'Inter', sans-serif;
+    }
+    .hero-placeholder svg { opacity: 0.4; }
+    .hero-placeholder p { margin: 0; letter-spacing: 0.04em; }
+
+    .hero-overlay {
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(to top, rgba(15,31,61,0.72) 0%, rgba(15,31,61,0.15) 60%, transparent 100%);
+      pointer-events: none;
+    }
+
+    .hero-caption {
+      position: absolute;
+      bottom: 28px;
+      left: 36px;
+      right: 36px;
+      color: var(--white);
+      pointer-events: none;
+    }
+    .hero-caption h2 {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      font-size: 1.8em;
+      font-weight: 800;
+      margin: 0 0 6px;
+      text-shadow: 0 2px 8px rgba(0,0,0,0.4);
+      line-height: 1.2;
+    }
+    .hero-caption p {
+      font-size: 0.97em;
+      color: rgba(255,255,255,0.82);
+      margin: 0;
+      text-shadow: 0 1px 4px rgba(0,0,0,0.4);
+      white-space: normal;
+    }
+
+    /* ── PHOTO GALLERY ── */
+    .gallery-section {
+      max-width: 1040px;
+      margin: 0 auto 0;
+      padding: 0 0 0;
+    }
+
+    .gallery-header {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 28px 0 16px;
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      font-size: 1.1em;
+      font-weight: 700;
+      color: var(--navy);
+    }
+    .gallery-header::before {
+      content: '';
+      display: inline-block;
+      width: 7px; height: 7px;
+      background: var(--indigo);
+      border-radius: 50%;
+      flex-shrink: 0;
+    }
+
+    .gallery-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 10px;
+    }
+
+    .gallery-item {
+      position: relative;
+      aspect-ratio: 1 / 1;
+      border-radius: 8px;
+      overflow: hidden;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      cursor: pointer;
+    }
+
+    .gallery-item img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+      transition: transform 0.3s ease, opacity 0.3s;
+    }
+    .gallery-item:hover img { transform: scale(1.06); opacity: 0.88; }
+
+    /* Placeholder tile */
+    .gallery-placeholder {
+      width: 100%;
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      color: rgba(67,97,238,0.35);
+      font-size: 0.75em;
+      font-family: 'Inter', sans-serif;
+      background: linear-gradient(135deg, #f0f4ff, #fafbff);
+      border: 2px dashed #c5d0f5;
+      border-radius: 8px;
+      text-align: center;
+      padding: 8px;
+      transition: border-color 0.2s, background 0.2s;
+    }
+    .gallery-placeholder:hover { border-color: var(--indigo); background: var(--indigo-pale); }
+    .gallery-placeholder svg { opacity: 0.5; }
+
+    /* Caption overlay on hover */
+    .gallery-item .gallery-caption {
+      position: absolute;
+      bottom: 0; left: 0; right: 0;
+      background: linear-gradient(to top, rgba(15,31,61,0.82), transparent);
+      color: var(--white);
+      font-size: 0.78em;
+      font-weight: 600;
+      padding: 20px 10px 10px;
+      transform: translateY(100%);
+      transition: transform 0.25s ease;
+      font-family: 'Plus Jakarta Sans', sans-serif;
+    }
+    .gallery-item:hover .gallery-caption { transform: translateY(0); }
+
+    /* Lightbox */
+    .lightbox {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(10,16,32,0.92);
+      z-index: 999;
+      align-items: center;
+      justify-content: center;
+      padding: 24px;
+    }
+    .lightbox.open { display: flex; }
+    .lightbox img {
+      max-width: 90vw;
+      max-height: 85vh;
+      border-radius: 10px;
+      object-fit: contain;
+      box-shadow: 0 20px 60px rgba(0,0,0,0.5);
+    }
+    .lightbox-close {
+      position: absolute;
+      top: 20px; right: 24px;
+      background: none;
+      border: none;
+      color: white;
+      font-size: 2em;
+      cursor: pointer;
+      line-height: 1;
+      opacity: 0.8;
+      transition: opacity 0.2s;
+    }
+    .lightbox-close:hover { opacity: 1; }
+    .lightbox-caption {
+      position: absolute;
+      bottom: 28px;
+      left: 0; right: 0;
+      text-align: center;
+      color: rgba(255,255,255,0.75);
+      font-size: 0.9em;
+    }
+
+    /* ── Responsive gallery ── */
+    @media (max-width: 768px) {
+      .hero { height: 260px; }
+      .hero-caption h2 { font-size: 1.35em; }
+      .hero-caption { left: 20px; right: 20px; bottom: 18px; }
+      .gallery-grid { grid-template-columns: repeat(3, 1fr); gap: 8px; }
+      .gallery-section { padding: 0 12px; }
+      .gallery-header { padding: 20px 0 12px; font-size: 1em; }
+    }
+    @media (max-width: 480px) {
+      .hero { height: 200px; }
+      .hero-caption h2 { font-size: 1.1em; }
+      .gallery-grid { grid-template-columns: repeat(2, 1fr); gap: 7px; }
+    }
+  </style>
 </head>
 <body>
 
@@ -30,11 +243,11 @@
       <span class="news-label">News</span>
       <div class="news-slider-vertical">
         <div class="slide-track">
-          <div class="slide"><p><strong>June 18, 2026:</strong> Our team won 1nd place in the National AI Symposium.</p></div>
+          <div class="slide"><p><strong>June 18, 2026:</strong> Our team won 2nd place in the National AI Hackathon.</p></div>
           <div class="slide"><p><strong>June 10, 2026:</strong> New research paper published on Big Data clustering techniques.</p></div>
-          <div class="slide"><p><strong>May 30, 2026:</strong> Collaboration announced with the Computer Engineering Department for joint projects.</p></div>
-          <div class="slide"><p><strong>May 20, 2026:</strong> A lecture on AI models by Dr. Jalal.</p></div>
-          <div class="slide"><p><strong>May 10, 2026:</strong> Field visit to Baghdad Tech Hub. by Dr. Suhad Faisal.</p></div>
+          <div class="slide"><p><strong>May 30, 2026:</strong> Collaboration announced with the Computer Science Department for joint projects.</p></div>
+          <div class="slide"><p><strong>May 20, 2026:</strong> Guest lecture on AI ethics by Dr. Rana.</p></div>
+          <div class="slide"><p><strong>May 10, 2026:</strong> Field visit to Baghdad Tech Hub.</p></div>
         </div>
       </div>
     </div>
@@ -70,6 +283,130 @@
     </div>
   </nav>
 
+  <!-- ── HERO BANNER ── -->
+  <!-- To use: replace "hero-bg.jpg" with your actual image filename -->
+  <div class="hero">
+    <div class="hero-placeholder" id="heroPlaceholder">
+      <svg width="52" height="52" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2" xmlns="http://www.w3.org/2000/svg">
+        <rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/>
+      </svg>
+      <p>Upload a banner image and set<br><code style="font-size:0.9em;opacity:0.7">src="hero-bg.jpg"</code> on the img tag below</p>
+    </div>
+    <!-- Uncomment and set your image filename when ready: -->
+    <!-- <img src="hero-bg.jpg" alt="Club banner" class="hero-img" id="heroImg" onload="document.getElementById('heroPlaceholder').style.display='none';this.style.display='block';" style="display:none;position:absolute;inset:0;"> -->
+    <div class="hero-overlay"></div>
+    <div class="hero-caption">
+      <h2>Big Data Artificial Intelligence Club</h2>
+      <p>Innovating, Collaborating, and Growing Together</p>
+    </div>
+  </div>
+
+  <!-- ── PHOTO GALLERY ── -->
+  <!-- To add photos: replace gallery-1.jpg ... gallery-8.jpg with your image filenames -->
+  <!-- Each <img> has an onload that hides the placeholder when the image loads -->
+  <div class="gallery-section">
+    <div class="gallery-header">&#128247; Club Gallery</div>
+    <div class="gallery-grid">
+
+      <!-- Photo slot 1 — replace src with your filename, update data-caption -->
+      <div class="gallery-item" onclick="openLightbox('gallery-1.jpg','AI Hackathon 2026')">
+        <div class="gallery-placeholder" id="ph1">
+          <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
+          Photo 1
+        </div>
+        <img src="gallery-1.jpg" alt="AI Hackathon 2026" style="display:none;position:absolute;inset:0;width:100%;height:100%;object-fit:cover;"
+             onload="document.getElementById('ph1').style.display='none';this.style.display='block';">
+        <div class="gallery-caption">AI Hackathon 2026</div>
+      </div>
+
+      <!-- Photo slot 2 -->
+      <div class="gallery-item" onclick="openLightbox('gallery-2.jpg','Workshop Session')">
+        <div class="gallery-placeholder" id="ph2">
+          <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
+          Photo 2
+        </div>
+        <img src="gallery-2.jpg" alt="Workshop Session" style="display:none;position:absolute;inset:0;width:100%;height:100%;object-fit:cover;"
+             onload="document.getElementById('ph2').style.display='none';this.style.display='block';">
+        <div class="gallery-caption">Workshop Session</div>
+      </div>
+
+      <!-- Photo slot 3 -->
+      <div class="gallery-item" onclick="openLightbox('gallery-3.jpg','Field Visit — Baghdad Tech Hub')">
+        <div class="gallery-placeholder" id="ph3">
+          <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
+          Photo 3
+        </div>
+        <img src="gallery-3.jpg" alt="Field Visit" style="display:none;position:absolute;inset:0;width:100%;height:100%;object-fit:cover;"
+             onload="document.getElementById('ph3').style.display='none';this.style.display='block';">
+        <div class="gallery-caption">Field Visit — Baghdad Tech Hub</div>
+      </div>
+
+      <!-- Photo slot 4 -->
+      <div class="gallery-item" onclick="openLightbox('gallery-4.jpg','Guest Lecture by Dr. Rana')">
+        <div class="gallery-placeholder" id="ph4">
+          <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
+          Photo 4
+        </div>
+        <img src="gallery-4.jpg" alt="Guest Lecture" style="display:none;position:absolute;inset:0;width:100%;height:100%;object-fit:cover;"
+             onload="document.getElementById('ph4').style.display='none';this.style.display='block';">
+        <div class="gallery-caption">Guest Lecture by Dr. Rana</div>
+      </div>
+
+      <!-- Photo slot 5 -->
+      <div class="gallery-item" onclick="openLightbox('gallery-5.jpg','New Members Orientation')">
+        <div class="gallery-placeholder" id="ph5">
+          <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
+          Photo 5
+        </div>
+        <img src="gallery-5.jpg" alt="New Members Orientation" style="display:none;position:absolute;inset:0;width:100%;height:100%;object-fit:cover;"
+             onload="document.getElementById('ph5').style.display='none';this.style.display='block';">
+        <div class="gallery-caption">New Members Orientation</div>
+      </div>
+
+      <!-- Photo slot 6 -->
+      <div class="gallery-item" onclick="openLightbox('gallery-6.jpg','Research Presentation')">
+        <div class="gallery-placeholder" id="ph6">
+          <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
+          Photo 6
+        </div>
+        <img src="gallery-6.jpg" alt="Research Presentation" style="display:none;position:absolute;inset:0;width:100%;height:100%;object-fit:cover;"
+             onload="document.getElementById('ph6').style.display='none';this.style.display='block';">
+        <div class="gallery-caption">Research Presentation</div>
+      </div>
+
+      <!-- Photo slot 7 -->
+      <div class="gallery-item" onclick="openLightbox('gallery-7.jpg','Seminar Day')">
+        <div class="gallery-placeholder" id="ph7">
+          <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
+          Photo 7
+        </div>
+        <img src="gallery-7.jpg" alt="Seminar Day" style="display:none;position:absolute;inset:0;width:100%;height:100%;object-fit:cover;"
+             onload="document.getElementById('ph7').style.display='none';this.style.display='block';">
+        <div class="gallery-caption">Seminar Day</div>
+      </div>
+
+      <!-- Photo slot 8 -->
+      <div class="gallery-item" onclick="openLightbox('gallery-8.jpg','Club Team 2026')">
+        <div class="gallery-placeholder" id="ph8">
+          <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
+          Photo 8
+        </div>
+        <img src="gallery-8.jpg" alt="Club Team 2026" style="display:none;position:absolute;inset:0;width:100%;height:100%;object-fit:cover;"
+             onload="document.getElementById('ph8').style.display='none';this.style.display='block';">
+        <div class="gallery-caption">Club Team 2026</div>
+      </div>
+
+    </div><!-- /gallery-grid -->
+  </div><!-- /gallery-section -->
+
+  <!-- Lightbox -->
+  <div class="lightbox" id="lightbox" onclick="closeLightbox(event)">
+    <button class="lightbox-close" onclick="document.getElementById('lightbox').classList.remove('open')">&times;</button>
+    <img id="lightboxImg" src="" alt="">
+    <div class="lightbox-caption" id="lightboxCaption"></div>
+  </div>
+
+  <!-- Main sections -->
   <section id="welcome">
     <h2>Welcome to the Big Data AI Club</h2>
     <p>We are a student-led community dedicated to exploring the fields of Big Data and Artificial Intelligence through workshops, projects, and research collaborations.</p>
@@ -96,6 +433,7 @@
   </footer>
 
   <script>
+    // News ticker
     var track = document.querySelector('.news-slider-vertical .slide-track');
     var slides = document.querySelectorAll('.news-slider-vertical .slide');
     var idx = 0;
@@ -103,6 +441,24 @@
     function nextSlide() { idx = (idx + 1) >= slides.length ? 0 : idx + 1; updateSlider(); }
     updateSlider();
     setInterval(nextSlide, 2500);
+
+    // Lightbox
+    function openLightbox(src, caption) {
+      var lb = document.getElementById('lightbox');
+      document.getElementById('lightboxImg').src = src;
+      document.getElementById('lightboxCaption').textContent = caption;
+      lb.classList.add('open');
+    }
+    function closeLightbox(e) {
+      if (e.target === document.getElementById('lightbox')) {
+        document.getElementById('lightbox').classList.remove('open');
+      }
+    }
+    document.addEventListener('keydown', function(e) {
+      if (e.key === 'Escape') document.getElementById('lightbox').classList.remove('open');
+    });
+
+    // Mobile nav
     var toggle = document.querySelector('.nav-toggle');
     var navLinks = document.querySelector('.nav-links');
     if (toggle && navLinks) {
@@ -117,5 +473,6 @@
       });
     }
   </script>
+
 </body>
 </html>
