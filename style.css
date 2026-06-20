@@ -209,11 +209,17 @@ nav .dropbtn:hover { color: var(--white); background: rgba(255,255,255,0.08); bo
 .dropdown-content {
   display: none;
   position: absolute;
-  top: calc(100% + 4px);
+  top: 100%;
   left: 0;
-  background: var(--white);
+  /* invisible padding bridges the gap so hover doesn't break */
+  padding-top: 6px;
+  background: transparent;
   min-width: 195px;
   z-index: 200;
+}
+/* The visible card is on the inner wrapper */
+.dropdown-content-inner {
+  background: var(--white);
   border-radius: 10px;
   overflow: hidden;
   box-shadow: 0 12px 32px rgba(15,31,61,0.18);
@@ -463,10 +469,17 @@ footer strong, footer b { color: rgba(255,255,255,0.92); font-weight: 600; }
   .dropdown-content {
     position: static;
     display: none;
+    padding-top: 0;
     box-shadow: none;
     border-radius: 0;
     border: none;
+    background: transparent;
+  }
+  .dropdown-content-inner {
     background: rgba(0,0,0,0.18);
+    border-radius: 0;
+    box-shadow: none;
+    border: none;
   }
   .dropdown.open .dropdown-content { display: block; }
   .dropdown-content a {
@@ -475,7 +488,7 @@ footer strong, footer b { color: rgba(255,255,255,0.92); font-weight: 600; }
     border-left: none;
     padding-left: 36px;
   }
-  .dropdown-content a:hover { background: rgba(255,255,255,0.08); color: var(--white); }
+  .dropdown-content a:hover { background: rgba(255,255,255,0.08); color: var(--white); border-left-color: transparent; }
 
   /* News bar */
   .news-bar-inner { flex-direction: column; align-items: flex-start; gap: 6px; padding: 10px 16px; }
