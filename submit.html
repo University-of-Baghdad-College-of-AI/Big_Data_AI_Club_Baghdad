@@ -33,17 +33,17 @@
       <a href="index.html">Home</a>
       <a href="mission.html">Mission</a>
       <div class="dropdown">
-        <button class="dropbtn">Activities ▾</button>
+        <button class="dropbtn">Activities &#9662;</button>
         <div class="dropdown-content">
           <div class="dropdown-content-inner">
-          <a href="workshops.html">Workshops</a>
-          <a href="researches.html">Researches</a>
-          <a href="projects.html">Projects</a>
-          <a href="lectures.html">Lectures</a>
-          <a href="presentations.html">Presentations</a>
-          <a href="seminars.html">Seminars</a>
-          <a href="conferences.html">Conferences</a>
-          <a href="field-visits.html">Field Visits</a>
+            <a href="workshops.html">Workshops</a>
+            <a href="researches.html">Researches</a>
+            <a href="projects.html">Projects</a>
+            <a href="lectures.html">Lectures</a>
+            <a href="presentations.html">Presentations</a>
+            <a href="seminars.html">Seminars</a>
+            <a href="conferences.html">Conferences</a>
+            <a href="field-visits.html">Field Visits</a>
           </div>
         </div>
       </div>
@@ -55,22 +55,22 @@
     </div>
   </nav>
 
-  <section id="submit">
-    <h2>📤 Submit Your Project</h2>
-    <p style="margin-bottom:20px; color:var(--text-muted); font-size:0.95em;">All fields are required. Please provide complete details about your project.</p>
-    <form action="https://formspree.io/f/YOUR_FORM_ID" method="POST" enctype="multipart/form-data">
+  <section>
+    <h2>&#128228; Submit Your Project</h2>
+    <p style="margin-bottom:20px;color:var(--text-muted);font-size:0.95em;">All fields are required. Please provide complete details about your project.</p>
+    <form action="https://formspree.io/f/xldejpqw" method="POST" enctype="multipart/form-data">
       <label for="name">Your Name
         <input type="text" id="name" name="name" placeholder="e.g. Sara Mohammed" required>
       </label>
       <label for="email">Your Email
-        <input type="email" id="email" name="_replyto" placeholder="e.g. sara@example.com" required>
+        <input type="email" id="email" name="email" placeholder="e.g. sara@example.com" required>
       </label>
       <label for="title">Project Title
         <input type="text" id="title" name="title" placeholder="e.g. AI-Based Traffic Prediction" required>
       </label>
       <label for="type">Project Type
         <select id="type" name="type" required>
-          <option value="">— Select a type —</option>
+          <option value="">&#8212; Select a type &#8212;</option>
           <option value="Research">Research</option>
           <option value="Software">Software</option>
           <option value="Data Analysis">Data Analysis</option>
@@ -81,9 +81,11 @@
       <label for="description">Project Description
         <textarea id="description" name="description" placeholder="Describe your project goals, methods, and outcomes..." required></textarea>
       </label>
-      <label for="file">Upload File
+      <label for="file">Upload File (optional)
         <input type="file" id="file" name="file">
       </label>
+      <input type="hidden" name="_replyto" value="jalal.hameed@uobaghdad.edu.iq">
+      <input type="hidden" name="_subject" value="New Project Submission - Big Data AI Club">
       <button type="submit">Submit Project</button>
     </form>
   </section>
@@ -100,12 +102,7 @@
       toggle.addEventListener('click', function() { navLinks.classList.toggle('open'); });
       document.querySelectorAll('.dropdown').forEach(function(dd) {
         dd.querySelector('.dropbtn').addEventListener('click', function(e) {
-          // Only intercept on mobile; desktop uses CSS :hover
-          if (window.innerWidth <= 768) {
-            e.preventDefault();
-            e.stopPropagation();
-            dd.classList.toggle('open');
-          }
+          if (window.innerWidth <= 768) { e.preventDefault(); e.stopPropagation(); dd.classList.toggle('open'); }
         });
       });
       document.querySelectorAll('.nav-links a').forEach(function(a) {

@@ -33,17 +33,17 @@
       <a href="index.html">Home</a>
       <a href="mission.html">Mission</a>
       <div class="dropdown">
-        <button class="dropbtn">Activities ▾</button>
+        <button class="dropbtn">Activities &#9662;</button>
         <div class="dropdown-content">
           <div class="dropdown-content-inner">
-          <a href="workshops.html">Workshops</a>
-          <a href="researches.html">Researches</a>
-          <a href="projects.html">Projects</a>
-          <a href="lectures.html">Lectures</a>
-          <a href="presentations.html">Presentations</a>
-          <a href="seminars.html">Seminars</a>
-          <a href="conferences.html">Conferences</a>
-          <a href="field-visits.html">Field Visits</a>
+            <a href="workshops.html">Workshops</a>
+            <a href="researches.html">Researches</a>
+            <a href="projects.html">Projects</a>
+            <a href="lectures.html">Lectures</a>
+            <a href="presentations.html">Presentations</a>
+            <a href="seminars.html">Seminars</a>
+            <a href="conferences.html">Conferences</a>
+            <a href="field-visits.html">Field Visits</a>
           </div>
         </div>
       </div>
@@ -55,8 +55,8 @@
     </div>
   </nav>
 
-  <section id="news">
-    <h2>📰 Club News</h2>
+  <section>
+    <h2>&#128240; Club News</h2>
     <ul>
       <li><strong>June 18, 2026:</strong> Our team won 2nd place in the National AI Hackathon.</li>
       <li><strong>June 10, 2026:</strong> New research paper published on Big Data clustering techniques.</li>
@@ -78,12 +78,7 @@
       toggle.addEventListener('click', function() { navLinks.classList.toggle('open'); });
       document.querySelectorAll('.dropdown').forEach(function(dd) {
         dd.querySelector('.dropbtn').addEventListener('click', function(e) {
-          // Only intercept on mobile; desktop uses CSS :hover
-          if (window.innerWidth <= 768) {
-            e.preventDefault();
-            e.stopPropagation();
-            dd.classList.toggle('open');
-          }
+          if (window.innerWidth <= 768) { e.preventDefault(); e.stopPropagation(); dd.classList.toggle('open'); }
         });
       });
       document.querySelectorAll('.nav-links a').forEach(function(a) {

@@ -36,7 +36,7 @@ html {
 /* ── HEADER ── */
 header {
   text-align: center;
-  padding: 40px 24px 30px;
+  padding: 32px 24px 24px;
   background: var(--white);
   border-bottom: 1px solid var(--border);
   box-shadow: var(--shadow-sm);
@@ -47,34 +47,37 @@ header {
   justify-content: center;
   align-items: center;
   gap: 28px;
-  margin-bottom: 16px;
+  margin-bottom: 14px;
   flex-wrap: wrap;
 }
 
-/* Logos have mixed backgrounds — show them naturally */
 .club-logo {
-  height: 70px;
+  height: 68px;
   max-width: 180px;
   object-fit: contain;
   transition: transform 0.25s ease, opacity 0.2s ease;
 }
-.club-logo:hover { transform: scale(1.05); opacity: 0.9; }
+.club-logo:hover { transform: scale(1.05); opacity: 0.88; }
 
 header h1 {
   font-family: 'Plus Jakarta Sans', sans-serif;
-  font-size: 2.1em;
+  font-size: 2em;
   font-weight: 800;
   color: var(--navy);
-  margin: 8px 0 6px;
+  margin: 0 0 6px;
   letter-spacing: -0.4px;
   line-height: 1.2;
 }
 header h1 a { color: inherit; text-decoration: none; }
 
+/* Subtitle — always one line, ellipsis if needed */
 header p {
-  font-size: 1em;
+  font-size: 0.97em;
   color: var(--text-muted);
-  max-width: 500px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 100%;
   margin: 0 auto;
 }
 
@@ -111,6 +114,7 @@ header p {
   height: 32px;
   overflow: hidden;
   flex: 1;
+  min-width: 0;
 }
 .news-slider-vertical .slide-track {
   display: flex;
@@ -121,6 +125,7 @@ header p {
   height: 32px;
   display: flex;
   align-items: center;
+  min-width: 0;
 }
 .news-slider-vertical .slide p {
   margin: 0;
@@ -151,7 +156,7 @@ nav {
   background: none;
   border: none;
   cursor: pointer;
-  padding: 14px 4px;
+  padding: 16px 4px;
   flex-direction: column;
   gap: 5px;
   margin-left: auto;
@@ -175,8 +180,8 @@ nav {
 nav a, nav .dropbtn {
   color: rgba(255,255,255,0.85);
   text-decoration: none;
-  padding: 15px 16px;
-  font-size: 0.9em;
+  padding: 15px 14px;
+  font-size: 0.88em;
   font-weight: 600;
   letter-spacing: 0.02em;
   transition: color 0.18s, background 0.18s;
@@ -192,7 +197,7 @@ nav a, nav .dropbtn {
 nav a::after {
   content: '';
   position: absolute;
-  bottom: 8px; left: 16px; right: 16px;
+  bottom: 8px; left: 14px; right: 14px;
   height: 2px;
   background: var(--gold);
   border-radius: 2px;
@@ -203,21 +208,20 @@ nav a:hover { color: var(--white); background: rgba(255,255,255,0.08); border-ra
 nav a:hover::after { transform: scaleX(1); }
 nav .dropbtn:hover { color: var(--white); background: rgba(255,255,255,0.08); border-radius: 6px; }
 
-/* Dropdown */
+/* ── DROPDOWN ── */
 .dropdown { position: relative; }
 
+/* invisible padding bridge — mouse never leaves the element */
 .dropdown-content {
   display: none;
   position: absolute;
   top: 100%;
   left: 0;
-  /* invisible padding bridges the gap so hover doesn't break */
   padding-top: 6px;
-  background: transparent;
-  min-width: 195px;
+  min-width: 200px;
   z-index: 200;
 }
-/* The visible card is on the inner wrapper */
+
 .dropdown-content-inner {
   background: var(--white);
   border-radius: 10px;
@@ -225,6 +229,7 @@ nav .dropbtn:hover { color: var(--white); background: rgba(255,255,255,0.08); bo
   box-shadow: 0 12px 32px rgba(15,31,61,0.18);
   border: 1px solid var(--border);
 }
+
 .dropdown-content a {
   display: block;
   padding: 11px 18px;
@@ -287,37 +292,28 @@ section ul {
 }
 section ul li {
   font-size: 0.96em;
-  padding: 11px 16px;
+  padding: 12px 16px;
   background: var(--surface);
   border-radius: 8px;
   border-left: 3px solid var(--indigo-light);
   transition: background 0.18s;
+  line-height: 1.5;
 }
 section ul li:hover { background: var(--indigo-pale); }
 
-/* Named sections */
-#mission {
-  background: linear-gradient(135deg, #F0F4FF 0%, #FAFBFF 100%);
-}
+/* Named section variants */
+#mission { background: linear-gradient(135deg, #F0F4FF 0%, #FAFBFF 100%); }
 #announcements { border-left-color: var(--gold); }
 #announcements h2::before { background: var(--gold); }
-#announcements ul li { border-left-color: var(--indigo-light); }
 
-/* News page — full list instead of ticker */
-#news .news-slider-vertical {
-  height: auto;
-  overflow: visible;
+/* Empty state for activity pages */
+.empty-state {
+  text-align: center;
+  padding: 40px 20px;
+  color: var(--text-muted);
 }
-#news .slide-track { transition: none; }
-#news .slide {
-  height: auto;
-  padding: 11px 16px;
-  background: var(--surface);
-  border-radius: 8px;
-  border-left: 3px solid var(--indigo-light);
-  margin-bottom: 10px;
-}
-#news .slide p { white-space: normal; font-size: 0.96em; color: var(--text-main); }
+.empty-state svg { margin-bottom: 14px; opacity: 0.35; }
+.empty-state p { font-size: 0.97em; }
 
 /* ── FORMS ── */
 form {
@@ -335,7 +331,6 @@ form label {
   font-size: 0.88em;
   font-weight: 600;
   color: var(--navy);
-  letter-spacing: 0.01em;
 }
 
 form input[type="text"],
@@ -360,9 +355,7 @@ form input:focus, form textarea:focus, form select:focus {
   box-shadow: 0 0 0 3px rgba(67,97,238,0.12);
 }
 form input::placeholder, form textarea::placeholder { color: #B0BCD0; }
-
 form textarea { min-height: 130px; resize: vertical; line-height: 1.6; }
-
 form select {
   background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%235E6E8A' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");
   background-repeat: no-repeat;
@@ -370,7 +363,6 @@ form select {
   padding-right: 38px;
   cursor: pointer;
 }
-
 form input[type="file"] {
   padding: 10px 14px;
   background: var(--surface);
@@ -405,11 +397,7 @@ form input[type="submit"]:hover {
   transform: translateY(-1px);
   box-shadow: 0 6px 20px rgba(67,97,238,0.38);
 }
-form button[type="submit"]:active,
-form input[type="submit"]:active {
-  transform: translateY(0);
-  box-shadow: 0 2px 8px rgba(67,97,238,0.22);
-}
+form button[type="submit"]:active { transform: translateY(0); }
 
 /* ── FOOTER ── */
 footer {
@@ -421,23 +409,22 @@ footer {
   margin-top: 52px;
   line-height: 1.9;
 }
-footer strong, footer b { color: rgba(255,255,255,0.92); font-weight: 600; }
+footer strong { color: rgba(255,255,255,0.92); font-weight: 600; }
 
 /* ── RESPONSIVE: Tablet ── */
 @media (max-width: 900px) {
   section { margin: 24px 20px; padding: 28px 26px; }
-  header h1 { font-size: 1.8em; }
+  header h1 { font-size: 1.7em; }
 }
 
 /* ── RESPONSIVE: Mobile ── */
 @media (max-width: 768px) {
-  header { padding: 28px 20px 22px; }
-  header h1 { font-size: 1.5em; }
-  header p { font-size: 0.92em; }
-  .club-logo { height: 56px; max-width: 140px; }
-  .logo-container { gap: 20px; }
+  header { padding: 24px 20px 18px; }
+  header h1 { font-size: 1.35em; }
+  header p { font-size: 0.85em; }
+  .club-logo { height: 52px; max-width: 130px; }
+  .logo-container { gap: 16px; margin-bottom: 10px; }
 
-  /* Hamburger */
   .nav-toggle { display: flex; }
 
   nav {
@@ -446,7 +433,6 @@ footer strong, footer b { color: rgba(255,255,255,0.92); font-weight: 600; }
     padding: 0;
     justify-content: flex-start;
   }
-
   .nav-links {
     display: none;
     flex-direction: column;
@@ -462,6 +448,7 @@ footer strong, footer b { color: rgba(255,255,255,0.92); font-weight: 600; }
     padding: 13px 20px;
     border-bottom: 1px solid rgba(255,255,255,0.07);
     border-radius: 0;
+    font-size: 0.93em;
   }
   nav a::after { display: none; }
 
@@ -470,10 +457,6 @@ footer strong, footer b { color: rgba(255,255,255,0.92); font-weight: 600; }
     position: static;
     display: none;
     padding-top: 0;
-    box-shadow: none;
-    border-radius: 0;
-    border: none;
-    background: transparent;
   }
   .dropdown-content-inner {
     background: rgba(0,0,0,0.18);
@@ -487,15 +470,17 @@ footer strong, footer b { color: rgba(255,255,255,0.92); font-weight: 600; }
     background: transparent;
     border-left: none;
     padding-left: 36px;
+    font-size: 0.88em;
   }
   .dropdown-content a:hover { background: rgba(255,255,255,0.08); color: var(--white); border-left-color: transparent; }
 
-  /* News bar */
-  .news-bar-inner { flex-direction: column; align-items: flex-start; gap: 6px; padding: 10px 16px; }
-  .news-slider-vertical { width: 100%; }
+  .news-bar-inner { flex-direction: row; padding: 8px 14px; gap: 10px; }
+  .news-slider-vertical { height: 28px; }
+  .news-slider-vertical .slide { height: 28px; }
+  .news-slider-vertical .slide p { font-size: 0.85em; }
 
   section { margin: 16px 12px; padding: 22px 18px; }
-  section h2 { font-size: 1.25em; }
+  section h2 { font-size: 1.2em; }
 
   form button[type="submit"],
   form input[type="submit"] { width: 100%; text-align: center; align-self: stretch; }
@@ -503,11 +488,13 @@ footer strong, footer b { color: rgba(255,255,255,0.92); font-weight: 600; }
 
 /* ── RESPONSIVE: Small Mobile ── */
 @media (max-width: 480px) {
-  header h1 { font-size: 1.25em; }
-  .club-logo { height: 46px; max-width: 110px; }
-  section { margin: 12px 8px; padding: 18px 15px; }
-  section h2 { font-size: 1.1em; }
-  footer { font-size: 0.8em; }
+  header h1 { font-size: 1.15em; }
+  header p { font-size: 0.8em; }
+  .club-logo { height: 44px; max-width: 100px; }
+  .logo-container { gap: 12px; }
+  section { margin: 10px 8px; padding: 16px 14px; }
+  section h2 { font-size: 1.05em; }
+  footer { font-size: 0.78em; padding: 22px 16px; }
 }
 
 /* ── ACCESSIBILITY ── */
@@ -517,7 +504,6 @@ input:focus-visible, select:focus-visible, textarea:focus-visible {
   outline-offset: 3px;
   border-radius: 4px;
 }
-
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { transition: none !important; animation: none !important; }
 }

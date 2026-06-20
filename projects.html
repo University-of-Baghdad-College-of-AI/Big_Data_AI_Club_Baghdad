@@ -33,17 +33,17 @@
       <a href="index.html">Home</a>
       <a href="mission.html">Mission</a>
       <div class="dropdown">
-        <button class="dropbtn">Activities ▾</button>
+        <button class="dropbtn">Activities &#9662;</button>
         <div class="dropdown-content">
           <div class="dropdown-content-inner">
-          <a href="workshops.html">Workshops</a>
-          <a href="researches.html">Researches</a>
-          <a href="projects.html">Projects</a>
-          <a href="lectures.html">Lectures</a>
-          <a href="presentations.html">Presentations</a>
-          <a href="seminars.html">Seminars</a>
-          <a href="conferences.html">Conferences</a>
-          <a href="field-visits.html">Field Visits</a>
+            <a href="workshops.html">Workshops</a>
+            <a href="researches.html">Researches</a>
+            <a href="projects.html">Projects</a>
+            <a href="lectures.html">Lectures</a>
+            <a href="presentations.html">Presentations</a>
+            <a href="seminars.html">Seminars</a>
+            <a href="conferences.html">Conferences</a>
+            <a href="field-visits.html">Field Visits</a>
           </div>
         </div>
       </div>
@@ -56,12 +56,12 @@
   </nav>
 
   <section>
-    <h2>🛠️ Projects</h2>
+    <h2>&#128295; Projects</h2>
     <ul>
-      <li>Intro to AI &amp; Big Data</li>
-      <li>Machine Learning for Healthcare</li>
-      <li>Data Analysis Toolkit</li>
-      <li>AI Hackathon Baghdad</li>
+      <li><strong>Intro to AI &amp; Big Data</strong> — Foundational project for new members exploring core concepts.</li>
+      <li><strong>Machine Learning for Healthcare</strong> — Applying ML models to medical datasets.</li>
+      <li><strong>Data Analysis Toolkit</strong> — Building reusable Python tools for data analysis.</li>
+      <li><strong>AI Hackathon Baghdad</strong> — Competitive project showcased at the national AI hackathon.</li>
     </ul>
   </section>
 
@@ -77,12 +77,7 @@
       toggle.addEventListener('click', function() { navLinks.classList.toggle('open'); });
       document.querySelectorAll('.dropdown').forEach(function(dd) {
         dd.querySelector('.dropbtn').addEventListener('click', function(e) {
-          // Only intercept on mobile; desktop uses CSS :hover
-          if (window.innerWidth <= 768) {
-            e.preventDefault();
-            e.stopPropagation();
-            dd.classList.toggle('open');
-          }
+          if (window.innerWidth <= 768) { e.preventDefault(); e.stopPropagation(); dd.classList.toggle('open'); }
         });
       });
       document.querySelectorAll('.nav-links a').forEach(function(a) {
