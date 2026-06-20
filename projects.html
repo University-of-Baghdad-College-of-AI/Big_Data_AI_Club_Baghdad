@@ -9,6 +9,124 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+  <style>
+    /* ── Accordion ── */
+    .accordion { display: flex; flex-direction: column; gap: 12px; margin-top: 8px; }
+
+    .acc-item { border: 1px solid var(--border); border-radius: 10px; overflow: hidden; }
+
+    .acc-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 16px 20px;
+      background: var(--indigo-pale);
+      cursor: pointer;
+      user-select: none;
+      transition: background 0.18s;
+      border: none;
+      width: 100%;
+      text-align: left;
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      font-size: 1.05em;
+      font-weight: 700;
+      color: var(--navy);
+    }
+    .acc-header:hover { background: #dce4fd; }
+    .acc-header.open { background: var(--indigo); color: var(--white); }
+
+    .acc-year-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .acc-year-badge span {
+      font-size: 0.78em;
+      font-weight: 600;
+      background: rgba(67,97,238,0.15);
+      color: var(--indigo);
+      padding: 2px 10px;
+      border-radius: 20px;
+      white-space: nowrap;
+    }
+    .acc-header.open .acc-year-badge span {
+      background: rgba(255,255,255,0.2);
+      color: var(--white);
+    }
+
+    .acc-arrow {
+      flex-shrink: 0;
+      width: 20px;
+      height: 20px;
+      transition: transform 0.3s ease;
+    }
+    .acc-header.open .acc-arrow { transform: rotate(180deg); }
+
+    /* Scrollable panel — max 320px then scroll */
+    .acc-body {
+      max-height: 0;
+      overflow: hidden;
+      transition: max-height 0.35s ease;
+    }
+    .acc-body.open {
+      max-height: 340px;  /* scroll kicks in beyond this */
+      overflow-y: auto;
+    }
+
+    .acc-list {
+      list-style: none;
+      margin: 0;
+      padding: 10px 0;
+      border-top: 1px solid var(--border);
+    }
+    .acc-list li {
+      display: flex;
+      align-items: flex-start;
+      gap: 12px;
+      padding: 13px 20px;
+      border-left: none;
+      border-radius: 0;
+      background: transparent;
+      transition: background 0.15s;
+      border-bottom: 1px solid var(--border);
+    }
+    .acc-list li:last-child { border-bottom: none; }
+    .acc-list li:hover { background: var(--indigo-pale); }
+
+    .proj-num {
+      flex-shrink: 0;
+      width: 26px;
+      height: 26px;
+      border-radius: 50%;
+      background: var(--indigo);
+      color: var(--white);
+      font-size: 0.72em;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-top: 1px;
+    }
+
+    .proj-info { flex: 1; min-width: 0; }
+    .proj-title {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      font-weight: 600;
+      font-size: 0.95em;
+      color: var(--navy);
+      margin-bottom: 2px;
+    }
+    .proj-desc {
+      font-size: 0.84em;
+      color: var(--text-muted);
+      line-height: 1.5;
+    }
+
+    /* Scrollbar styling */
+    .acc-body::-webkit-scrollbar { width: 5px; }
+    .acc-body::-webkit-scrollbar-track { background: var(--surface); }
+    .acc-body::-webkit-scrollbar-thumb { background: var(--indigo-light); border-radius: 3px; }
+  </style>
 </head>
 <body>
 
@@ -57,12 +175,124 @@
 
   <section>
     <h2>&#128295; Projects</h2>
-    <ul>
-      <li><strong>Intro to AI &amp; Big Data</strong> — Foundational project for new members exploring core concepts.</li>
-      <li><strong>Machine Learning for Healthcare</strong> — Applying ML models to medical datasets.</li>
-      <li><strong>Data Analysis Toolkit</strong> — Building reusable Python tools for data analysis.</li>
-      <li><strong>AI Hackathon Baghdad</strong> — Competitive project showcased at the national AI hackathon.</li>
-    </ul>
+
+    <div class="accordion">
+
+      <!-- 2026 -->
+      <div class="acc-item">
+        <button class="acc-header open" data-target="y2026">
+          <span class="acc-year-badge">
+            2026
+            <span>3 projects</span>
+          </span>
+          <svg class="acc-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round">
+            <polyline points="6 9 12 15 18 9"/>
+          </svg>
+        </button>
+        <div class="acc-body open" id="y2026">
+          <ul class="acc-list">
+            <li>
+              <span class="proj-num">1</span>
+              <div class="proj-info">
+                <div class="proj-title">AI Hackathon Baghdad</div>
+                <div class="proj-desc">Competitive project showcased at the national AI hackathon — won 2nd place.</div>
+              </div>
+            </li>
+            <li>
+              <span class="proj-num">2</span>
+              <div class="proj-info">
+                <div class="proj-title">Big Data Clustering Research</div>
+                <div class="proj-desc">Research paper published on novel clustering techniques for large-scale datasets.</div>
+              </div>
+            </li>
+            <li>
+              <span class="proj-num">3</span>
+              <div class="proj-info">
+                <div class="proj-title">CS Department Collaboration</div>
+                <div class="proj-desc">Joint research initiative with the Computer Science Department.</div>
+              </div>
+            </li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- 2025 -->
+      <div class="acc-item">
+        <button class="acc-header" data-target="y2025">
+          <span class="acc-year-badge">
+            2025
+            <span>4 projects</span>
+          </span>
+          <svg class="acc-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round">
+            <polyline points="6 9 12 15 18 9"/>
+          </svg>
+        </button>
+        <div class="acc-body" id="y2025">
+          <ul class="acc-list">
+            <li>
+              <span class="proj-num">1</span>
+              <div class="proj-info">
+                <div class="proj-title">Machine Learning for Healthcare</div>
+                <div class="proj-desc">Applying ML models to medical datasets for early disease detection.</div>
+              </div>
+            </li>
+            <li>
+              <span class="proj-num">2</span>
+              <div class="proj-info">
+                <div class="proj-title">Data Analysis Toolkit</div>
+                <div class="proj-desc">Building reusable Python tools for data cleaning, visualization, and analysis.</div>
+              </div>
+            </li>
+            <li>
+              <span class="proj-num">3</span>
+              <div class="proj-info">
+                <div class="proj-title">NLP Text Classifier</div>
+                <div class="proj-desc">Arabic text classification system using transformer-based models.</div>
+              </div>
+            </li>
+            <li>
+              <span class="proj-num">4</span>
+              <div class="proj-info">
+                <div class="proj-title">Smart Campus IoT Dashboard</div>
+                <div class="proj-desc">Real-time dashboard aggregating IoT sensor data from across the campus.</div>
+              </div>
+            </li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- 2024 -->
+      <div class="acc-item">
+        <button class="acc-header" data-target="y2024">
+          <span class="acc-year-badge">
+            2024
+            <span>2 projects</span>
+          </span>
+          <svg class="acc-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round">
+            <polyline points="6 9 12 15 18 9"/>
+          </svg>
+        </button>
+        <div class="acc-body" id="y2024">
+          <ul class="acc-list">
+            <li>
+              <span class="proj-num">1</span>
+              <div class="proj-info">
+                <div class="proj-title">Intro to AI &amp; Big Data</div>
+                <div class="proj-desc">Foundational project for new members exploring core AI and Big Data concepts.</div>
+              </div>
+            </li>
+            <li>
+              <span class="proj-num">2</span>
+              <div class="proj-info">
+                <div class="proj-title">Predictive Analytics for Student Performance</div>
+                <div class="proj-desc">Using academic data to predict and improve student outcomes.</div>
+              </div>
+            </li>
+          </ul>
+        </div>
+      </div>
+
+    </div><!-- /accordion -->
   </section>
 
   <footer>
@@ -71,6 +301,30 @@
   </footer>
 
   <script>
+    // ── Accordion ──
+    document.querySelectorAll('.acc-header').forEach(function(btn) {
+      btn.addEventListener('click', function() {
+        var targetId = btn.getAttribute('data-target');
+        var body = document.getElementById(targetId);
+        var isOpen = btn.classList.contains('open');
+
+        // Close all
+        document.querySelectorAll('.acc-header').forEach(function(b) { b.classList.remove('open'); });
+        document.querySelectorAll('.acc-body').forEach(function(b) { b.classList.remove('open'); });
+
+        // Open clicked (toggle: if was open, leave closed)
+        if (!isOpen) {
+          btn.classList.add('open');
+          body.classList.add('open');
+          // Smooth scroll into view
+          setTimeout(function() {
+            btn.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+          }, 50);
+        }
+      });
+    });
+
+    // ── Mobile nav ──
     var toggle = document.querySelector('.nav-toggle');
     var navLinks = document.querySelector('.nav-links');
     if (toggle && navLinks) {
