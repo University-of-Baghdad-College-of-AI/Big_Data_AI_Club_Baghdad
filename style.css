@@ -115,7 +115,7 @@ form label {
   display: block;
   margin-bottom: 8px;
 }
-form input, form textarea {
+form input, form textarea, form select {
   width: 100%;
   padding: 12px;
   margin-bottom: 20px;
@@ -125,7 +125,7 @@ form input, form textarea {
   font-family: "Aptos", "Segoe UI", Arial, sans-serif;
   transition: border 0.3s ease;
 }
-form input:focus, form textarea:focus {
+form input:focus, form textarea:focus, form select:focus {
   border-color: #34495e;
   outline: none;
 }
@@ -149,9 +149,9 @@ form button:hover {
   transform: translateY(-2px);
 }
 
-/* Modern Dark Footer */
+/* Modern Gradient Footer */
 footer {
-  background: #121212; /* deep modern dark background */
+  background: linear-gradient(90deg, #34495e, #2c3e50); /* same as nav */
   text-align: center;  /* centered text */
   padding: 35px 20px;
   margin-top: 60px;
@@ -159,7 +159,6 @@ footer {
   border-top: 3px solid #1abc9c; /* accent line */
   font-family: "Aptos", "Segoe UI", Arial, sans-serif;
 }
-
 footer p {
   margin: 8px 0;
   font-weight: 600;
@@ -167,7 +166,10 @@ footer p {
   line-height: 1.5;
   color: #fff; /* same as nav links */
 }
-
+footer p:first-child {
+  font-weight: 700;
+  color: #ffffff; /* copyright stands out */
+}
 
 /* Responsive Design */
 @media (max-width: 768px) {
