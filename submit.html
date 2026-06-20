@@ -2,13 +2,88 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Submit Project - Big Data AI Club</title>
+  <title>Submit Activity - Big Data AI Club</title>
   <link rel="stylesheet" href="style.css">
   <link rel="icon" type="image/png" href="favicon.png">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+  <style>
+    /* Role selector */
+    .role-selector {
+      display: flex;
+      gap: 12px;
+      margin-bottom: 4px;
+    }
+    .role-btn {
+      flex: 1;
+      padding: 14px 20px;
+      border-radius: 10px;
+      border: 2px solid var(--border);
+      background: var(--white);
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      font-size: 0.95em;
+      font-weight: 700;
+      color: var(--text-muted);
+      cursor: pointer;
+      transition: all 0.2s;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+    }
+    .role-btn:hover { border-color: var(--indigo); color: var(--indigo); }
+    .role-btn.active-student { border-color: var(--indigo); background: var(--indigo-pale); color: var(--indigo); }
+    .role-btn.active-professor { border-color: var(--gold); background: #FFF8EC; color: #9a6f00; }
+
+    /* Sub-type panel */
+    .subtype-panel {
+      display: none;
+      flex-direction: column;
+      gap: 6px;
+    }
+    .subtype-panel.visible { display: flex; }
+
+    /* Success message */
+    .success-msg {
+      display: none;
+      background: #EDF7EE;
+      border: 1.5px solid #81C784;
+      border-radius: 10px;
+      padding: 20px 24px;
+      color: #2E7D32;
+      font-weight: 600;
+      font-size: 0.95em;
+      align-items: center;
+      gap: 12px;
+    }
+    .success-msg.show { display: flex; }
+
+    /* Info banner */
+    .info-banner {
+      background: var(--indigo-pale);
+      border: 1.5px solid var(--indigo-light);
+      border-radius: 10px;
+      padding: 14px 18px;
+      font-size: 0.88em;
+      color: var(--navy);
+      line-height: 1.6;
+      margin-bottom: 8px;
+    }
+    .info-banner strong { color: var(--indigo); }
+
+    /* Divider */
+    .form-divider {
+      height: 1px;
+      background: var(--border);
+      margin: 8px 0;
+    }
+
+    @media (max-width: 480px) {
+      .role-selector { flex-direction: column; }
+    }
+  </style>
 </head>
 <body>
 
@@ -65,37 +140,216 @@
   </nav>
 
   <section>
-    <h2>&#128228; Submit Your Project</h2>
-    <p style="margin-bottom:20px;color:var(--text-muted);font-size:0.95em;">All fields are required. Please provide complete details about your project.</p>
-    <form action="https://formspree.io/f/xldejpqw" method="POST" enctype="multipart/form-data">
+    <h2>&#128228; Activity Submission</h2>
+    <p style="margin-bottom:20px;color:var(--text-muted);font-size:0.95em;">Submit your activity work to the club repository. Files must be PDF or ZIP only. After submission, Dr. Jalal will review and upload your file to the appropriate repository.</p>
+
+    <!-- Success message -->
+    <div class="success-msg" id="successMsg">
+      <span style="font-size:1.5em;">&#10003;</span>
+      <div>
+        <div>Your submission was sent successfully!</div>
+        <div style="font-weight:400;font-size:0.9em;margin-top:4px;color:#388E3C;">Dr. Jalal will review it and add it to the repository. You will be notified at your email.</div>
+      </div>
+    </div>
+
+    <form id="submitForm" action="https://formspree.io/f/xldejpqw" method="POST" enctype="multipart/form-data">
+
+      <!-- Hidden fields -->
+      <input type="hidden" name="_subject" id="emailSubject" value="New Activity Submission - Big Data AI Club">
+      <input type="hidden" name="_replyto" id="replyTo" value="">
+
+      <!-- Role selector -->
+      <label style="margin-bottom:4px;">I am a
+        <div class="role-selector" style="margin-top:8px;">
+          <button type="button" class="role-btn" id="btnStudent" onclick="setRole('student')">
+            &#127891; Student
+          </button>
+          <button type="button" class="role-btn" id="btnProfessor" onclick="setRole('professor')">
+            &#128218; Professor
+          </button>
+        </div>
+      </label>
+      <input type="hidden" name="role" id="roleInput" value="">
+
+      <!-- Info banner (shown after role selected) -->
+      <div class="info-banner" id="infoBanner" style="display:none;"></div>
+
+      <div class="form-divider"></div>
+
+      <!-- Personal info -->
       <label for="name">Your Name
-        <input type="text" id="name" name="name" placeholder="e.g. Sara Mohammed" required>
+        <input type="text" id="name" name="name" placeholder="e.g. Ahmed Al-Rashidi" required>
       </label>
+
       <label for="email">Your Email
-        <input type="email" id="email" name="email" placeholder="e.g. sara@example.com" required>
+        <input type="email" id="email" name="email" placeholder="e.g. ahmed@uobaghdad.edu.iq" required
+               oninput="document.getElementById('replyTo').value=this.value">
       </label>
-      <label for="title">Project Title
-        <input type="text" id="title" name="title" placeholder="e.g. AI-Based Traffic Prediction" required>
-      </label>
-      <label for="type">Project Type
-        <select id="type" name="type" required>
-          <option value="">&#8212; Select a type &#8212;</option>
+
+      <div class="form-divider"></div>
+
+      <!-- Activity type -->
+      <label for="activityType">Activity Type
+        <select id="activityType" name="activity_type" required onchange="updateSubtype()">
+          <option value="">&#8212; Select activity type &#8212;</option>
+          <option value="Workshop">Workshop</option>
           <option value="Research">Research</option>
-          <option value="Software">Software</option>
-          <option value="Data Analysis">Data Analysis</option>
-          <option value="AI Model">AI Model</option>
+          <option value="Project">Project</option>
+          <option value="Lecture">Lecture</option>
+          <option value="Presentation">Presentation</option>
+          <option value="Seminar">Seminar</option>
+          <option value="Conference">Conference</option>
+          <option value="Field Visit">Field Visit</option>
           <option value="Other">Other</option>
         </select>
       </label>
-      <label for="description">Project Description
-        <textarea id="description" name="description" placeholder="Describe your project goals, methods, and outcomes..." required></textarea>
+
+      <!-- Sub-type: Project -->
+      <div class="subtype-panel" id="subProject">
+        <label for="subProject_type">Project Type
+          <select id="subProject_type" name="project_type">
+            <option value="">&#8212; Select project type &#8212;</option>
+            <option value="Research">Research</option>
+            <option value="Software">Software</option>
+            <option value="Data Analysis">Data Analysis</option>
+            <option value="AI Model">AI Model</option>
+            <option value="Other">Other</option>
+          </select>
+        </label>
+      </div>
+
+      <!-- Sub-type: Research -->
+      <div class="subtype-panel" id="subResearch">
+        <label for="subResearch_field">Research Field
+          <select id="subResearch_field" name="research_field">
+            <option value="">&#8212; Select research field &#8212;</option>
+            <option value="Artificial Intelligence">Artificial Intelligence</option>
+            <option value="Big Data">Big Data</option>
+            <option value="NLP">Natural Language Processing</option>
+            <option value="Computer Vision">Computer Vision</option>
+            <option value="Bioinformatics">Bioinformatics</option>
+            <option value="Machine Learning">Machine Learning</option>
+            <option value="Other">Other</option>
+          </select>
+        </label>
+      </div>
+
+      <!-- Sub-type: Workshop -->
+      <div class="subtype-panel" id="subWorkshop">
+        <label for="subWorkshop_level">Workshop Level
+          <select id="subWorkshop_level" name="workshop_level">
+            <option value="">&#8212; Select level &#8212;</option>
+            <option value="Beginner">Beginner</option>
+            <option value="Intermediate">Intermediate</option>
+            <option value="Advanced">Advanced</option>
+          </select>
+        </label>
+      </div>
+
+      <!-- Sub-type: Lecture -->
+      <div class="subtype-panel" id="subLecture">
+        <label for="subLecture_type">Lecture Type
+          <select id="subLecture_type" name="lecture_type">
+            <option value="">&#8212; Select type &#8212;</option>
+            <option value="Introductory">Introductory</option>
+            <option value="Advanced">Advanced</option>
+            <option value="Guest Lecture">Guest Lecture</option>
+            <option value="Tutorial">Tutorial</option>
+          </select>
+        </label>
+      </div>
+
+      <!-- Sub-type: Conference -->
+      <div class="subtype-panel" id="subConference">
+        <label for="subConference_type">Conference Type
+          <select id="subConference_type" name="conference_type">
+            <option value="">&#8212; Select type &#8212;</option>
+            <option value="International">International</option>
+            <option value="National">National</option>
+            <option value="Local">Local</option>
+            <option value="Organized by Club">Organized by Club</option>
+          </select>
+        </label>
+      </div>
+
+      <!-- Sub-type: Presentation -->
+      <div class="subtype-panel" id="subPresentation">
+        <label for="subPresentation_type">Presentation Type
+          <select id="subPresentation_type" name="presentation_type">
+            <option value="">&#8212; Select type &#8212;</option>
+            <option value="Project Demo">Project Demo</option>
+            <option value="Research Results">Research Results</option>
+            <option value="Keynote">Keynote</option>
+            <option value="Live Demo">Live Demo</option>
+          </select>
+        </label>
+      </div>
+
+      <!-- Sub-type: Seminar -->
+      <div class="subtype-panel" id="subSeminar">
+        <label for="subSeminar_type">Seminar Type
+          <select id="subSeminar_type" name="seminar_type">
+            <option value="">&#8212; Select type &#8212;</option>
+            <option value="Trend Discussion">Trend Discussion</option>
+            <option value="Research Seminar">Research Seminar</option>
+            <option value="Industry Talk">Industry Talk</option>
+            <option value="Open Discussion">Open Discussion</option>
+          </select>
+        </label>
+      </div>
+
+      <!-- Sub-type: Field Visit -->
+      <div class="subtype-panel" id="subFieldVisit">
+        <label for="subFieldVisit_type">Visit Type
+          <select id="subFieldVisit_type" name="visit_type">
+            <option value="">&#8212; Select type &#8212;</option>
+            <option value="Tech Company">Tech Company</option>
+            <option value="Research Lab">Research Lab</option>
+            <option value="University">University</option>
+            <option value="Government Institution">Government Institution</option>
+          </select>
+        </label>
+      </div>
+
+      <!-- Sub-type: Other -->
+      <div class="subtype-panel" id="subOther">
+        <label for="subOther_type">Please Specify
+          <input type="text" id="subOther_type" name="other_type" placeholder="Describe the activity type">
+        </label>
+      </div>
+
+      <div class="form-divider"></div>
+
+      <!-- Activity title -->
+      <label for="activityTitle">Activity Title
+        <input type="text" id="activityTitle" name="activity_title" placeholder="e.g. Machine Learning for Healthcare" required>
       </label>
-      <label for="file">Upload File (optional)
-        <input type="file" id="file" name="file">
+
+      <!-- Year -->
+      <label for="activityYear">Year
+        <select id="activityYear" name="year" required>
+          <option value="">&#8212; Select year &#8212;</option>
+          <option value="2026">2026</option>
+          <option value="2025">2025</option>
+          <option value="2024">2024</option>
+          <option value="2023">2023</option>
+        </select>
       </label>
-      <input type="hidden" name="_replyto" value="jalal.hameed@uobaghdad.edu.iq">
-      <input type="hidden" name="_subject" value="New Project Submission - Big Data AI Club">
-      <button type="submit">Submit Project</button>
+
+      <!-- Description -->
+      <label for="description">Description
+        <textarea id="description" name="description" placeholder="Briefly describe your activity, its goals, methods, and outcomes..." required></textarea>
+      </label>
+
+      <!-- File upload -->
+      <label for="file">Upload File
+        <span style="font-size:0.82em;font-weight:400;color:var(--text-muted);margin-left:6px;">(PDF or ZIP only, max 10MB)</span>
+        <input type="file" id="file" name="file" accept=".pdf,.zip" required>
+      </label>
+      <div id="fileError" style="display:none;color:#C62828;font-size:0.83em;margin-top:-8px;">&#9888; Only PDF or ZIP files are allowed.</div>
+
+      <button type="submit" id="submitBtn">Send Submission</button>
+
     </form>
   </section>
 
@@ -105,6 +359,95 @@
   </footer>
 
   <script>
+    // ── Role selection ──
+    var currentRole = '';
+
+    function setRole(role) {
+      currentRole = role;
+      document.getElementById('roleInput').value = role;
+
+      var btnS = document.getElementById('btnStudent');
+      var btnP = document.getElementById('btnProfessor');
+      var banner = document.getElementById('infoBanner');
+
+      btnS.className = 'role-btn' + (role === 'student' ? ' active-student' : '');
+      btnP.className = 'role-btn' + (role === 'professor' ? ' active-professor' : '');
+
+      if (role === 'student') {
+        banner.style.display = 'block';
+        banner.innerHTML = '&#127891; <strong>Student submission</strong> — your file will be added to <strong>Big_Data_AI_Club_Students/submissions/[year]/</strong> after review.';
+        document.getElementById('emailSubject').value = 'New Student Submission - Big Data AI Club';
+      } else {
+        banner.style.display = 'block';
+        banner.innerHTML = '&#128218; <strong>Professor submission</strong> — your file will be added to <strong>Big_Data_AI_Club_Professors/submissions/[year]/</strong> after review.';
+        document.getElementById('emailSubject').value = 'New Professor Submission - Big Data AI Club';
+      }
+    }
+
+    // ── Activity sub-type panels ──
+    var subtypeMap = {
+      'Project':     'subProject',
+      'Research':    'subResearch',
+      'Workshop':    'subWorkshop',
+      'Lecture':     'subLecture',
+      'Conference':  'subConference',
+      'Presentation':'subPresentation',
+      'Seminar':     'subSeminar',
+      'Field Visit': 'subFieldVisit',
+      'Other':       'subOther'
+    };
+
+    function updateSubtype() {
+      var val = document.getElementById('activityType').value;
+      Object.values(subtypeMap).forEach(function(id) {
+        var el = document.getElementById(id);
+        if (el) el.classList.remove('visible');
+      });
+      if (val && subtypeMap[val]) {
+        var panel = document.getElementById(subtypeMap[val]);
+        if (panel) panel.classList.add('visible');
+      }
+    }
+
+    // ── File validation ──
+    document.getElementById('file').addEventListener('change', function() {
+      var file = this.files[0];
+      var errEl = document.getElementById('fileError');
+      if (file) {
+        var name = file.name.toLowerCase();
+        if (!name.endsWith('.pdf') && !name.endsWith('.zip')) {
+          errEl.style.display = 'block';
+          this.value = '';
+        } else {
+          errEl.style.display = 'none';
+        }
+      }
+    });
+
+    // ── Form submission ──
+    document.getElementById('submitForm').addEventListener('submit', function(e) {
+      // Validate role selected
+      if (!currentRole) {
+        e.preventDefault();
+        alert('Please select whether you are a Student or Professor before submitting.');
+        return;
+      }
+      // Validate file type
+      var file = document.getElementById('file').files[0];
+      if (file) {
+        var name = file.name.toLowerCase();
+        if (!name.endsWith('.pdf') && !name.endsWith('.zip')) {
+          e.preventDefault();
+          document.getElementById('fileError').style.display = 'block';
+          return;
+        }
+      }
+      // Show success after short delay (Formspree redirects by default)
+      document.getElementById('submitBtn').textContent = 'Sending...';
+      document.getElementById('submitBtn').disabled = true;
+    });
+
+    // Mobile nav
     var toggle = document.querySelector('.nav-toggle');
     var navLinks = document.querySelector('.nav-links');
     if (toggle && navLinks) {
@@ -119,5 +462,6 @@
       });
     }
   </script>
+
 </body>
 </html>
