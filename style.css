@@ -41,11 +41,11 @@ header p {
   transform: scale(1.05);
 }
 
-/* Modern News Slider */
+/* Modern News Slider without controls */
 .news-slider {
   position: relative;
   max-width: 1000px;
-  margin: 20px auto;
+  margin: 30px auto;
   overflow: hidden;
   border-radius: 12px;
   box-shadow: 0 4px 12px rgba(0,0,0,0.08);
@@ -54,7 +54,8 @@ header p {
 
 .news-slider .slide-track {
   display: flex;
-  transition: transform 0.5s ease;
+  width: calc(33.33% * 10); /* enough width for looping */
+  animation: scrollNews 20s linear infinite;
 }
 
 .news-slider .slide {
@@ -63,43 +64,20 @@ header p {
   padding: 20px;
   border-right: 1px solid #eee;
 }
-
 .news-slider .slide:last-child {
   border-right: none;
 }
-
 .news-slider .slide p {
   font-size: 1.05em;
   line-height: 1.5;
 }
 
-/* Controls */
-.news-slider .prev,
-.news-slider .next {
-  position: absolute;
-  top: 50%;
-  transform: translateY(-50%);
-  background: #34495e;
-  color: #fff;
-  border: none;
-  padding: 10px 15px;
-  cursor: pointer;
-  border-radius: 50%;
-  font-size: 1.2em;
-  transition: background 0.3s ease;
+/* Keyframes for infinite scroll */
+@keyframes scrollNews {
+  0% { transform: translateX(0); }
+  100% { transform: translateX(-100%); }
 }
 
-.news-slider .prev:hover,
-.news-slider .next:hover {
-  background: #1abc9c;
-}
-
-.news-slider .prev {
-  left: 10px;
-}
-.news-slider .next {
-  right: 10px;
-}
 
 
 /* Navigation Bar */
