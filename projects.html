@@ -164,7 +164,7 @@
       </div>
     </div>
 
-    <div class="results-count" id="resultsCount"><strong>9</strong> projects found</div>
+    <div class="results-count" id="resultsCount"><strong>15</strong> results found</div>
 
     <div class="cards-grid" id="cardsGrid">
       <!-- ══ ADD MORE CARDS BELOW — set data-type and data-year on each card ══ -->
@@ -478,88 +478,64 @@
   </footer>
 
   <script>
-
-    // ── Filters + Pagination ──
     var activeType = 'all';
     var activeYear = 'all';
     var ITEMS_PER_PAGE = 9;
     var currentPage = 1;
 
-    function applyFilters() {
-      currentPage = 1;
-      renderPage();
-    }
+    function applyFilters() { currentPage = 1; renderPage(); }
 
     function renderPage() {
-      var allCards = Array.from(document.querySelectorAll('.card'));
-
-      // Step 1: determine which cards match filters
-      var matched = allCards.filter(function(card) {
-        var typeMatch = activeType === 'all' || card.dataset.type === activeType;
-        var yearMatch = activeYear === 'all' || card.dataset.year === activeYear;
-        return typeMatch && yearMatch;
+      var all = Array.from(document.querySelectorAll('.card'));
+      var matched = all.filter(function(c) {
+        return (activeType === 'all' || c.dataset.type === activeType) &&
+               (activeYear === 'all' || c.dataset.year === activeYear);
       });
-
       var total = matched.length;
       var totalPages = Math.max(1, Math.ceil(total / ITEMS_PER_PAGE));
       if (currentPage > totalPages) currentPage = totalPages;
-
       var start = (currentPage - 1) * ITEMS_PER_PAGE;
       var end   = start + ITEMS_PER_PAGE;
 
-      // Step 2: show/hide all cards
-      allCards.forEach(function(card) {
-        card.style.display = 'none';
-      });
-      matched.forEach(function(card, i) {
-        card.style.display = (i >= start && i < end) ? '' : 'none';
-      });
+      all.forEach(function(c) { c.style.display = 'none'; });
+      matched.forEach(function(c, i) { c.style.display = (i >= start && i < end) ? '' : 'none'; });
 
-      // Step 3: results count
       var rc = document.getElementById('resultsCount');
-      if (rc) {
-        rc.innerHTML = '<strong>' + total + '</strong> result' + (total !== 1 ? 's' : '') + ' found' +
-          (totalPages > 1 ? ' &nbsp;|&nbsp; Page ' + currentPage + ' of ' + totalPages : '');
-      }
+      if (rc) rc.innerHTML = '<strong>' + total + '</strong> result' + (total !== 1 ? 's' : '') + ' found' +
+        (totalPages > 1 ? ' &nbsp;|&nbsp; Page ' + currentPage + ' of ' + totalPages : '');
 
-      // Step 4: no results message
       var nr = document.getElementById('noResults');
       if (nr) nr.style.display = total === 0 ? 'block' : 'none';
 
-      // Step 5: pagination buttons
-      var container = document.getElementById('pagination');
-      if (container) {
-        container.innerHTML = '';
+      var pg = document.getElementById('pagination');
+      if (pg) {
+        pg.innerHTML = '';
         if (totalPages > 1) {
-          // Prev
           var prev = document.createElement('button');
           prev.className = 'page-btn prev-next';
           prev.innerHTML = '&#8592; Prev';
           prev.disabled = currentPage === 1;
           prev.onclick = function() { currentPage--; renderPage(); window.scrollTo({top:0,behavior:'smooth'}); };
-          container.appendChild(prev);
-          // Pages
+          pg.appendChild(prev);
           for (var p = 1; p <= totalPages; p++) {
-            (function(pg) {
+            (function(n) {
               var btn = document.createElement('button');
-              btn.className = 'page-btn' + (pg === currentPage ? ' active' : '');
-              btn.textContent = pg;
-              btn.onclick = function() { currentPage = pg; renderPage(); window.scrollTo({top:0,behavior:'smooth'}); };
-              container.appendChild(btn);
+              btn.className = 'page-btn' + (n === currentPage ? ' active' : '');
+              btn.textContent = n;
+              btn.onclick = function() { currentPage = n; renderPage(); window.scrollTo({top:0,behavior:'smooth'}); };
+              pg.appendChild(btn);
             })(p);
           }
-          // Next
           var next = document.createElement('button');
           next.className = 'page-btn prev-next';
           next.innerHTML = 'Next &#8594;';
           next.disabled = currentPage === totalPages;
           next.onclick = function() { currentPage++; renderPage(); window.scrollTo({top:0,behavior:'smooth'}); };
-          container.appendChild(next);
+          pg.appendChild(next);
         }
       }
     }
 
-    // Type filter clicks
     document.querySelectorAll('#typeFilters .filter-btn').forEach(function(btn) {
       btn.addEventListener('click', function() {
         document.querySelectorAll('#typeFilters .filter-btn').forEach(function(b) { b.classList.remove('active'); });
@@ -569,7 +545,6 @@
       });
     });
 
-    // Year filter clicks
     document.querySelectorAll('#yearFilters .filter-btn').forEach(function(btn) {
       btn.addEventListener('click', function() {
         document.querySelectorAll('#yearFilters .filter-btn').forEach(function(b) { b.classList.remove('active'); });
@@ -578,9 +553,6 @@
         applyFilters();
       });
     });
-
-    // Init
-    renderPage();
 
     // Mobile nav
     var toggle = document.querySelector('.nav-toggle');
@@ -597,98 +569,7 @@
       });
     }
 
-    // ── Pagination ──
-    var ITEMS_PER_PAGE = 9;
-    var currentPage = 1;
-
-    function getVisibleCards() {
-      return Array.from(document.querySelectorAll('.card')).filter(function(c) {
-        return c.style.display !== 'none';
-      });
-    }
-
-    function renderPage(page) {
-      currentPage = page;
-      var visible = getVisibleCards();
-      var total = visible.length;
-      var totalPages = Math.max(1, Math.ceil(total / ITEMS_PER_PAGE));
-      if (currentPage > totalPages) currentPage = totalPages;
-
-      var start = (currentPage - 1) * ITEMS_PER_PAGE;
-      var end   = start + ITEMS_PER_PAGE;
-
-      // Show/hide cards for this page
-      visible.forEach(function(card, i) {
-        card.style.display = (i >= start && i < end) ? '' : 'none';
-      });
-
-      // Update results count
-      var rc = document.getElementById('resultsCount');
-      if (rc) rc.innerHTML = '<strong>' + total + '</strong> result' + (total !== 1 ? 's' : '') + ' found' +
-        (totalPages > 1 ? ' &nbsp;|&nbsp; Page ' + currentPage + ' of ' + totalPages : '');
-
-      // Render pagination buttons
-      renderPagination(totalPages);
-
-      // No results
-      var nr = document.getElementById('noResults');
-      if (nr) nr.style.display = total === 0 ? 'block' : 'none';
-    }
-
-    function renderPagination(totalPages) {
-      var container = document.getElementById('pagination');
-      if (!container) return;
-      container.innerHTML = '';
-      if (totalPages <= 1) return;
-
-      // Prev button
-      var prev = document.createElement('button');
-      prev.className = 'page-btn prev-next';
-      prev.innerHTML = '&#8592; Prev';
-      prev.disabled = currentPage === 1;
-      prev.onclick = function() { renderPage(currentPage - 1); window.scrollTo({top:0,behavior:'smooth'}); };
-      container.appendChild(prev);
-
-      // Page number buttons
-      for (var i = 1; i <= totalPages; i++) {
-        (function(p) {
-          var btn = document.createElement('button');
-          btn.className = 'page-btn' + (p === currentPage ? ' active' : '');
-          btn.textContent = p;
-          btn.onclick = function() { renderPage(p); window.scrollTo({top:0,behavior:'smooth'}); };
-          container.appendChild(btn);
-        })(i);
-      }
-
-      // Next button
-      var next = document.createElement('button');
-      next.className = 'page-btn prev-next';
-      next.innerHTML = 'Next &#8594;';
-      next.disabled = currentPage === totalPages;
-      next.onclick = function() { renderPage(currentPage + 1); window.scrollTo({top:0,behavior:'smooth'}); };
-      container.appendChild(next);
-    }
-
-    // Override applyFilters to reset to page 1 after filtering
-    var _origApplyFilters = applyFilters;
-    applyFilters = function() {
-      // Restore all cards to their natural display first
-      document.querySelectorAll('.card').forEach(function(c) {
-        c.style.display = '';
-      });
-      // Apply type/year filters
-      document.querySelectorAll('.card').forEach(function(card) {
-        var typeMatch = activeType === 'all' || card.dataset.type === activeType;
-        var yearMatch = activeYear === 'all' || card.dataset.year === activeYear;
-        if (!typeMatch || !yearMatch) card.style.display = 'none';
-      });
-      currentPage = 1;
-      renderPage(1);
-    };
-
-    // Init on load
-    renderPage(1);
-
+    renderPage();
   </script>
 </body>
 </html>
