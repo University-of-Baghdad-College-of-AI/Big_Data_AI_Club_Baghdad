@@ -10,20 +10,46 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
   <style>
-    .filter-bar { display:flex; gap:8px; flex-wrap:wrap; margin-bottom:24px; }
-    .filter-btn { font-family:'Plus Jakarta Sans',sans-serif; font-size:0.82em; font-weight:600; padding:6px 16px; border-radius:20px; border:1.5px solid var(--border); background:var(--white); color:var(--text-muted); cursor:pointer; transition:all 0.18s; }
-    .filter-btn:hover, .filter-btn.active { background:var(--indigo); color:var(--white); border-color:var(--indigo); }
+    /* ── Filter bars ── */
+    .filter-row { display:flex; gap:24px; flex-wrap:wrap; margin-bottom:24px; align-items:flex-start; }
+    .filter-group { display:flex; flex-direction:column; gap:6px; }
+    .filter-group label { font-size:0.75em; font-weight:700; text-transform:uppercase; letter-spacing:0.08em; color:var(--text-muted); }
+    .filter-bar { display:flex; gap:6px; flex-wrap:wrap; }
+    .filter-btn { font-family:'Plus Jakarta Sans',sans-serif; font-size:0.82em; font-weight:600; padding:6px 14px; border-radius:20px; border:1.5px solid var(--border); background:var(--white); color:var(--text-muted); cursor:pointer; transition:all 0.18s; }
+    .filter-btn:hover { border-color:var(--indigo); color:var(--indigo); }
+    .filter-btn.active { background:var(--indigo); color:var(--white); border-color:var(--indigo); }
+    .filter-btn.year-btn.active { background:var(--navy); border-color:var(--navy); color:var(--white); }
+
+    /* Results count */
+    .results-count { font-size:0.83em; color:var(--text-muted); margin-bottom:16px; }
+    .results-count strong { color:var(--navy); }
+
+    /* ── Cards ── */
     .cards-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(280px,1fr)); gap:16px; }
     .card { background:var(--white); border:1px solid var(--border); border-radius:10px; padding:20px; transition:box-shadow 0.2s,transform 0.2s; display:flex; flex-direction:column; gap:10px; }
     .card:hover { box-shadow:var(--shadow-md); transform:translateY(-2px); }
-    .card-type { display:inline-block; font-size:0.72em; font-weight:700; letter-spacing:0.08em; text-transform:uppercase; padding:3px 10px; border-radius:20px; }
+    .card-badges { display:flex; gap:6px; flex-wrap:wrap; }
+    .badge { display:inline-block; font-size:0.70em; font-weight:700; letter-spacing:0.07em; text-transform:uppercase; padding:3px 10px; border-radius:20px; }
+    .badge-type-research  { background:var(--indigo-pale); color:var(--indigo); }
+    .badge-type-software  { background:#FFF3E0; color:#E65100; }
+    .badge-type-data      { background:#F3E5F5; color:#6A1B9A; }
+    .badge-type-ai        { background:#EDF7EE; color:#2E7D32; }
+    .badge-year { background:var(--surface); color:var(--navy); border:1px solid var(--border); }
     .card h3 { font-family:'Plus Jakarta Sans',sans-serif; font-size:1em; font-weight:700; color:var(--navy); line-height:1.3; }
     .card p { font-size:0.87em; color:var(--text-muted); line-height:1.55; flex:1; }
     .card-meta { font-size:0.78em; color:var(--text-muted); display:flex; gap:12px; flex-wrap:wrap; }
     .card-meta span { display:flex; align-items:center; gap:4px; }
     .card a { display:inline-flex; align-items:center; gap:6px; font-size:0.83em; font-weight:600; color:var(--indigo); text-decoration:none; margin-top:4px; transition:gap 0.2s; }
     .card a:hover { gap:10px; }
-    @media (max-width:768px) { .cards-grid { grid-template-columns:1fr; } }
+
+    /* Empty state */
+    .no-results { text-align:center; padding:48px 20px; color:var(--text-muted); display:none; }
+    .no-results svg { opacity:0.3; margin-bottom:12px; }
+
+    @media (max-width:768px) {
+      .cards-grid { grid-template-columns:1fr; }
+      .filter-row { gap:16px; }
+    }
   </style>
 </head>
 <body>
@@ -82,21 +108,41 @@
 
   <section>
     <h2>&#128295; Projects</h2>
-    <p>Club projects spanning AI, Big Data, machine learning, and software development. Filter by type or year below.</p>
+    <p>Club projects spanning AI, Big Data, machine learning, and software development. Filter by type and/or year.</p>
 
-    <div class="filter-bar">
-      <button class="filter-btn active" onclick="filterCards('all', this)">All</button>
-      <button class="filter-btn" onclick="filterCards('research', this)">Research</button>
-      <button class="filter-btn" onclick="filterCards('software', this)">Software</button>
-      <button class="filter-btn" onclick="filterCards('data', this)">Data Analysis</button>
-      <button class="filter-btn" onclick="filterCards('ai', this)">AI Model</button>
+    <!-- Filter Row -->
+    <div class="filter-row" style="margin-top:20px;">
+      <div class="filter-group">
+        <label>By Type</label>
+        <div class="filter-bar" id="typeFilters">
+          <button class="filter-btn active" data-type="all">All Types</button>
+          <button class="filter-btn" data-type="research">Research</button>
+          <button class="filter-btn" data-type="software">Software</button>
+          <button class="filter-btn" data-type="data">Data Analysis</button>
+          <button class="filter-btn" data-type="ai">AI Model</button>
+        </div>
+      </div>
+      <div class="filter-group">
+        <label>By Year</label>
+        <div class="filter-bar" id="yearFilters">
+          <button class="filter-btn year-btn active" data-year="all">All Years</button>
+          <button class="filter-btn year-btn" data-year="2026">2026</button>
+          <button class="filter-btn year-btn" data-year="2025">2025</button>
+          <button class="filter-btn year-btn" data-year="2024">2024</button>
+        </div>
+      </div>
     </div>
 
-    <div class="cards-grid">
-      <!-- ══ ADD MORE CARDS BELOW — copy a block and fill in details ══ -->
+    <div class="results-count" id="resultsCount"><strong>9</strong> projects found</div>
 
-      <div class="card" data-type="ai">
-        <span class="card-type" style="background:#EDF7EE;color:#2E7D32;">AI Model</span>
+    <div class="cards-grid" id="cardsGrid">
+      <!-- ══ ADD MORE CARDS BELOW — set data-type and data-year on each card ══ -->
+
+      <div class="card" data-type="ai" data-year="2026">
+        <div class="card-badges">
+          <span class="badge badge-type-ai">AI Model</span>
+          <span class="badge badge-year">2026</span>
+        </div>
         <h3>AI Hackathon Baghdad 2026</h3>
         <p>Competitive project showcased at the National AI Hackathon — won 2nd place with an innovative ML-based solution.</p>
         <div class="card-meta">
@@ -106,8 +152,11 @@
         <a href="#">View Project &#8594;</a>
       </div>
 
-      <div class="card" data-type="research">
-        <span class="card-type" style="background:var(--indigo-pale);color:var(--indigo);">Research</span>
+      <div class="card" data-type="research" data-year="2026">
+        <div class="card-badges">
+          <span class="badge badge-type-research">Research</span>
+          <span class="badge badge-year">2026</span>
+        </div>
         <h3>Big Data Clustering Research</h3>
         <p>Research paper on novel clustering techniques for large-scale datasets, targeting Q1 journal publication.</p>
         <div class="card-meta">
@@ -117,8 +166,11 @@
         <a href="#">View Paper &#8594;</a>
       </div>
 
-      <div class="card" data-type="research">
-        <span class="card-type" style="background:var(--indigo-pale);color:var(--indigo);">Research</span>
+      <div class="card" data-type="research" data-year="2026">
+        <div class="card-badges">
+          <span class="badge badge-type-research">Research</span>
+          <span class="badge badge-year">2026</span>
+        </div>
         <h3>CS Department Collaboration</h3>
         <p>Joint research initiative with the Computer Science Department exploring cross-disciplinary AI applications.</p>
         <div class="card-meta">
@@ -128,8 +180,11 @@
         <a href="#">View Details &#8594;</a>
       </div>
 
-      <div class="card" data-type="ai">
-        <span class="card-type" style="background:#EDF7EE;color:#2E7D32;">AI Model</span>
+      <div class="card" data-type="ai" data-year="2025">
+        <div class="card-badges">
+          <span class="badge badge-type-ai">AI Model</span>
+          <span class="badge badge-year">2025</span>
+        </div>
         <h3>Machine Learning for Healthcare</h3>
         <p>Applying ML models to medical datasets for early disease detection and clinical decision support.</p>
         <div class="card-meta">
@@ -139,8 +194,11 @@
         <a href="#">View Project &#8594;</a>
       </div>
 
-      <div class="card" data-type="software">
-        <span class="card-type" style="background:#FFF3E0;color:#E65100;">Software</span>
+      <div class="card" data-type="software" data-year="2025">
+        <div class="card-badges">
+          <span class="badge badge-type-software">Software</span>
+          <span class="badge badge-year">2025</span>
+        </div>
         <h3>Data Analysis Toolkit</h3>
         <p>Reusable Python tools for data cleaning, transformation, visualization, and exploratory analysis.</p>
         <div class="card-meta">
@@ -150,8 +208,11 @@
         <a href="#">View Repo &#8594;</a>
       </div>
 
-      <div class="card" data-type="ai">
-        <span class="card-type" style="background:#EDF7EE;color:#2E7D32;">AI Model</span>
+      <div class="card" data-type="ai" data-year="2025">
+        <div class="card-badges">
+          <span class="badge badge-type-ai">AI Model</span>
+          <span class="badge badge-year">2025</span>
+        </div>
         <h3>Arabic NLP Text Classifier</h3>
         <p>Arabic text classification system using parameter-efficient transformer fine-tuning for multi-domain classification.</p>
         <div class="card-meta">
@@ -161,8 +222,11 @@
         <a href="#">View Project &#8594;</a>
       </div>
 
-      <div class="card" data-type="software">
-        <span class="card-type" style="background:#FFF3E0;color:#E65100;">Software</span>
+      <div class="card" data-type="software" data-year="2025">
+        <div class="card-badges">
+          <span class="badge badge-type-software">Software</span>
+          <span class="badge badge-year">2025</span>
+        </div>
         <h3>Smart Campus IoT Dashboard</h3>
         <p>Real-time web dashboard aggregating IoT sensor data from across the College of AI campus.</p>
         <div class="card-meta">
@@ -172,8 +236,11 @@
         <a href="#">View Project &#8594;</a>
       </div>
 
-      <div class="card" data-type="research">
-        <span class="card-type" style="background:var(--indigo-pale);color:var(--indigo);">Research</span>
+      <div class="card" data-type="research" data-year="2024">
+        <div class="card-badges">
+          <span class="badge badge-type-research">Research</span>
+          <span class="badge badge-year">2024</span>
+        </div>
         <h3>Intro to AI &amp; Big Data</h3>
         <p>Foundational research project for new members exploring core AI and Big Data concepts and applications.</p>
         <div class="card-meta">
@@ -183,8 +250,11 @@
         <a href="#">View Details &#8594;</a>
       </div>
 
-      <div class="card" data-type="data">
-        <span class="card-type" style="background:#F3E5F5;color:#6A1B9A;">Data Analysis</span>
+      <div class="card" data-type="data" data-year="2024">
+        <div class="card-badges">
+          <span class="badge badge-type-data">Data Analysis</span>
+          <span class="badge badge-year">2024</span>
+        </div>
         <h3>Student Performance Predictive Analytics</h3>
         <p>Using academic records and behavioral data to predict student outcomes and recommend early interventions.</p>
         <div class="card-meta">
@@ -194,7 +264,15 @@
         <a href="#">View Report &#8594;</a>
       </div>
 
+    </div><!-- /cards-grid -->
+
+    <div class="no-results" id="noResults">
+      <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" xmlns="http://www.w3.org/2000/svg">
+        <circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/>
+      </svg>
+      <p>No projects match the selected filters.</p>
     </div>
+
   </section>
 
   <footer>
@@ -203,6 +281,45 @@
   </footer>
 
   <script>
+    var activeType = 'all';
+    var activeYear = 'all';
+
+    function applyFilters() {
+      var cards = document.querySelectorAll('.card');
+      var visible = 0;
+      cards.forEach(function(card) {
+        var typeMatch = activeType === 'all' || card.dataset.type === activeType;
+        var yearMatch = activeYear === 'all' || card.dataset.year === activeYear;
+        var show = typeMatch && yearMatch;
+        card.style.display = show ? '' : 'none';
+        if (show) visible++;
+      });
+      document.getElementById('resultsCount').innerHTML =
+        '<strong>' + visible + '</strong> project' + (visible !== 1 ? 's' : '') + ' found';
+      document.getElementById('noResults').style.display = visible === 0 ? 'block' : 'none';
+    }
+
+    // Type filters
+    document.querySelectorAll('#typeFilters .filter-btn').forEach(function(btn) {
+      btn.addEventListener('click', function() {
+        document.querySelectorAll('#typeFilters .filter-btn').forEach(function(b) { b.classList.remove('active'); });
+        btn.classList.add('active');
+        activeType = btn.dataset.type;
+        applyFilters();
+      });
+    });
+
+    // Year filters
+    document.querySelectorAll('#yearFilters .filter-btn').forEach(function(btn) {
+      btn.addEventListener('click', function() {
+        document.querySelectorAll('#yearFilters .filter-btn').forEach(function(b) { b.classList.remove('active'); });
+        btn.classList.add('active');
+        activeYear = btn.dataset.year;
+        applyFilters();
+      });
+    });
+
+    // Mobile nav
     var toggle = document.querySelector('.nav-toggle');
     var navLinks = document.querySelector('.nav-links');
     if (toggle && navLinks) {
@@ -214,13 +331,6 @@
       });
       document.querySelectorAll('.nav-links a').forEach(function(a) {
         a.addEventListener('click', function() { navLinks.classList.remove('open'); });
-      });
-    }
-    function filterCards(type, btn) {
-      document.querySelectorAll('.filter-btn').forEach(function(b) { b.classList.remove('active'); });
-      btn.classList.add('active');
-      document.querySelectorAll('.card').forEach(function(card) {
-        card.style.display = (type === 'all' || card.dataset.type === type) ? '' : 'none';
       });
     }
   </script>
