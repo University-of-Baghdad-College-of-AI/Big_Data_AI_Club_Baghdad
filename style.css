@@ -78,11 +78,11 @@ header p {
   display: flex;
   align-items: center;
   max-width: 1000px;
-  margin: 0 auto;       /* remove extra vertical space */
-  padding: 2px 8px;     /* very narrow padding */
+  margin: 0 auto;       /* no extra vertical space */
+  padding: 0 8px;       /* very narrow padding */
   background: #f9f9f9;
   border-bottom: 1px solid #ddd;
-  font-size: 0.8em;     /* smaller font */
+  font-size: 0.85em;
 }
 
 .news-label {
@@ -94,7 +94,7 @@ header p {
 /* Vertical News Ticker */
 .news-slider-vertical {
   position: relative;
-  height: 24px; /* very narrow height */
+  height: 28px; /* narrow height */
   overflow: hidden;
   flex: 1;
 }
@@ -106,16 +106,17 @@ header p {
 }
 
 .news-slider-vertical .slide {
-  height: 24px;
+  height: 28px;
   display: flex;
   align-items: center;
 }
 
 .news-slider-vertical .slide p {
   margin: 0;
-  font-size: 0.8em;
+  font-size: 0.85em;
   line-height: 1.2;
 }
+
 
 
 
