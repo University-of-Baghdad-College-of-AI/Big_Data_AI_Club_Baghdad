@@ -54,7 +54,7 @@ header p {
 
 .news-label {
   font-weight: bold;
-  color: #1abc9c;
+  color: #0073e6; /* blue accent */
   margin-right: 10px;
 }
 
@@ -89,7 +89,7 @@ nav {
   display: flex;
   justify-content: center;
   flex-wrap: wrap;
-  background: #1abc9c;
+  background: #0073e6; /* modern blue */
   padding: 14px;
   box-shadow: 0 2px 6px rgba(0,0,0,0.05);
 }
@@ -104,7 +104,7 @@ nav a, nav .dropbtn {
 }
 
 nav a:hover, nav .dropbtn:hover {
-  background: #16a085;
+  background: #005bb5; /* darker blue hover */
   border-radius: 4px;
 }
 
@@ -116,7 +116,7 @@ nav a:hover, nav .dropbtn:hover {
 .dropdown-content {
   display: none;
   position: absolute;
-  background: #1abc9c;
+  background: #0073e6;
   min-width: 160px;
   z-index: 1;
   border-radius: 4px;
@@ -178,7 +178,7 @@ section h2 {
 footer {
   text-align: center;
   padding: 20px;
-  background: #1abc9c;
+  background: #0073e6; /* blue footer */
   color: #fff;
   font-size: 0.9em;
   margin-top: 40px;
