@@ -171,7 +171,68 @@
   </footer>
 
     <script>
-    var allData = [{"type": "nlp", "year": "2026", "title": "Multilingual Text Classification with Transformers", "desc": "Parameter-efficient fine-tuning for multilingual text classification using adapter-based methods.", "who": "Dr. Jalal Hameed", "date": "June 2026", "link": "#"}, {"type": "ai", "year": "2026", "title": "Video Fake Frame Detection using VIA-Net", "desc": "Novel deep learning architecture for detecting manipulated frames in video content.", "who": "Dr. Jalal Hameed", "date": "May 2026", "link": "#"}, {"type": "bigdata", "year": "2026", "title": "SDG Classification using SciBERT-GraphSAGE", "desc": "Hybrid NLP and graph learning framework mapping research to UN Sustainable Development Goals.", "who": "Dr. Ahmed Ali", "date": "April 2026", "link": "#"}, {"type": "bio", "year": "2025", "title": "AI Platform for Disease Spread During Arbaeen", "desc": "GNN models predicting infectious disease spread in large crowd gatherings.", "who": "Dr. Jalal Hameed", "date": "March 2025", "link": "#"}, {"type": "ai", "year": "2025", "title": "Predictive Analytics for Student Performance", "desc": "Using academic data and ML models to predict and improve student outcomes.", "who": "Student Team", "date": "January 2025", "link": "#"}, {"type": "nlp", "year": "2024", "title": "Arabic Sentiment Analysis using BERT", "desc": "Fine-tuned Arabic BERT model for sentiment classification across social media datasets.", "who": "Club Members", "date": "October 2024", "link": "#"}];
+    var allData = [
+  {
+    "type"  : "nlp",
+    "year"  : "2026",
+    "title" : "Multilingual Text Classification with Transformers",
+    "desc"  : "Parameter-efficient fine-tuning for multilingual text classification using adapter-based methods.",
+    "who"   : "Dr. Jalal Hameed",
+    "date"  : "June 2026",
+    "link"  : "#"
+  },
+
+  {
+    "type"  : "ai",
+    "year"  : "2026",
+    "title" : "Video Fake Frame Detection using VIA-Net",
+    "desc"  : "Novel deep learning architecture for detecting manipulated frames in video content.",
+    "who"   : "Dr. Jalal Hameed",
+    "date"  : "May 2026",
+    "link"  : "#"
+  },
+
+  {
+    "type"  : "bigdata",
+    "year"  : "2026",
+    "title" : "SDG Classification using SciBERT-GraphSAGE",
+    "desc"  : "Hybrid NLP and graph learning framework mapping research to UN Sustainable Development Goals.",
+    "who"   : "Dr. Ahmed Ali",
+    "date"  : "April 2026",
+    "link"  : "#"
+  },
+
+  {
+    "type"  : "bio",
+    "year"  : "2025",
+    "title" : "AI Platform for Disease Spread During Arbaeen",
+    "desc"  : "GNN models predicting infectious disease spread in large crowd gatherings.",
+    "who"   : "Dr. Jalal Hameed",
+    "date"  : "March 2025",
+    "link"  : "#"
+  },
+
+  {
+    "type"  : "ai",
+    "year"  : "2025",
+    "title" : "Predictive Analytics for Student Performance",
+    "desc"  : "Using academic data and ML models to predict and improve student outcomes.",
+    "who"   : "Student Team",
+    "date"  : "January 2025",
+    "link"  : "#"
+  },
+
+  {
+    "type"  : "nlp",
+    "year"  : "2024",
+    "title" : "Arabic Sentiment Analysis using BERT",
+    "desc"  : "Fine-tuned Arabic BERT model for sentiment classification across social media datasets.",
+    "who"   : "Club Members",
+    "date"  : "October 2024",
+    "link"  : "#"
+  }
+
+];
 
     var activeType = 'all', activeYear = 'all';
     var ITEMS_PER_PAGE = 9, currentPage = 1;
@@ -272,8 +333,15 @@
       document.getElementById('modalWho').textContent=d.who||'—';
       document.getElementById('modalDate').textContent=d.date||'—';
       var lnk=document.getElementById('modalLink');
-      if(d.link&&d.link!=='#'){lnk.href=d.link;lnk.style.display='inline-flex';}
-      else{lnk.style.display='none';}
+      if(d.link && d.link!=='#'){
+        lnk.href=d.link;
+        lnk.style.display='inline-flex';
+        lnk.onclick=null;
+      } else {
+        lnk.href='#';
+        lnk.style.display='inline-flex';
+        lnk.onclick=function(e){ e.preventDefault(); alert('No link available for this item yet.'); };
+      }
       document.getElementById('modal').classList.add('open');
       document.body.style.overflow='hidden';
     }

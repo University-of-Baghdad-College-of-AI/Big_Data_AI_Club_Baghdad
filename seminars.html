@@ -171,7 +171,68 @@
   </footer>
 
     <script>
-    var allData = [{"type": "trend", "year": "2026", "title": "Large Language Models: Where Are We Heading?", "desc": "Seminar on capabilities, limitations, and future directions of LLMs like GPT and Claude.", "who": "Dr. Jalal Hameed", "date": "June 2026", "link": "#"}, {"type": "research", "year": "2026", "title": "Graph Neural Networks in Practice", "desc": "Deep dive into GCN, GAT, and ST-GNN architectures with real-world examples.", "who": "Club Members", "date": "April 2026", "link": "#"}, {"type": "industry", "year": "2025", "title": "AI Adoption in the Iraqi Tech Sector", "desc": "Panel on challenges and opportunities of AI adoption in Iraq.", "who": "Panel", "date": "March 2025", "link": "#"}, {"type": "discussion", "year": "2025", "title": "Open Discussion: Bias and Fairness in AI", "desc": "Student-led roundtable on algorithmic bias and societal implications of AI systems.", "who": "Club Members", "date": "January 2025", "link": "#"}, {"type": "trend", "year": "2024", "title": "Transformer Models Beyond NLP", "desc": "Exploring transformer architectures in vision, audio, and multimodal tasks.", "who": "Dr. Jalal Hameed", "date": "October 2024", "link": "#"}, {"type": "research", "year": "2024", "title": "Reinforcement Learning: Theory and Applications", "desc": "Overview of RL algorithms including Q-Learning, PPO, and real-world applications.", "who": "Club Members", "date": "September 2024", "link": "#"}];
+    var allData = [
+  {
+    "type"  : "trend",
+    "year"  : "2026",
+    "title" : "Large Language Models: Where Are We Heading?",
+    "desc"  : "Seminar on capabilities, limitations, and future directions of LLMs like GPT and Claude.",
+    "who"   : "Dr. Jalal Hameed",
+    "date"  : "June 2026",
+    "link"  : "#"
+  },
+
+  {
+    "type"  : "research",
+    "year"  : "2026",
+    "title" : "Graph Neural Networks in Practice",
+    "desc"  : "Deep dive into GCN, GAT, and ST-GNN architectures with real-world examples.",
+    "who"   : "Club Members",
+    "date"  : "April 2026",
+    "link"  : "#"
+  },
+
+  {
+    "type"  : "industry",
+    "year"  : "2025",
+    "title" : "AI Adoption in the Iraqi Tech Sector",
+    "desc"  : "Panel on challenges and opportunities of AI adoption in Iraq.",
+    "who"   : "Panel",
+    "date"  : "March 2025",
+    "link"  : "#"
+  },
+
+  {
+    "type"  : "discussion",
+    "year"  : "2025",
+    "title" : "Open Discussion: Bias and Fairness in AI",
+    "desc"  : "Student-led roundtable on algorithmic bias and societal implications of AI systems.",
+    "who"   : "Club Members",
+    "date"  : "January 2025",
+    "link"  : "#"
+  },
+
+  {
+    "type"  : "trend",
+    "year"  : "2024",
+    "title" : "Transformer Models Beyond NLP",
+    "desc"  : "Exploring transformer architectures in vision, audio, and multimodal tasks.",
+    "who"   : "Dr. Jalal Hameed",
+    "date"  : "October 2024",
+    "link"  : "#"
+  },
+
+  {
+    "type"  : "research",
+    "year"  : "2024",
+    "title" : "Reinforcement Learning: Theory and Applications",
+    "desc"  : "Overview of RL algorithms including Q-Learning, PPO, and real-world applications.",
+    "who"   : "Club Members",
+    "date"  : "September 2024",
+    "link"  : "#"
+  }
+
+];
 
     var activeType = 'all', activeYear = 'all';
     var ITEMS_PER_PAGE = 9, currentPage = 1;
@@ -272,8 +333,15 @@
       document.getElementById('modalWho').textContent=d.who||'—';
       document.getElementById('modalDate').textContent=d.date||'—';
       var lnk=document.getElementById('modalLink');
-      if(d.link&&d.link!=='#'){lnk.href=d.link;lnk.style.display='inline-flex';}
-      else{lnk.style.display='none';}
+      if(d.link && d.link!=='#'){
+        lnk.href=d.link;
+        lnk.style.display='inline-flex';
+        lnk.onclick=null;
+      } else {
+        lnk.href='#';
+        lnk.style.display='inline-flex';
+        lnk.onclick=function(e){ e.preventDefault(); alert('No link available for this item yet.'); };
+      }
       document.getElementById('modal').classList.add('open');
       document.body.style.overflow='hidden';
     }

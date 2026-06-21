@@ -172,7 +172,68 @@
   </footer>
 
     <script>
-    var allData = [{"type": "ai", "year": "2026", "title": "Introduction to Artificial Intelligence", "desc": "Foundational lecture covering the history, key concepts, and current landscape of AI.", "who": "Dr. Jalal Hameed", "date": "June 2026", "link": "#"}, {"type": "ethics", "year": "2026", "title": "AI Ethics and Responsible Innovation", "desc": "Ethical challenges in AI including bias, fairness, transparency, and accountability.", "who": "Dr. Rana", "date": "May 2026", "link": "#"}, {"type": "data", "year": "2025", "title": "From Raw Data to Insights", "desc": "Full data science pipeline from collection and cleaning to visualization and storytelling.", "who": "Club Members", "date": "April 2025", "link": "#"}, {"type": "career", "year": "2025", "title": "Career Paths in AI and Big Data", "desc": "Industry professionals share insights on career opportunities in AI.", "who": "Guest Speaker", "date": "February 2025", "link": "#"}, {"type": "ai", "year": "2024", "title": "Neural Networks from Scratch", "desc": "Building and training neural networks from first principles using Python and NumPy.", "who": "Dr. Jalal Hameed", "date": "November 2024", "link": "#"}, {"type": "bigdata", "year": "2024", "title": "Introduction to Cloud Computing for Data Science", "desc": "Overview of AWS, GCP, and Azure for scalable data storage and ML workloads.", "who": "Guest Speaker", "date": "September 2024", "link": "#"}];
+    var allData = [
+  {
+    "type"  : "ai",
+    "year"  : "2026",
+    "title" : "Introduction to Artificial Intelligence",
+    "desc"  : "Foundational lecture covering the history, key concepts, and current landscape of AI.",
+    "who"   : "Dr. Jalal Hameed",
+    "date"  : "June 2026",
+    "link"  : "#"
+  },
+
+  {
+    "type"  : "ethics",
+    "year"  : "2026",
+    "title" : "AI Ethics and Responsible Innovation",
+    "desc"  : "Ethical challenges in AI including bias, fairness, transparency, and accountability.",
+    "who"   : "Dr. Rana",
+    "date"  : "May 2026",
+    "link"  : "#"
+  },
+
+  {
+    "type"  : "data",
+    "year"  : "2025",
+    "title" : "From Raw Data to Insights",
+    "desc"  : "Full data science pipeline from collection and cleaning to visualization and storytelling.",
+    "who"   : "Club Members",
+    "date"  : "April 2025",
+    "link"  : "#"
+  },
+
+  {
+    "type"  : "career",
+    "year"  : "2025",
+    "title" : "Career Paths in AI and Big Data",
+    "desc"  : "Industry professionals share insights on career opportunities in AI.",
+    "who"   : "Guest Speaker",
+    "date"  : "February 2025",
+    "link"  : "#"
+  },
+
+  {
+    "type"  : "ai",
+    "year"  : "2024",
+    "title" : "Neural Networks from Scratch",
+    "desc"  : "Building and training neural networks from first principles using Python and NumPy.",
+    "who"   : "Dr. Jalal Hameed",
+    "date"  : "November 2024",
+    "link"  : "#"
+  },
+
+  {
+    "type"  : "bigdata",
+    "year"  : "2024",
+    "title" : "Introduction to Cloud Computing for Data Science",
+    "desc"  : "Overview of AWS, GCP, and Azure for scalable data storage and ML workloads.",
+    "who"   : "Guest Speaker",
+    "date"  : "September 2024",
+    "link"  : "#"
+  }
+
+];
 
     var activeType = 'all', activeYear = 'all';
     var ITEMS_PER_PAGE = 9, currentPage = 1;
@@ -273,8 +334,15 @@
       document.getElementById('modalWho').textContent=d.who||'—';
       document.getElementById('modalDate').textContent=d.date||'—';
       var lnk=document.getElementById('modalLink');
-      if(d.link&&d.link!=='#'){lnk.href=d.link;lnk.style.display='inline-flex';}
-      else{lnk.style.display='none';}
+      if(d.link && d.link!=='#'){
+        lnk.href=d.link;
+        lnk.style.display='inline-flex';
+        lnk.onclick=null;
+      } else {
+        lnk.href='#';
+        lnk.style.display='inline-flex';
+        lnk.onclick=function(e){ e.preventDefault(); alert('No link available for this item yet.'); };
+      }
       document.getElementById('modal').classList.add('open');
       document.body.style.overflow='hidden';
     }

@@ -171,9 +171,7 @@
   </footer>
 
     <script>
-      
-var allData = [
-
+    var allData = [
   {
     "type"  : "ml",
     "year"  : "2026",
@@ -181,7 +179,7 @@ var allData = [
     "desc"  : "A practical workshop covering supervised learning, model evaluation, and pipeline building using Python's Scikit-Learn library.",
     "who"   : "Dr. Jalal Hameed",
     "date"  : "June 2026",
-    "link"  : "https://university-of-baghdad-college-of-ai.github.io/Big_Data_AI_Club_Baghdad"
+    "link"  : "#"
   },
 
   {
@@ -235,6 +233,7 @@ var allData = [
   }
 
 ];
+
     var activeType = 'all', activeYear = 'all';
     var ITEMS_PER_PAGE = 9, currentPage = 1;
 
@@ -334,8 +333,15 @@ var allData = [
       document.getElementById('modalWho').textContent=d.who||'—';
       document.getElementById('modalDate').textContent=d.date||'—';
       var lnk=document.getElementById('modalLink');
-      if(d.link&&d.link!=='#'){lnk.href=d.link;lnk.style.display='inline-flex';}
-      else{lnk.style.display='none';}
+      if(d.link && d.link!=='#'){
+        lnk.href=d.link;
+        lnk.style.display='inline-flex';
+        lnk.onclick=null;
+      } else {
+        lnk.href='#';
+        lnk.style.display='inline-flex';
+        lnk.onclick=function(e){ e.preventDefault(); alert('No link available for this item yet.'); };
+      }
       document.getElementById('modal').classList.add('open');
       document.body.style.overflow='hidden';
     }
