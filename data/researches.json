@@ -1,0 +1,56 @@
+[
+  {
+    "type": "nlp",
+    "year": "2026",
+    "title": "Multilingual Text Classification with Transformers",
+    "desc": "Parameter-efficient fine-tuning for multilingual text classification using adapter-based methods targeting Q1 journal publication.",
+    "who": "Dr. Jalal Hameed",
+    "date": "June 2026",
+    "link": "#"
+  },
+  {
+    "type": "ai",
+    "year": "2026",
+    "title": "Video Fake Frame Detection using VIA-Net",
+    "desc": "Novel deep learning architecture for detecting manipulated frames in video content, submitted for Q1 publication.",
+    "who": "Dr. Jalal Hameed",
+    "date": "May 2026",
+    "link": "#"
+  },
+  {
+    "type": "bigdata",
+    "year": "2026",
+    "title": "SDG Classification using SciBERT-GraphSAGE",
+    "desc": "Hybrid NLP and graph learning framework mapping research publications to UN Sustainable Development Goals.",
+    "who": "Dr. Ahmed Ali",
+    "date": "April 2026",
+    "link": "#"
+  },
+  {
+    "type": "bio",
+    "year": "2025",
+    "title": "AI Platform for Disease Spread During Arbaeen",
+    "desc": "Graph neural network models predicting infectious disease spread in large crowd gatherings using real epidemiological data.",
+    "who": "Dr. Jalal Hameed",
+    "date": "March 2025",
+    "link": "#"
+  },
+  {
+    "type": "ai",
+    "year": "2025",
+    "title": "Predictive Analytics for Student Performance",
+    "desc": "Using academic data and ML models to predict and improve student outcomes at the College of AI.",
+    "who": "Student Team",
+    "date": "January 2025",
+    "link": "#"
+  },
+  {
+    "type": "nlp",
+    "year": "2024",
+    "title": "Arabic Sentiment Analysis using BERT",
+    "desc": "Fine-tuned Arabic BERT model for sentiment classification across social media datasets.",
+    "who": "Club Members",
+    "date": "October 2024",
+    "link": "#"
+  }
+]

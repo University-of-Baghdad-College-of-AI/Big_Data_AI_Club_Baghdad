@@ -1,0 +1,65 @@
+[
+  {
+    "type": "research",
+    "year": "2026",
+    "title": "Big Data Clustering Techniques",
+    "desc": "Novel clustering algorithms applied to large-scale educational datasets at the University of Baghdad.",
+    "who": "Ahmed Ali",
+    "date": "June 2026",
+    "link": "#"
+  },
+  {
+    "type": "ai",
+    "year": "2026",
+    "title": "AI Hackathon Baghdad — 2nd Place",
+    "desc": "Innovative ML solution that won 2nd place at the National AI Hackathon 2026 with a traffic optimization model.",
+    "who": "Club Team",
+    "date": "June 2026",
+    "link": "#"
+  },
+  {
+    "type": "ai",
+    "year": "2026",
+    "title": "Arabic Text Classification using Transformers",
+    "desc": "Parameter-efficient fine-tuning for classifying Arabic text across multiple domains using BERT adapters.",
+    "who": "Sara Mohammed",
+    "date": "May 2026",
+    "link": "#"
+  },
+  {
+    "type": "software",
+    "year": "2025",
+    "title": "Smart Campus IoT Dashboard",
+    "desc": "Real-time dashboard aggregating IoT sensor data from across the College of AI campus facilities.",
+    "who": "Ali Hassan",
+    "date": "April 2025",
+    "link": "#"
+  },
+  {
+    "type": "data",
+    "year": "2025",
+    "title": "Student Performance Predictive Analytics",
+    "desc": "Using academic records to predict student outcomes and provide early intervention recommendations.",
+    "who": "Noor Khalid",
+    "date": "March 2025",
+    "link": "#"
+  },
+  {
+    "type": "ai",
+    "year": "2024",
+    "title": "Arabic Sentiment Analysis using BERT",
+    "desc": "Fine-tuned Arabic BERT model for sentiment classification on social media datasets.",
+    "who": "Club Members",
+    "date": "November 2024",
+    "link": "#"
+  },
+  {
+    "type": "software",
+    "year": "2024",
+    "title": "Data Analysis Toolkit",
+    "desc": "Reusable Python tools for data cleaning, transformation, and visualization for data science workflows.",
+    "who": "Club Members",
+    "date": "September 2024",
+    "link": "#"
+  }
+]

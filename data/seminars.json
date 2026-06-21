@@ -1,0 +1,56 @@
+[
+  {
+    "type": "trend",
+    "year": "2026",
+    "title": "Large Language Models: Where Are We Heading?",
+    "desc": "Seminar on capabilities, limitations, and future directions of LLMs like GPT and Claude with live demos.",
+    "who": "Dr. Jalal Hameed",
+    "date": "June 2026",
+    "link": "#"
+  },
+  {
+    "type": "research",
+    "year": "2026",
+    "title": "Graph Neural Networks in Practice",
+    "desc": "Deep dive into GCN, GAT, and ST-GNN architectures with real-world application examples and code walkthroughs.",
+    "who": "Club Members",
+    "date": "April 2026",
+    "link": "#"
+  },
+  {
+    "type": "industry",
+    "year": "2025",
+    "title": "AI Adoption in the Iraqi Tech Sector",
+    "desc": "Panel discussion with industry professionals on challenges and opportunities of AI adoption in Iraq.",
+    "who": "Panel",
+    "date": "March 2025",
+    "link": "#"
+  },
+  {
+    "type": "discussion",
+    "year": "2025",
+    "title": "Open Discussion: Bias and Fairness in AI",
+    "desc": "Student-led roundtable on algorithmic bias, fairness metrics, and the societal implications of AI systems.",
+    "who": "Club Members",
+    "date": "January 2025",
+    "link": "#"
+  },
+  {
+    "type": "trend",
+    "year": "2024",
+    "title": "Transformer Models Beyond NLP",
+    "desc": "Exploring the application of transformer architectures in vision, audio, and multimodal tasks.",
+    "who": "Dr. Jalal Hameed",
+    "date": "October 2024",
+    "link": "#"
+  },
+  {
+    "type": "research",
+    "year": "2024",
+    "title": "Reinforcement Learning: Theory and Applications",
+    "desc": "Overview of RL algorithms including Q-Learning, PPO, and their real-world applications.",
+    "who": "Club Members",
+    "date": "September 2024",
+    "link": "#"
+  }
+]
