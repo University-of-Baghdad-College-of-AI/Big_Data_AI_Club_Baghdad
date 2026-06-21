@@ -1,0 +1,333 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Field Visits - Big Data AI Club</title>
+  <link rel="stylesheet" href="style.css">
+  <link rel="icon" type="image/png" href="favicon.png">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+  <style>
+    /* Filters */
+    .filter-row{display:flex;gap:24px;flex-wrap:wrap;margin:20px 0 0;align-items:flex-start;}
+    .filter-group{display:flex;flex-direction:column;gap:6px;}
+    .filter-group label{font-size:.75em;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--text-muted);}
+    .filter-bar{display:flex;gap:6px;flex-wrap:wrap;}
+    .filter-btn{font-family:'Plus Jakarta Sans',sans-serif;font-size:.82em;font-weight:600;padding:6px 14px;border-radius:20px;border:1.5px solid var(--border);background:var(--white);color:var(--text-muted);cursor:pointer;transition:all .18s;}
+    .filter-btn:hover{border-color:var(--indigo);color:var(--indigo);}
+    .filter-btn.active{background:var(--indigo);color:#fff;border-color:var(--indigo);}
+    .filter-btn.year-btn.active{background:var(--navy);border-color:var(--navy);color:#fff;}
+    .results-count{font-size:.83em;color:var(--text-muted);margin:14px 0 16px;}
+    .results-count strong{color:var(--navy);}
+    /* Cards */
+    .cards-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:16px;}
+    .card{background:var(--white);border:1px solid var(--border);border-radius:10px;padding:20px;transition:box-shadow .2s,transform .2s;display:flex;flex-direction:column;gap:10px;}
+    .card:hover{box-shadow:var(--shadow-md);transform:translateY(-2px);}
+    .card-badges{display:flex;gap:6px;flex-wrap:wrap;}
+    .badge{display:inline-block;font-size:.70em;font-weight:700;letter-spacing:.07em;text-transform:uppercase;padding:3px 10px;border-radius:20px;}
+    .badge-year{background:var(--surface);color:var(--navy);border:1px solid var(--border);}
+    .badge-ml,.badge-ai,.badge-publication{background:#EDF7EE;color:#2E7D32;}
+    .badge-bigdata,.badge-lecture,.badge-research{background:var(--indigo-pale);color:var(--indigo);}
+    .badge-programming,.badge-software,.badge-tech,.badge-uni{background:#FFF3E0;color:#E65100;}
+    .badge-tools,.badge-data,.badge-resource,.badge-gov{background:#FFF8E1;color:#F57F17;}
+    .badge-nlp,.badge-discussion,.badge-demo,.badge-local{background:#F3E5F5;color:#6A1B9A;}
+    .badge-bio,.badge-career,.badge-project,.badge-national{background:#E8F5E9;color:#1B5E20;}
+    .badge-ethics,.badge-workshop,.badge-organized{background:#FCE4EC;color:#880E4F;}
+    .badge-trend,.badge-industry,.badge-keynote,.badge-lab{background:#E3F2FD;color:#0D47A1;}
+    .badge-international{background:#EEF2FF;color:#3730a3;}
+    .card h3{font-family:'Plus Jakarta Sans',sans-serif;font-size:1em;font-weight:700;color:var(--navy);line-height:1.3;}
+    .card p{font-size:.87em;color:var(--text-muted);line-height:1.55;flex:1;display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden;}
+    .card-meta{font-size:.78em;color:var(--text-muted);display:flex;gap:12px;flex-wrap:wrap;}
+    .card-meta span{display:flex;align-items:center;gap:4px;}
+    .view-btn{display:inline-flex;align-items:center;gap:6px;font-size:.83em;font-weight:600;color:var(--indigo);background:var(--indigo-pale);border:none;border-radius:6px;padding:7px 14px;cursor:pointer;font-family:'Plus Jakarta Sans',sans-serif;transition:background .18s,gap .2s;margin-top:4px;text-decoration:none;}
+    .view-btn:hover{background:#dce4fd;gap:10px;}
+    /* Pagination */
+    .pagination{display:flex;align-items:center;justify-content:center;gap:6px;margin-top:28px;flex-wrap:wrap;}
+    .page-btn{font-family:'Plus Jakarta Sans',sans-serif;font-size:.88em;font-weight:600;min-width:36px;height:36px;border-radius:8px;border:1.5px solid var(--border);background:var(--white);color:var(--text-muted);cursor:pointer;transition:all .18s;padding:0 10px;}
+    .page-btn:hover{border-color:var(--indigo);color:var(--indigo);}
+    .page-btn.active{background:var(--indigo);color:#fff;border-color:var(--indigo);}
+    .page-btn:disabled{opacity:.35;cursor:not-allowed;}
+    .no-results{text-align:center;padding:48px 20px;color:var(--text-muted);display:none;}
+    /* Modal */
+    .modal-overlay{display:none;position:fixed;inset:0;background:rgba(10,16,32,.88);z-index:9999;align-items:center;justify-content:center;padding:20px;}
+    .modal-overlay.open{display:flex;}
+    .modal{background:var(--white);border-radius:14px;max-width:580px;width:100%;max-height:90vh;overflow-y:auto;box-shadow:0 20px 60px rgba(0,0,0,.35);position:relative;}
+    .modal-header{padding:24px 28px 0;display:flex;align-items:flex-start;justify-content:space-between;gap:12px;}
+    .modal-close{background:none;border:none;font-size:1.6em;cursor:pointer;color:var(--text-muted);line-height:1;flex-shrink:0;transition:color .15s;}
+    .modal-close:hover{color:var(--navy);}
+    .modal-body{padding:16px 28px 28px;}
+    .modal-badges{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:14px;}
+    .modal h2{font-family:'Plus Jakarta Sans',sans-serif;font-size:1.2em;font-weight:800;color:var(--navy);line-height:1.3;margin:0;}
+    .modal-desc{font-size:.93em;color:var(--text-main);line-height:1.75;margin:14px 0 18px;}
+    .modal-meta{display:flex;flex-direction:column;gap:8px;margin-bottom:20px;}
+    .modal-meta-row{display:flex;align-items:center;gap:10px;font-size:.87em;color:var(--text-muted);}
+    .modal-meta-row strong{color:var(--navy);min-width:60px;}
+    .modal-link{display:inline-flex;align-items:center;gap:8px;font-family:'Plus Jakarta Sans',sans-serif;font-weight:700;font-size:.92em;color:#fff;background:var(--indigo);padding:11px 24px;border-radius:8px;text-decoration:none;transition:background .2s,transform .15s;box-shadow:0 4px 14px rgba(67,97,238,.3);}
+    .modal-link:hover{background:#3350D0;transform:translateY(-1px);}
+    @media(max-width:768px){.cards-grid{grid-template-columns:1fr;}.filter-row{gap:16px;}.modal{max-height:95vh;}.modal-body,.modal-header{padding-left:20px;padding-right:20px;}}
+  </style>
+</head>
+<body>
+
+  <header>
+    <div class="logo-container">
+      <a href="https://uobaghdad.edu.iq/" target="_blank"><img src="logo3.png" alt="University of Baghdad" class="club-logo"></a>
+      <a href="https://en.coai.uobaghdad.edu.iq/" target="_blank"><img src="coai-english-logo.png" alt="College of AI" class="club-logo"></a>
+    </div>
+    <h1><a href="index.html">Big Data Artificial Intelligence Club</a></h1>
+    <p>A student-led community exploring Big Data and Artificial Intelligence</p>
+  </header>
+
+  <nav>
+    <button class="nav-toggle" aria-label="Toggle menu"><span></span><span></span><span></span></button>
+    <div class="nav-links">
+      <a href="index.html">Home</a>
+      <a href="mission.html">Mission</a>
+      <div class="dropdown">
+        <button class="dropbtn">Activities &#9662;</button>
+        <div class="dropdown-content"><div class="dropdown-content-inner">
+            <a href="workshops.html">Workshops</a>
+            <a href="researches.html">Researches</a>
+            <a href="projects.html">Projects</a>
+            <a href="lectures.html">Lectures</a>
+            <a href="presentations.html">Presentations</a>
+            <a href="seminars.html">Seminars</a>
+            <a href="conferences.html">Conferences</a>
+            <a href="field-visits.html">Field Visits</a>
+        </div></div>
+      </div>
+      <a href="members.html">Members</a>
+      <a href="announcements.html">Announcements</a>
+      <a href="news.html">News</a>
+      <div class="dropdown">
+        <button class="dropbtn">Submissions &#9662;</button>
+        <div class="dropdown-content"><div class="dropdown-content-inner">
+            <a href="https://university-of-baghdad-college-of-ai.github.io/Big_Data_AI_Club_Students/" target="_blank">Students Work</a>
+            <a href="https://university-of-baghdad-college-of-ai.github.io/Big_Data_AI_Club_Professors/" target="_blank">Professors Work</a>
+        </div></div>
+      </div>
+      <a href="submit.html">Submit</a>
+      <a href="contact.html">Contact</a>
+    </div>
+  </nav>
+
+  <section>
+    <h2>&#127758; Field Visits</h2>
+    <p>Organized visits to technology companies, research labs, and institutions.</p>
+
+    <div class="filter-row">
+      <div class="filter-group">
+        <label>By Type</label>
+        <div class="filter-bar" id="typeFilters">
+          <button class="filter-btn active" data-type="all">All Types</button>
+          <button class="filter-btn" data-type="tech">Tech Company</button>
+          <button class="filter-btn" data-type="lab">Research Lab</button>
+          <button class="filter-btn" data-type="uni">University</button>
+          <button class="filter-btn" data-type="gov">Government</button>
+        </div>
+      </div>
+      <div class="filter-group">
+        <label>By Year</label>
+        <div class="filter-bar" id="yearFilters"><button class="filter-btn year-btn active" data-year="all">All Years</button></div>
+      </div>
+    </div>
+
+    <div class="results-count" id="resultsCount">Loading...</div>
+    <div class="cards-grid" id="cardsGrid">
+      <p style="color:var(--text-muted);font-size:.9em;">Loading field visits...</p>
+    </div>
+    <div class="pagination" id="pagination"></div>
+    <div class="no-results" id="noResults">
+      <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+      <p>No results match the selected filters.</p>
+    </div>
+  </section>
+
+
+  <!-- Modal -->
+  <div class="modal-overlay" id="modal" onclick="if(event.target===this)closeModal()">
+    <div class="modal">
+      <div class="modal-header">
+        <div id="modalBadges" class="modal-badges"></div>
+        <button class="modal-close" onclick="closeModal()">&#10005;</button>
+      </div>
+      <div class="modal-body">
+        <h2 id="modalTitle"></h2>
+        <p class="modal-desc" id="modalDesc"></p>
+        <div class="modal-meta">
+          <div class="modal-meta-row"><strong>&#128100; Who</strong> <span id="modalWho"></span></div>
+          <div class="modal-meta-row"><strong>&#128197; Date</strong> <span id="modalDate"></span></div>
+        </div>
+        <a href="#" id="modalLink" class="modal-link" target="_blank">View Full Details &#8594;</a>
+      </div>
+    </div>
+  </div>
+
+  <footer>
+    <p>&copy; 2026 <strong>Big Data Artificial Intelligence Club</strong> | Students Scientific Community</p>
+    <p>Big Data Department | College of AI | University of Baghdad</p>
+  </footer>
+
+  <script>
+    // Fetch data from JSON
+    fetch('https://university-of-baghdad-college-of-ai.github.io/Big_Data_AI_Club_Baghdad/data/field-visits.json')
+      .then(function(r){ return r.json(); })
+      .then(function(data){ allData=data; buildYearFilters(data); renderPage(); })
+      .catch(function(){ document.getElementById('cardsGrid').innerHTML='<p style="color:var(--text-muted)">Failed to load data. Please try again later.</p>'; });
+
+
+    
+    function buildYearFilters(data) {
+      var years = [...new Set(data.map(function(d){ return d.year; }))].filter(Boolean).sort().reverse();
+      var container = document.getElementById('yearFilters');
+      if (!container) return;
+      container.innerHTML = '<button class="filter-btn year-btn active" data-year="all">All Years</button>';
+      years.forEach(function(y) {
+        var btn = document.createElement('button');
+        btn.className = 'filter-btn year-btn';
+        btn.dataset.year = y;
+        btn.textContent = y;
+        btn.addEventListener('click', function() {
+          container.querySelectorAll('.filter-btn').forEach(function(b){ b.classList.remove('active'); });
+          btn.classList.add('active');
+          activeYear = y;
+          applyFilters();
+        });
+        container.appendChild(btn);
+      });
+      // Re-attach "All Years" click
+      container.querySelector('[data-year="all"]').addEventListener('click', function() {
+        container.querySelectorAll('.filter-btn').forEach(function(b){ b.classList.remove('active'); });
+        container.querySelector('[data-year="all"]').classList.add('active');
+        activeYear = 'all';
+        applyFilters();
+      });
+    }
+    var activeType = 'all', activeYear = 'all';
+    var ITEMS_PER_PAGE = 9, currentPage = 1;
+    var allData = [];
+
+    function applyFilters(){ currentPage=1; renderPage(); }
+
+    function renderPage(){
+      var matched = allData.filter(function(d){
+        return (activeType==='all'||d.type===activeType) && (activeYear==='all'||d.year===activeYear);
+      });
+      var total=matched.length, totalPages=Math.max(1,Math.ceil(total/ITEMS_PER_PAGE));
+      if(currentPage>totalPages) currentPage=totalPages;
+      var start=(currentPage-1)*ITEMS_PER_PAGE, end=start+ITEMS_PER_PAGE, slice=matched.slice(start,end);
+
+      var grid=document.getElementById('cardsGrid');
+      grid.innerHTML = slice.length ? slice.map(cardHTML).join('') : '';
+
+      var rc=document.getElementById('resultsCount');
+      if(rc) rc.innerHTML='<strong>'+total+'</strong> result'+(total!==1?'s':'')+' found'+
+        (totalPages>1?' &nbsp;|&nbsp; Page '+currentPage+' of '+totalPages:'');
+
+      var nr=document.getElementById('noResults');
+      if(nr) nr.style.display=total===0?'block':'none';
+
+      renderPagination(totalPages);
+    }
+
+    function cardHTML(d){
+      var safeD = JSON.stringify(d).replace(/'/g,"&#39;");
+      return '<div class="card">'+
+        '<div class="card-badges">'+
+          '<span class="badge badge-'+d.type+'">'+typeLabel(d.type)+'</span>'+
+          '<span class="badge badge-year">'+d.year+'</span>'+
+        '</div>'+
+        '<h3>'+d.title+'</h3>'+
+        '<p>'+d.desc+'</p>'+
+        '<div class="card-meta">'+
+          '<span>&#128100; '+d.who+'</span>'+
+          '<span>&#128197; '+d.date+'</span>'+
+        '</div>'+
+        '<button class="view-btn" onclick='openModal('+safeD+')'>View Details &#8594;</button>'+
+      '</div>';
+    }
+
+    function typeLabel(t){
+      var map={ml:'Machine Learning',bigdata:'Big Data',programming:'Programming',tools:'Tools',
+        ai:'AI',nlp:'NLP',bio:'Bioinformatics',ethics:'Ethics',data:'Data Science',
+        career:'Career',project:'Project',research:'Research',demo:'Demo',keynote:'Keynote',
+        trend:'Trend',industry:'Industry',discussion:'Discussion',national:'National',
+        international:'International',local:'Local',organized:'Organized',tech:'Tech Company',
+        lab:'Research Lab',uni:'University',gov:'Government',software:'Software',
+        publication:'Publication',lecture:'Lecture',workshop:'Workshop',resource:'Resource'};
+      return map[t]||t;
+    }
+
+    function renderPagination(totalPages){
+      var pg=document.getElementById('pagination');
+      if(!pg) return;
+      pg.innerHTML='';
+      if(totalPages<=1) return;
+      function btn(label,page,disabled,active){
+        var b=document.createElement('button');
+        b.className='page-btn'+(active?' active':'');
+        b.innerHTML=label; b.disabled=disabled;
+        b.onclick=function(){ currentPage=page; renderPage(); window.scrollTo({top:0,behavior:'smooth'}); };
+        pg.appendChild(b);
+      }
+      btn('&#8592; Prev',currentPage-1,currentPage===1,false);
+      for(var p=1;p<=totalPages;p++) btn(p,p,false,p===currentPage);
+      btn('Next &#8594;',currentPage+1,currentPage===totalPages,false);
+    }
+
+    // ── Modal ──
+    function openModal(d){
+      document.getElementById('modalBadges').innerHTML=
+        '<span class="badge badge-'+d.type+'">'+typeLabel(d.type)+'</span>'+
+        '<span class="badge badge-year">'+d.year+'</span>';
+      document.getElementById('modalTitle').textContent=d.title;
+      document.getElementById('modalDesc').textContent=d.desc;
+      document.getElementById('modalWho').textContent=d.who;
+      document.getElementById('modalDate').textContent=d.date;
+      var link=document.getElementById('modalLink');
+      if(d.link && d.link!=='#'){
+        link.href=d.link; link.style.display='inline-flex';
+      } else {
+        link.style.display='none';
+      }
+      document.getElementById('modal').classList.add('open');
+      document.body.style.overflow='hidden';
+    }
+    function closeModal(){
+      document.getElementById('modal').classList.remove('open');
+      document.body.style.overflow='';
+    }
+    document.addEventListener('keydown',function(e){ if(e.key==='Escape') closeModal(); });
+
+    // ── Filter buttons ──
+    document.querySelectorAll('#typeFilters .filter-btn').forEach(function(btn){
+      btn.addEventListener('click',function(){
+        document.querySelectorAll('#typeFilters .filter-btn').forEach(function(b){b.classList.remove('active');});
+        btn.classList.add('active'); activeType=btn.dataset.type; applyFilters();
+      });
+    });
+    document.querySelectorAll('#yearFilters .filter-btn').forEach(function(btn){
+      btn.addEventListener('click',function(){
+        document.querySelectorAll('#yearFilters .filter-btn').forEach(function(b){b.classList.remove('active');});
+        btn.classList.add('active'); activeYear=btn.dataset.year; applyFilters();
+      });
+    });
+
+    // ── Mobile nav ──
+    var toggle=document.querySelector('.nav-toggle'), navLinks=document.querySelector('.nav-links');
+    if(toggle&&navLinks){
+      toggle.addEventListener('click',function(){navLinks.classList.toggle('open');});
+      document.querySelectorAll('.dropdown').forEach(function(dd){
+        dd.querySelector('.dropbtn').addEventListener('click',function(e){
+          if(window.innerWidth<=768){e.preventDefault();e.stopPropagation();dd.classList.toggle('open');}
+        });
+      });
+      document.querySelectorAll('.nav-links a').forEach(function(a){
+        a.addEventListener('click',function(){navLinks.classList.remove('open');});
+      });
+    }
+  </script>
+</body>
+</html>
