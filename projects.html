@@ -170,88 +170,37 @@
     <p>Big Data Department | College of AI | University of Baghdad</p>
   </footer>
 
-  <script>
-    // Fetch data from JSON
-        fetch('https://raw.githubusercontent.com/University-of-Baghdad-College-of-AI/Big_Data_AI_Club_Baghdad/main/data/projects.json')
-      .then(function(r){ return r.json(); })
-      .then(function(data){ allData=data; buildYearFilters(data); renderPage(); })
-      .catch(function(){
-        // Fallback: inline data if fetch fails
-        allData = [{"type": "ai", "year": "2026", "title": "AI Hackathon Baghdad 2026", "desc": "Competitive project showcased at the National AI Hackathon — won 2nd place with an innovative ML-based solution.", "who": "Club Team", "date": "June 2026", "link": "#"}, {"type": "research", "year": "2026", "title": "Big Data Clustering Research", "desc": "Research paper on novel clustering techniques for large-scale datasets, targeting Q1 journal publication.", "who": "Dr. Jalal Hameed", "date": "June 2026", "link": "#"}, {"type": "research", "year": "2026", "title": "CS Department Collaboration", "desc": "Joint research initiative with the Computer Science Department exploring cross-disciplinary AI applications.", "who": "Club Members", "date": "May 2026", "link": "#"}, {"type": "ai", "year": "2026", "title": "Video Fake Frame Detection — VIA-Net", "desc": "Novel deep learning architecture for detecting manipulated frames in video content, submitted for Q1 publication.", "who": "Dr. Jalal Hameed", "date": "May 2026", "link": "#"}, {"type": "data", "year": "2026", "title": "Arbaeen Disease Spread Prediction", "desc": "GNN-based platform predicting infectious disease spread during large crowd gatherings using real epidemiological data.", "who": "Dr. Jalal Hameed", "date": "April 2026", "link": "#"}, {"type": "ai", "year": "2025", "title": "Machine Learning for Healthcare", "desc": "Applying ML models to medical datasets for early disease detection and clinical decision support.", "who": "Student Team", "date": "April 2025", "link": "#"}, {"type": "software", "year": "2025", "title": "Data Analysis Toolkit", "desc": "Reusable Python tools for data cleaning, transformation, visualization, and exploratory analysis.", "who": "Club Members", "date": "March 2025", "link": "#"}, {"type": "ai", "year": "2025", "title": "Arabic NLP Text Classifier", "desc": "Arabic text classification system using parameter-efficient transformer fine-tuning for multi-domain classification.", "who": "Student Team", "date": "February 2025", "link": "#"}, {"type": "software", "year": "2025", "title": "Smart Campus IoT Dashboard", "desc": "Real-time web dashboard aggregating IoT sensor data from across the College of AI campus.", "who": "Student Team", "date": "January 2025", "link": "#"}, {"type": "research", "year": "2025", "title": "SDG Classification using SciBERT-GraphSAGE", "desc": "Hybrid NLP and graph learning framework mapping University of Baghdad research publications to UN SDGs.", "who": "Dr. Ahmed Ali", "date": "March 2025", "link": "#"}, {"type": "data", "year": "2025", "title": "Student Performance Predictive Analytics", "desc": "Using academic records and behavioral data to predict student outcomes and recommend early interventions.", "who": "Student Team", "date": "February 2025", "link": "#"}, {"type": "research", "year": "2024", "title": "Intro to AI & Big Data", "desc": "Foundational research project for new members exploring core AI and Big Data concepts and applications.", "who": "Club Members", "date": "September 2024", "link": "#"}, {"type": "data", "year": "2024", "title": "Baghdad Traffic Pattern Analysis", "desc": "Analysis of traffic flow patterns in Baghdad using GPS data and statistical modeling to identify congestion hotspots.", "who": "Student Team", "date": "October 2024", "link": "#"}, {"type": "software", "year": "2024", "title": "Arabic Chatbot for Student Support", "desc": "Rule-based and ML-powered Arabic chatbot to help students navigate university services and FAQs.", "who": "Student Team", "date": "November 2024", "link": "#"}, {"type": "ai", "year": "2024", "title": "Face Recognition Attendance System", "desc": "Automated attendance tracking system using deep learning-based face recognition for classrooms.", "who": "Student Team", "date": "December 2024", "link": "#"}];
-        buildYearFilters(allData); renderPage();
-      });
+    <script>
+    var allData = [{"type": "ai", "year": "2026", "title": "AI Hackathon Baghdad 2026", "desc": "Won 2nd place at the National AI Hackathon with an innovative ML-based solution.", "who": "Club Team", "date": "June 2026", "link": "#"}, {"type": "research", "year": "2026", "title": "Big Data Clustering Research", "desc": "Novel clustering techniques for large-scale datasets targeting Q1 journal publication.", "who": "Dr. Jalal Hameed", "date": "June 2026", "link": "#"}, {"type": "research", "year": "2026", "title": "CS Department Collaboration", "desc": "Joint research with Computer Science Department on cross-disciplinary AI applications.", "who": "Club Members", "date": "May 2026", "link": "#"}, {"type": "ai", "year": "2026", "title": "Video Fake Frame Detection — VIA-Net", "desc": "Deep learning architecture for detecting manipulated frames in video content.", "who": "Dr. Jalal Hameed", "date": "May 2026", "link": "#"}, {"type": "data", "year": "2026", "title": "Arbaeen Disease Spread Prediction", "desc": "GNN-based platform predicting disease spread during large crowd gatherings.", "who": "Dr. Jalal Hameed", "date": "April 2026", "link": "#"}, {"type": "ai", "year": "2025", "title": "Machine Learning for Healthcare", "desc": "Applying ML models to medical datasets for early disease detection.", "who": "Student Team", "date": "April 2025", "link": "#"}, {"type": "software", "year": "2025", "title": "Data Analysis Toolkit", "desc": "Reusable Python tools for data cleaning, transformation, and visualization.", "who": "Club Members", "date": "March 2025", "link": "#"}, {"type": "ai", "year": "2025", "title": "Arabic NLP Text Classifier", "desc": "Arabic text classification using parameter-efficient transformer fine-tuning.", "who": "Student Team", "date": "February 2025", "link": "#"}, {"type": "software", "year": "2025", "title": "Smart Campus IoT Dashboard", "desc": "Real-time dashboard aggregating IoT sensor data from the College of AI campus.", "who": "Student Team", "date": "January 2025", "link": "#"}, {"type": "research", "year": "2025", "title": "SDG Classification using SciBERT-GraphSAGE", "desc": "Hybrid NLP and graph framework mapping UoB research publications to UN SDGs.", "who": "Dr. Ahmed Ali", "date": "March 2025", "link": "#"}, {"type": "data", "year": "2025", "title": "Student Performance Predictive Analytics", "desc": "Using academic records to predict student outcomes and recommend early interventions.", "who": "Student Team", "date": "February 2025", "link": "#"}, {"type": "research", "year": "2024", "title": "Intro to AI & Big Data", "desc": "Foundational project exploring core AI and Big Data concepts and applications.", "who": "Club Members", "date": "September 2024", "link": "#"}, {"type": "data", "year": "2024", "title": "Baghdad Traffic Pattern Analysis", "desc": "Analysis of traffic flow in Baghdad using GPS data and statistical modeling.", "who": "Student Team", "date": "October 2024", "link": "#"}, {"type": "software", "year": "2024", "title": "Arabic Chatbot for Student Support", "desc": "ML-powered Arabic chatbot helping students navigate university services.", "who": "Student Team", "date": "November 2024", "link": "#"}, {"type": "ai", "year": "2024", "title": "Face Recognition Attendance System", "desc": "Automated attendance tracking using deep learning face recognition for classrooms.", "who": "Student Team", "date": "December 2024", "link": "#"}];
 
+    var activeType = 'all', activeYear = 'all';
+    var ITEMS_PER_PAGE = 9, currentPage = 1;
 
-    
     function buildYearFilters(data) {
-      var years = [...new Set(data.map(function(d){ return d.year; }))].filter(Boolean).sort().reverse();
+      var years = [];
+      data.forEach(function(d){ if(d.year && years.indexOf(d.year)===-1) years.push(d.year); });
+      years.sort().reverse();
       var container = document.getElementById('yearFilters');
-      if (!container) return;
+      if(!container) return;
       container.innerHTML = '<button class="filter-btn year-btn active" data-year="all">All Years</button>';
-      years.forEach(function(y) {
+      years.forEach(function(y){
         var btn = document.createElement('button');
         btn.className = 'filter-btn year-btn';
         btn.dataset.year = y;
         btn.textContent = y;
-        btn.addEventListener('click', function() {
-          container.querySelectorAll('.filter-btn').forEach(function(b){ b.classList.remove('active'); });
-          btn.classList.add('active');
-          activeYear = y;
-          applyFilters();
-        });
         container.appendChild(btn);
       });
-      // Re-attach "All Years" click
-      container.querySelector('[data-year="all"]').addEventListener('click', function() {
-        container.querySelectorAll('.filter-btn').forEach(function(b){ b.classList.remove('active'); });
-        container.querySelector('[data-year="all"]').classList.add('active');
-        activeYear = 'all';
-        applyFilters();
+      container.querySelectorAll('.filter-btn').forEach(function(btn){
+        btn.addEventListener('click', function(){
+          container.querySelectorAll('.filter-btn').forEach(function(b){b.classList.remove('active');});
+          btn.classList.add('active');
+          activeYear = btn.dataset.year;
+          currentPage = 1; renderPage();
+        });
       });
     }
-    var activeType = 'all', activeYear = 'all';
-    var ITEMS_PER_PAGE = 9, currentPage = 1;
-    var allData = [];
 
     function applyFilters(){ currentPage=1; renderPage(); }
-
-    function renderPage(){
-      var matched = allData.filter(function(d){
-        return (activeType==='all'||d.type===activeType) && (activeYear==='all'||d.year===activeYear);
-      });
-      var total=matched.length, totalPages=Math.max(1,Math.ceil(total/ITEMS_PER_PAGE));
-      if(currentPage>totalPages) currentPage=totalPages;
-      var start=(currentPage-1)*ITEMS_PER_PAGE, end=start+ITEMS_PER_PAGE, slice=matched.slice(start,end);
-
-      var grid=document.getElementById('cardsGrid');
-      grid.innerHTML = slice.length ? slice.map(cardHTML).join('') : '';
-
-      var rc=document.getElementById('resultsCount');
-      if(rc) rc.innerHTML='<strong>'+total+'</strong> result'+(total!==1?'s':'')+' found'+
-        (totalPages>1?' &nbsp;|&nbsp; Page '+currentPage+' of '+totalPages:'');
-
-      var nr=document.getElementById('noResults');
-      if(nr) nr.style.display=total===0?'block':'none';
-
-      renderPagination(totalPages);
-    }
-
-    function cardHTML(d){
-      var safeD = JSON.stringify(d).replace(/'/g,"&#39;");
-      return '<div class="card">'+
-        '<div class="card-badges">'+
-          '<span class="badge badge-'+d.type+'">'+typeLabel(d.type)+'</span>'+
-          '<span class="badge badge-year">'+d.year+'</span>'+
-        '</div>'+
-        '<h3>'+d.title+'</h3>'+
-        '<p>'+d.desc+'</p>'+
-        '<div class="card-meta">'+
-          '<span>&#128100; '+d.who+'</span>'+
-          '<span>&#128197; '+d.date+'</span>'+
-        '</div>'+
-        '<button class="view-btn" onclick='openModal('+safeD+')'>View Details &#8594;</button>'+
-      '</div>';
-    }
 
     function typeLabel(t){
       var map={ml:'Machine Learning',bigdata:'Big Data',programming:'Programming',tools:'Tools',
@@ -260,42 +209,71 @@
         trend:'Trend',industry:'Industry',discussion:'Discussion',national:'National',
         international:'International',local:'Local',organized:'Organized',tech:'Tech Company',
         lab:'Research Lab',uni:'University',gov:'Government',software:'Software',
-        publication:'Publication',lecture:'Lecture',workshop:'Workshop',resource:'Resource'};
+        publication:'Publication',lecture:'Lecture',workshop:'Workshop',resource:'Resource',file:'File'};
       return map[t]||t;
     }
 
+    function cardHTML(d){
+      var safeD = JSON.stringify(d).replace(/'/g,"&#39;");
+      return '<div class="card">'+
+        '<div class="card-badges">'+
+          '<span class="badge badge-'+(d.type||'file')+'">'+typeLabel(d.type||'file')+'</span>'+
+          '<span class="badge badge-year">'+(d.year||'')+'</span>'+
+        '</div>'+
+        '<h3>'+(d.title||'')+'</h3>'+
+        '<p>'+(d.desc||'')+'</p>'+
+        '<div class="card-meta">'+
+          '<span>&#128100; '+(d.who||'')+'</span>'+
+          '<span>&#128197; '+(d.date||'')+'</span>'+
+        '</div>'+
+        '<button class="view-btn" onclick='openModal('+safeD+')'>View Details &#8594;</button>'+
+      '</div>';
+    }
+
+    function renderPage(){
+      var matched = allData.filter(function(d){
+        return (activeType==='all'||d.type===activeType) && (activeYear==='all'||d.year===activeYear);
+      });
+      var total = matched.length;
+      var totalPages = Math.max(1, Math.ceil(total/ITEMS_PER_PAGE));
+      if(currentPage>totalPages) currentPage=totalPages;
+      var slice = matched.slice((currentPage-1)*ITEMS_PER_PAGE, currentPage*ITEMS_PER_PAGE);
+      document.getElementById('cardsGrid').innerHTML = slice.map(cardHTML).join('');
+      var rc = document.getElementById('resultsCount');
+      if(rc) rc.innerHTML = '<strong>'+total+'</strong> result'+(total!==1?'s':'')+' found'+
+        (totalPages>1?' &nbsp;|&nbsp; Page '+currentPage+' of '+totalPages:'');
+      var nr = document.getElementById('noResults');
+      if(nr) nr.style.display = total===0?'block':'none';
+      renderPagination(totalPages);
+    }
+
     function renderPagination(totalPages){
-      var pg=document.getElementById('pagination');
-      if(!pg) return;
-      pg.innerHTML='';
+      var pg = document.getElementById('pagination');
+      if(!pg) return; pg.innerHTML='';
       if(totalPages<=1) return;
-      function btn(label,page,disabled,active){
+      function mkBtn(label,p,disabled,active){
         var b=document.createElement('button');
         b.className='page-btn'+(active?' active':'');
         b.innerHTML=label; b.disabled=disabled;
-        b.onclick=function(){ currentPage=page; renderPage(); window.scrollTo({top:0,behavior:'smooth'}); };
+        b.onclick=function(){currentPage=p;renderPage();window.scrollTo({top:0,behavior:'smooth'});};
         pg.appendChild(b);
       }
-      btn('&#8592; Prev',currentPage-1,currentPage===1,false);
-      for(var p=1;p<=totalPages;p++) btn(p,p,false,p===currentPage);
-      btn('Next &#8594;',currentPage+1,currentPage===totalPages,false);
+      mkBtn('&#8592; Prev',currentPage-1,currentPage===1,false);
+      for(var p=1;p<=totalPages;p++) mkBtn(p,p,false,p===currentPage);
+      mkBtn('Next &#8594;',currentPage+1,currentPage===totalPages,false);
     }
 
-    // ── Modal ──
     function openModal(d){
       document.getElementById('modalBadges').innerHTML=
-        '<span class="badge badge-'+d.type+'">'+typeLabel(d.type)+'</span>'+
-        '<span class="badge badge-year">'+d.year+'</span>';
-      document.getElementById('modalTitle').textContent=d.title;
-      document.getElementById('modalDesc').textContent=d.desc;
-      document.getElementById('modalWho').textContent=d.who;
-      document.getElementById('modalDate').textContent=d.date;
-      var link=document.getElementById('modalLink');
-      if(d.link && d.link!=='#'){
-        link.href=d.link; link.style.display='inline-flex';
-      } else {
-        link.style.display='none';
-      }
+        '<span class="badge badge-'+(d.type||'file')+'">'+typeLabel(d.type||'file')+'</span>'+
+        '<span class="badge badge-year">'+(d.year||'')+'</span>';
+      document.getElementById('modalTitle').textContent=d.title||'';
+      document.getElementById('modalDesc').textContent=d.desc||'No description available.';
+      document.getElementById('modalWho').textContent=d.who||'—';
+      document.getElementById('modalDate').textContent=d.date||'—';
+      var lnk=document.getElementById('modalLink');
+      if(d.link&&d.link!=='#'){lnk.href=d.link;lnk.style.display='inline-flex';}
+      else{lnk.style.display='none';}
       document.getElementById('modal').classList.add('open');
       document.body.style.overflow='hidden';
     }
@@ -303,23 +281,16 @@
       document.getElementById('modal').classList.remove('open');
       document.body.style.overflow='';
     }
-    document.addEventListener('keydown',function(e){ if(e.key==='Escape') closeModal(); });
+    document.addEventListener('keydown',function(e){if(e.key==='Escape')closeModal();});
 
-    // ── Filter buttons ──
     document.querySelectorAll('#typeFilters .filter-btn').forEach(function(btn){
       btn.addEventListener('click',function(){
         document.querySelectorAll('#typeFilters .filter-btn').forEach(function(b){b.classList.remove('active');});
         btn.classList.add('active'); activeType=btn.dataset.type; applyFilters();
       });
     });
-    document.querySelectorAll('#yearFilters .filter-btn').forEach(function(btn){
-      btn.addEventListener('click',function(){
-        document.querySelectorAll('#yearFilters .filter-btn').forEach(function(b){b.classList.remove('active');});
-        btn.classList.add('active'); activeYear=btn.dataset.year; applyFilters();
-      });
-    });
 
-    // ── Mobile nav ──
+    // Mobile nav
     var toggle=document.querySelector('.nav-toggle'), navLinks=document.querySelector('.nav-links');
     if(toggle&&navLinks){
       toggle.addEventListener('click',function(){navLinks.classList.toggle('open');});
@@ -332,6 +303,12 @@
         a.addEventListener('click',function(){navLinks.classList.remove('open');});
       });
     }
+
+    
+
+    // Init
+    buildYearFilters(allData);
+    renderPage();
   </script>
 </body>
 </html>

@@ -171,88 +171,37 @@
     <p>Big Data Department | College of AI | University of Baghdad</p>
   </footer>
 
-  <script>
-    // Fetch data from JSON
-        fetch('https://raw.githubusercontent.com/University-of-Baghdad-College-of-AI/Big_Data_AI_Club_Baghdad/main/data/lectures.json')
-      .then(function(r){ return r.json(); })
-      .then(function(data){ allData=data; buildYearFilters(data); renderPage(); })
-      .catch(function(){
-        // Fallback: inline data if fetch fails
-        allData = [{"type": "ai", "year": "2026", "title": "Introduction to Artificial Intelligence", "desc": "Foundational lecture covering the history, key concepts, and current landscape of Artificial Intelligence and its applications.", "who": "Dr. Jalal Hameed", "date": "June 2026", "link": "#"}, {"type": "ethics", "year": "2026", "title": "AI Ethics and Responsible Innovation", "desc": "Ethical challenges in AI deployment including bias, fairness, transparency, and accountability in real-world systems.", "who": "Dr. Rana", "date": "May 2026", "link": "#"}, {"type": "data", "year": "2025", "title": "From Raw Data to Insights", "desc": "Full data science pipeline from collection and cleaning to visualization and storytelling with real datasets.", "who": "Club Members", "date": "April 2025", "link": "#"}, {"type": "career", "year": "2025", "title": "Career Paths in AI and Big Data", "desc": "Industry professionals share insights on career opportunities, required skills, and growth paths in the AI field.", "who": "Guest Speaker", "date": "February 2025", "link": "#"}, {"type": "ai", "year": "2024", "title": "Neural Networks from Scratch", "desc": "Building and training neural networks from first principles using Python and NumPy without any ML frameworks.", "who": "Dr. Jalal Hameed", "date": "November 2024", "link": "#"}, {"type": "bigdata", "year": "2024", "title": "Introduction to Cloud Computing for Data Science", "desc": "Overview of AWS, GCP, and Azure services for scalable data storage and ML workloads in the cloud.", "who": "Guest Speaker", "date": "September 2024", "link": "#"}];
-        buildYearFilters(allData); renderPage();
-      });
+    <script>
+    var allData = [{"type": "ai", "year": "2026", "title": "Introduction to Artificial Intelligence", "desc": "Foundational lecture covering the history, key concepts, and current landscape of AI.", "who": "Dr. Jalal Hameed", "date": "June 2026", "link": "#"}, {"type": "ethics", "year": "2026", "title": "AI Ethics and Responsible Innovation", "desc": "Ethical challenges in AI including bias, fairness, transparency, and accountability.", "who": "Dr. Rana", "date": "May 2026", "link": "#"}, {"type": "data", "year": "2025", "title": "From Raw Data to Insights", "desc": "Full data science pipeline from collection and cleaning to visualization and storytelling.", "who": "Club Members", "date": "April 2025", "link": "#"}, {"type": "career", "year": "2025", "title": "Career Paths in AI and Big Data", "desc": "Industry professionals share insights on career opportunities in AI.", "who": "Guest Speaker", "date": "February 2025", "link": "#"}, {"type": "ai", "year": "2024", "title": "Neural Networks from Scratch", "desc": "Building and training neural networks from first principles using Python and NumPy.", "who": "Dr. Jalal Hameed", "date": "November 2024", "link": "#"}, {"type": "bigdata", "year": "2024", "title": "Introduction to Cloud Computing for Data Science", "desc": "Overview of AWS, GCP, and Azure for scalable data storage and ML workloads.", "who": "Guest Speaker", "date": "September 2024", "link": "#"}];
 
+    var activeType = 'all', activeYear = 'all';
+    var ITEMS_PER_PAGE = 9, currentPage = 1;
 
-    
     function buildYearFilters(data) {
-      var years = [...new Set(data.map(function(d){ return d.year; }))].filter(Boolean).sort().reverse();
+      var years = [];
+      data.forEach(function(d){ if(d.year && years.indexOf(d.year)===-1) years.push(d.year); });
+      years.sort().reverse();
       var container = document.getElementById('yearFilters');
-      if (!container) return;
+      if(!container) return;
       container.innerHTML = '<button class="filter-btn year-btn active" data-year="all">All Years</button>';
-      years.forEach(function(y) {
+      years.forEach(function(y){
         var btn = document.createElement('button');
         btn.className = 'filter-btn year-btn';
         btn.dataset.year = y;
         btn.textContent = y;
-        btn.addEventListener('click', function() {
-          container.querySelectorAll('.filter-btn').forEach(function(b){ b.classList.remove('active'); });
-          btn.classList.add('active');
-          activeYear = y;
-          applyFilters();
-        });
         container.appendChild(btn);
       });
-      // Re-attach "All Years" click
-      container.querySelector('[data-year="all"]').addEventListener('click', function() {
-        container.querySelectorAll('.filter-btn').forEach(function(b){ b.classList.remove('active'); });
-        container.querySelector('[data-year="all"]').classList.add('active');
-        activeYear = 'all';
-        applyFilters();
+      container.querySelectorAll('.filter-btn').forEach(function(btn){
+        btn.addEventListener('click', function(){
+          container.querySelectorAll('.filter-btn').forEach(function(b){b.classList.remove('active');});
+          btn.classList.add('active');
+          activeYear = btn.dataset.year;
+          currentPage = 1; renderPage();
+        });
       });
     }
-    var activeType = 'all', activeYear = 'all';
-    var ITEMS_PER_PAGE = 9, currentPage = 1;
-    var allData = [];
 
     function applyFilters(){ currentPage=1; renderPage(); }
-
-    function renderPage(){
-      var matched = allData.filter(function(d){
-        return (activeType==='all'||d.type===activeType) && (activeYear==='all'||d.year===activeYear);
-      });
-      var total=matched.length, totalPages=Math.max(1,Math.ceil(total/ITEMS_PER_PAGE));
-      if(currentPage>totalPages) currentPage=totalPages;
-      var start=(currentPage-1)*ITEMS_PER_PAGE, end=start+ITEMS_PER_PAGE, slice=matched.slice(start,end);
-
-      var grid=document.getElementById('cardsGrid');
-      grid.innerHTML = slice.length ? slice.map(cardHTML).join('') : '';
-
-      var rc=document.getElementById('resultsCount');
-      if(rc) rc.innerHTML='<strong>'+total+'</strong> result'+(total!==1?'s':'')+' found'+
-        (totalPages>1?' &nbsp;|&nbsp; Page '+currentPage+' of '+totalPages:'');
-
-      var nr=document.getElementById('noResults');
-      if(nr) nr.style.display=total===0?'block':'none';
-
-      renderPagination(totalPages);
-    }
-
-    function cardHTML(d){
-      var safeD = JSON.stringify(d).replace(/'/g,"&#39;");
-      return '<div class="card">'+
-        '<div class="card-badges">'+
-          '<span class="badge badge-'+d.type+'">'+typeLabel(d.type)+'</span>'+
-          '<span class="badge badge-year">'+d.year+'</span>'+
-        '</div>'+
-        '<h3>'+d.title+'</h3>'+
-        '<p>'+d.desc+'</p>'+
-        '<div class="card-meta">'+
-          '<span>&#128100; '+d.who+'</span>'+
-          '<span>&#128197; '+d.date+'</span>'+
-        '</div>'+
-        '<button class="view-btn" onclick='openModal('+safeD+')'>View Details &#8594;</button>'+
-      '</div>';
-    }
 
     function typeLabel(t){
       var map={ml:'Machine Learning',bigdata:'Big Data',programming:'Programming',tools:'Tools',
@@ -261,42 +210,71 @@
         trend:'Trend',industry:'Industry',discussion:'Discussion',national:'National',
         international:'International',local:'Local',organized:'Organized',tech:'Tech Company',
         lab:'Research Lab',uni:'University',gov:'Government',software:'Software',
-        publication:'Publication',lecture:'Lecture',workshop:'Workshop',resource:'Resource'};
+        publication:'Publication',lecture:'Lecture',workshop:'Workshop',resource:'Resource',file:'File'};
       return map[t]||t;
     }
 
+    function cardHTML(d){
+      var safeD = JSON.stringify(d).replace(/'/g,"&#39;");
+      return '<div class="card">'+
+        '<div class="card-badges">'+
+          '<span class="badge badge-'+(d.type||'file')+'">'+typeLabel(d.type||'file')+'</span>'+
+          '<span class="badge badge-year">'+(d.year||'')+'</span>'+
+        '</div>'+
+        '<h3>'+(d.title||'')+'</h3>'+
+        '<p>'+(d.desc||'')+'</p>'+
+        '<div class="card-meta">'+
+          '<span>&#128100; '+(d.who||'')+'</span>'+
+          '<span>&#128197; '+(d.date||'')+'</span>'+
+        '</div>'+
+        '<button class="view-btn" onclick='openModal('+safeD+')'>View Details &#8594;</button>'+
+      '</div>';
+    }
+
+    function renderPage(){
+      var matched = allData.filter(function(d){
+        return (activeType==='all'||d.type===activeType) && (activeYear==='all'||d.year===activeYear);
+      });
+      var total = matched.length;
+      var totalPages = Math.max(1, Math.ceil(total/ITEMS_PER_PAGE));
+      if(currentPage>totalPages) currentPage=totalPages;
+      var slice = matched.slice((currentPage-1)*ITEMS_PER_PAGE, currentPage*ITEMS_PER_PAGE);
+      document.getElementById('cardsGrid').innerHTML = slice.map(cardHTML).join('');
+      var rc = document.getElementById('resultsCount');
+      if(rc) rc.innerHTML = '<strong>'+total+'</strong> result'+(total!==1?'s':'')+' found'+
+        (totalPages>1?' &nbsp;|&nbsp; Page '+currentPage+' of '+totalPages:'');
+      var nr = document.getElementById('noResults');
+      if(nr) nr.style.display = total===0?'block':'none';
+      renderPagination(totalPages);
+    }
+
     function renderPagination(totalPages){
-      var pg=document.getElementById('pagination');
-      if(!pg) return;
-      pg.innerHTML='';
+      var pg = document.getElementById('pagination');
+      if(!pg) return; pg.innerHTML='';
       if(totalPages<=1) return;
-      function btn(label,page,disabled,active){
+      function mkBtn(label,p,disabled,active){
         var b=document.createElement('button');
         b.className='page-btn'+(active?' active':'');
         b.innerHTML=label; b.disabled=disabled;
-        b.onclick=function(){ currentPage=page; renderPage(); window.scrollTo({top:0,behavior:'smooth'}); };
+        b.onclick=function(){currentPage=p;renderPage();window.scrollTo({top:0,behavior:'smooth'});};
         pg.appendChild(b);
       }
-      btn('&#8592; Prev',currentPage-1,currentPage===1,false);
-      for(var p=1;p<=totalPages;p++) btn(p,p,false,p===currentPage);
-      btn('Next &#8594;',currentPage+1,currentPage===totalPages,false);
+      mkBtn('&#8592; Prev',currentPage-1,currentPage===1,false);
+      for(var p=1;p<=totalPages;p++) mkBtn(p,p,false,p===currentPage);
+      mkBtn('Next &#8594;',currentPage+1,currentPage===totalPages,false);
     }
 
-    // ── Modal ──
     function openModal(d){
       document.getElementById('modalBadges').innerHTML=
-        '<span class="badge badge-'+d.type+'">'+typeLabel(d.type)+'</span>'+
-        '<span class="badge badge-year">'+d.year+'</span>';
-      document.getElementById('modalTitle').textContent=d.title;
-      document.getElementById('modalDesc').textContent=d.desc;
-      document.getElementById('modalWho').textContent=d.who;
-      document.getElementById('modalDate').textContent=d.date;
-      var link=document.getElementById('modalLink');
-      if(d.link && d.link!=='#'){
-        link.href=d.link; link.style.display='inline-flex';
-      } else {
-        link.style.display='none';
-      }
+        '<span class="badge badge-'+(d.type||'file')+'">'+typeLabel(d.type||'file')+'</span>'+
+        '<span class="badge badge-year">'+(d.year||'')+'</span>';
+      document.getElementById('modalTitle').textContent=d.title||'';
+      document.getElementById('modalDesc').textContent=d.desc||'No description available.';
+      document.getElementById('modalWho').textContent=d.who||'—';
+      document.getElementById('modalDate').textContent=d.date||'—';
+      var lnk=document.getElementById('modalLink');
+      if(d.link&&d.link!=='#'){lnk.href=d.link;lnk.style.display='inline-flex';}
+      else{lnk.style.display='none';}
       document.getElementById('modal').classList.add('open');
       document.body.style.overflow='hidden';
     }
@@ -304,23 +282,16 @@
       document.getElementById('modal').classList.remove('open');
       document.body.style.overflow='';
     }
-    document.addEventListener('keydown',function(e){ if(e.key==='Escape') closeModal(); });
+    document.addEventListener('keydown',function(e){if(e.key==='Escape')closeModal();});
 
-    // ── Filter buttons ──
     document.querySelectorAll('#typeFilters .filter-btn').forEach(function(btn){
       btn.addEventListener('click',function(){
         document.querySelectorAll('#typeFilters .filter-btn').forEach(function(b){b.classList.remove('active');});
         btn.classList.add('active'); activeType=btn.dataset.type; applyFilters();
       });
     });
-    document.querySelectorAll('#yearFilters .filter-btn').forEach(function(btn){
-      btn.addEventListener('click',function(){
-        document.querySelectorAll('#yearFilters .filter-btn').forEach(function(b){b.classList.remove('active');});
-        btn.classList.add('active'); activeYear=btn.dataset.year; applyFilters();
-      });
-    });
 
-    // ── Mobile nav ──
+    // Mobile nav
     var toggle=document.querySelector('.nav-toggle'), navLinks=document.querySelector('.nav-links');
     if(toggle&&navLinks){
       toggle.addEventListener('click',function(){navLinks.classList.toggle('open');});
@@ -333,6 +304,12 @@
         a.addEventListener('click',function(){navLinks.classList.remove('open');});
       });
     }
+
+    
+
+    // Init
+    buildYearFilters(allData);
+    renderPage();
   </script>
 </body>
 </html>
