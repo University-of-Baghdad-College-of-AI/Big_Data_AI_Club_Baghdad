@@ -172,10 +172,14 @@
 
   <script>
     // Fetch data from JSON
-    fetch('https://university-of-baghdad-college-of-ai.github.io/Big_Data_AI_Club_Baghdad/data/conferences.json')
+        fetch('https://raw.githubusercontent.com/University-of-Baghdad-College-of-AI/Big_Data_AI_Club_Baghdad/main/data/conferences.json')
       .then(function(r){ return r.json(); })
       .then(function(data){ allData=data; buildYearFilters(data); renderPage(); })
-      .catch(function(){ document.getElementById('cardsGrid').innerHTML='<p style="color:var(--text-muted)">Failed to load data. Please try again later.</p>'; });
+      .catch(function(){
+        // Fallback: inline data if fetch fails
+        allData = [{"type": "national", "year": "2026", "title": "National AI Hackathon 2026", "desc": "Club team won 2nd place at the National AI Hackathon with an innovative ML-based solution for traffic optimization.", "who": "Club Team", "date": "June 2026", "link": "#"}, {"type": "international", "year": "2026", "title": "IEEE International Conference on Big Data", "desc": "Club members presented a paper on Big Data clustering techniques at the IEEE Big Data conference.", "who": "Dr. Jalal Hameed", "date": "May 2026", "link": "#"}, {"type": "local", "year": "2025", "title": "University of Baghdad Research Symposium", "desc": "Annual research symposium showcasing student and college research contributions across all departments.", "who": "Club Members", "date": "April 2025", "link": "#"}, {"type": "organized", "year": "2025", "title": "College of AI Annual Tech Summit", "desc": "Club-organized summit bringing together students, professors, and industry professionals for talks and networking.", "who": "Big Data AI Club", "date": "February 2025", "link": "#"}, {"type": "international", "year": "2024", "title": "ICCV Workshop on AI Applications", "desc": "Paper presentation at the International Conference on Computer Vision workshop track on applied AI.", "who": "Dr. Jalal Hameed", "date": "October 2024", "link": "#"}, {"type": "national", "year": "2024", "title": "Iraqi National Science Fair", "desc": "Club project showcased at the Iraqi National Science Fair, receiving commendation from the jury.", "who": "Club Members", "date": "May 2024", "link": "#"}];
+        buildYearFilters(allData); renderPage();
+      });
 
 
     

@@ -172,10 +172,14 @@
 
   <script>
     // Fetch data from JSON
-    fetch('https://university-of-baghdad-college-of-ai.github.io/Big_Data_AI_Club_Baghdad/data/presentations.json')
+        fetch('https://raw.githubusercontent.com/University-of-Baghdad-College-of-AI/Big_Data_AI_Club_Baghdad/main/data/presentations.json')
       .then(function(r){ return r.json(); })
       .then(function(data){ allData=data; buildYearFilters(data); renderPage(); })
-      .catch(function(){ document.getElementById('cardsGrid').innerHTML='<p style="color:var(--text-muted)">Failed to load data. Please try again later.</p>'; });
+      .catch(function(){
+        // Fallback: inline data if fetch fails
+        allData = [{"type": "project", "year": "2026", "title": "Smart Campus IoT Dashboard Demo", "desc": "Live demonstration of the real-time IoT dashboard built to monitor campus facilities at the College of AI.", "who": "Student Team", "date": "June 2026", "link": "#"}, {"type": "research", "year": "2026", "title": "Big Data Clustering — Results Presentation", "desc": "Presentation of findings from the Big Data clustering research project targeting Q1 journal publication.", "who": "Dr. Jalal Hameed", "date": "May 2026", "link": "#"}, {"type": "demo", "year": "2025", "title": "Arabic NLP Text Classifier Live Demo", "desc": "Interactive demo of the Arabic text classification system built using parameter-efficient transformer fine-tuning.", "who": "Student Team", "date": "April 2025", "link": "#"}, {"type": "keynote", "year": "2025", "title": "The Future of AI in Iraq", "desc": "Keynote exploring opportunities and challenges of adopting AI technologies in the Iraqi context.", "who": "Guest Speaker", "date": "February 2025", "link": "#"}, {"type": "research", "year": "2024", "title": "Graph Neural Networks: Applications and Results", "desc": "Presentation of GNN research outcomes including node classification and link prediction tasks.", "who": "Club Members", "date": "November 2024", "link": "#"}, {"type": "project", "year": "2024", "title": "Student Performance Analytics — Final Presentation", "desc": "Final presentation of the predictive analytics project for student performance outcomes.", "who": "Student Team", "date": "June 2024", "link": "#"}];
+        buildYearFilters(allData); renderPage();
+      });
 
 
     
