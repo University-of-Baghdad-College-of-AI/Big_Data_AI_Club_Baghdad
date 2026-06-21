@@ -172,7 +172,7 @@
 
   <script>
     // Fetch data from JSON
-    fetch('data/conferences.json')
+    fetch('https://university-of-baghdad-college-of-ai.github.io/Big_Data_AI_Club_Baghdad/data/conferences.json')
       .then(function(r){ return r.json(); })
       .then(function(data){ allData=data; buildYearFilters(data); renderPage(); })
       .catch(function(){ document.getElementById('cardsGrid').innerHTML='<p style="color:var(--text-muted)">Failed to load data. Please try again later.</p>'; });
