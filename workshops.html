@@ -170,8 +170,9 @@
     <p>Big Data Department | College of AI | University of Baghdad</p>
   </footer>
 
-    <script>
+      <script>
     var allData = [
+
   {
     "type"  : "ml",
     "year"  : "2026",
@@ -189,7 +190,7 @@
     "desc"  : "Hands-on session on distributed data processing using Apache Spark, covering RDDs, DataFrames, and Spark SQL.",
     "who"   : "Club Members",
     "date"  : "April 2026",
-    "link"  : "https://university-of-baghdad-college-of-ai.github.io/Big_Data_AI_Club_Baghdad"
+    "link"  : "#"
   },
 
   {
@@ -274,32 +275,49 @@
       return map[t]||t;
     }
 
-    function cardHTML(d){
-      var safeD = JSON.stringify(d).replace(/'/g,"&#39;");
-      return '<div class="card">'+
-        '<div class="card-badges">'+
-          '<span class="badge badge-'+(d.type||'file')+'">'+typeLabel(d.type||'file')+'</span>'+
-          '<span class="badge badge-year">'+(d.year||'')+'</span>'+
-        '</div>'+
-        '<h3>'+(d.title||'')+'</h3>'+
-        '<p>'+(d.desc||'')+'</p>'+
-        '<div class="card-meta">'+
-          '<span>&#128100; '+(d.who||'')+'</span>'+
-          '<span>&#128197; '+(d.date||'')+'</span>'+
-        '</div>'+
-        '<button class="view-btn" onclick="openModal('+safeD+')">View Details &#8594;</button>'+
+    // Use index to avoid passing JSON through HTML attributes
+    function cardHTML(d, idx){
+      return '<div class="card">' +
+        '<div class="card-badges">' +
+          '<span class="badge badge-'+(d.type||'file')+'">'+typeLabel(d.type||'file')+'</span>' +
+          '<span class="badge badge-year">'+(d.year||'')+'</span>' +
+        '</div>' +
+        '<h3>'+(d.title||'')+'</h3>' +
+        '<p>'+(d.desc||'')+'</p>' +
+        '<div class="card-meta">' +
+          '<span>&#128100; '+(d.who||'')+'</span>' +
+          '<span>&#128197; '+(d.date||'')+'</span>' +
+        '</div>' +
+        '<button class="view-btn" data-idx="'+idx+'">View Details &#8594;</button>' +
       '</div>';
     }
 
     function renderPage(){
-      var matched = allData.filter(function(d){
-        return (activeType==='all'||d.type===activeType) && (activeYear==='all'||d.year===activeYear);
+      var matched = [];
+      var matchedIdx = [];
+      allData.forEach(function(d, i){
+        if((activeType==='all'||d.type===activeType) && (activeYear==='all'||d.year===activeYear)){
+          matched.push(d);
+          matchedIdx.push(i);
+        }
       });
       var total = matched.length;
       var totalPages = Math.max(1, Math.ceil(total/ITEMS_PER_PAGE));
       if(currentPage>totalPages) currentPage=totalPages;
-      var slice = matched.slice((currentPage-1)*ITEMS_PER_PAGE, currentPage*ITEMS_PER_PAGE);
-      document.getElementById('cardsGrid').innerHTML = slice.map(cardHTML).join('');
+      var start = (currentPage-1)*ITEMS_PER_PAGE;
+      var slice = matched.slice(start, start+ITEMS_PER_PAGE);
+      var sliceIdx = matchedIdx.slice(start, start+ITEMS_PER_PAGE);
+
+      var grid = document.getElementById('cardsGrid');
+      grid.innerHTML = slice.map(function(d,i){ return cardHTML(d, sliceIdx[i]); }).join('');
+
+      // Attach click handlers after rendering
+      grid.querySelectorAll('.view-btn').forEach(function(btn){
+        btn.addEventListener('click', function(){
+          openModal(allData[parseInt(btn.dataset.idx)]);
+        });
+      });
+
       var rc = document.getElementById('resultsCount');
       if(rc) rc.innerHTML = '<strong>'+total+'</strong> result'+(total!==1?'s':'')+' found'+
         (totalPages>1?' &nbsp;|&nbsp; Page '+currentPage+' of '+totalPages:'');
@@ -328,31 +346,32 @@
       document.getElementById('modalBadges').innerHTML=
         '<span class="badge badge-'+(d.type||'file')+'">'+typeLabel(d.type||'file')+'</span>'+
         '<span class="badge badge-year">'+(d.year||'')+'</span>';
-      document.getElementById('modalTitle').textContent=d.title||'';
-      document.getElementById('modalDesc').textContent=d.desc||'No description available.';
-      document.getElementById('modalWho').textContent=d.who||'—';
-      document.getElementById('modalDate').textContent=d.date||'—';
-      var lnk=document.getElementById('modalLink');
+      document.getElementById('modalTitle').textContent = d.title||'';
+      document.getElementById('modalDesc').textContent  = d.desc||'No description available.';
+      document.getElementById('modalWho').textContent   = d.who||'—';
+      document.getElementById('modalDate').textContent  = d.date||'—';
+      var lnk = document.getElementById('modalLink');
       if(d.link && d.link!=='#'){
-        lnk.href=d.link;
-        lnk.style.display='inline-flex';
-        lnk.onclick=null;
+        lnk.href = d.link;
+        lnk.style.display = 'inline-flex';
+        lnk.onclick = null;
       } else {
-        lnk.href='#';
-        lnk.style.display='inline-flex';
-        lnk.onclick=function(e){ e.preventDefault(); alert('No link available for this item yet.'); };
+        lnk.href = '#';
+        lnk.style.display = 'inline-flex';
+        lnk.onclick = function(e){ e.preventDefault(); alert('No link available for this item yet.'); };
       }
       document.getElementById('modal').classList.add('open');
-      document.body.style.overflow='hidden';
+      document.body.style.overflow = 'hidden';
     }
+
     function closeModal(){
       document.getElementById('modal').classList.remove('open');
-      document.body.style.overflow='';
+      document.body.style.overflow = '';
     }
-    document.addEventListener('keydown',function(e){if(e.key==='Escape')closeModal();});
+    document.addEventListener('keydown', function(e){ if(e.key==='Escape') closeModal(); });
 
     document.querySelectorAll('#typeFilters .filter-btn').forEach(function(btn){
-      btn.addEventListener('click',function(){
+      btn.addEventListener('click', function(){
         document.querySelectorAll('#typeFilters .filter-btn').forEach(function(b){b.classList.remove('active');});
         btn.classList.add('active'); activeType=btn.dataset.type; applyFilters();
       });
@@ -374,7 +393,6 @@
 
     
 
-    // Init
     buildYearFilters(allData);
     renderPage();
   </script>
