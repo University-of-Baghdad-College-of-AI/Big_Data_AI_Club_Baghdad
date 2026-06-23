@@ -22,6 +22,6 @@ var APPROVED_USERS = {
   // 'employee@uobaghdad.edu.iq': 'employee',
 
   /* ── Test accounts ── */
-  // 'test@gmail.com': 'test',
+  'jalal.hameed15@gmail.com': 'test',
 
 };
