@@ -352,6 +352,23 @@
       .tb-popup-overlay{ padding-right: 10px; }
       .tb-popup{ width: calc(100vw - 20px); }
     }
+  
+    /* ── Stats year buttons ── */
+    .filter-bar { display:flex; gap:6px; flex-wrap:wrap; }
+    .filter-btn {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      font-size: 0.85em; font-weight: 600;
+      padding: 6px 16px; border-radius: 20px;
+      border: 1.5px solid #E2E7F0;
+      background: #fff; color: #5E6E8A;
+      cursor: pointer; transition: all 0.18s;
+      white-space: nowrap;
+    }
+    .filter-btn:hover { border-color: #4361EE; color: #4361EE; }
+    .filter-btn.year-btn.active {
+      background: #0F1F3D; color: #fff;
+      border-color: #0F1F3D;
+    }
   </style>
 </head>
 <body>
