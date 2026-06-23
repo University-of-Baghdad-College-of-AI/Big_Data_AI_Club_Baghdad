@@ -1679,6 +1679,13 @@
     const auth     = getAuth(app);
     const provider = new GoogleAuthProvider();
 
+    var ROLE_CONFIG = {
+      admin:     { label: '&#9881; Admin',       style: 'background:#1A2340;color:#F8C200;border:1px solid #F8C200;' },
+      professor: { label: '&#128218; Professor',  style: 'background:#FFF8EC;color:#9a6f00;' },
+      student:   { label: '&#127891; Student',    style: 'background:#EEF2FF;color:#4361EE;' },
+      employee:  { label: '&#128084; Employee',   style: 'background:#E8F5E9;color:#2E7D32;' },
+      test:      { label: '&#128295; Test',       style: 'background:#F3E5F5;color:#6A1B9A;' },
+    };
     function showSignedIn(user, role) {
       document.getElementById('tbNotSigned').style.display = 'none';
       var si = document.getElementById('tbSignedIn');
@@ -1686,8 +1693,10 @@
       document.getElementById('tbAvatar').src = user.photoURL || '';
       document.getElementById('tbName').textContent = user.displayName || user.email;
       var roleEl = document.getElementById('tbRole');
-      roleEl.innerHTML = role === 'student' ? '&#127891; Student' : '&#128218; Professor';
-      roleEl.className = 'tb-role ' + role;
+      var cfg = ROLE_CONFIG[role] || { label: role, style: '' };
+      roleEl.innerHTML = cfg.label;
+      roleEl.className = 'tb-role';
+      roleEl.style.cssText = cfg.style + 'font-size:0.78em;font-weight:700;padding:2px 9px;border-radius:20px;letter-spacing:0.05em;';
     }
     function showSignedOut() {
       document.getElementById('tbNotSigned').style.display = 'flex';

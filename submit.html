@@ -547,14 +547,24 @@
       if (document.getElementById('googleEmail')) document.getElementById('googleEmail').value = user.email;
       if (document.getElementById('googleName'))  document.getElementById('googleName').value  = user.displayName || '';
       if (document.getElementById('infoBanner')) {
-        document.getElementById('infoBanner').innerHTML = role === 'student'
-          ? '&#127891; Your file will be added to <strong>Big_Data_AI_Club_Students/submissions/[year]/</strong> after review.'
-          : '&#128218; Your file will be added to <strong>Big_Data_AI_Club_Professors/submissions/[year]/</strong> after review.';
+        var bannerMap = {
+          student:   '&#127891; Your file → <strong>Big_Data_AI_Club_Students/submissions/[year]/</strong>',
+          professor: '&#128218; Your file → <strong>Big_Data_AI_Club_Professors/submissions/[year]/</strong>',
+          employee:  '&#128084; Your file → <strong>Big_Data_AI_Club_Baghdad/submissions/[year]/</strong>',
+          admin:     '&#9881; Admin submission → will be routed appropriately.',
+          test:      '&#128295; Test submission — will not be published.',
+        };
+        document.getElementById('infoBanner').innerHTML = bannerMap[role] || 'Your file will be reviewed by Club Manager.';
       }
       if (document.getElementById('emailSubject')) {
-        document.getElementById('emailSubject').value = role === 'student'
-          ? 'New Student Submission - Big Data AI Club'
-          : 'New Professor Submission - Big Data AI Club';
+        var subjectMap = {
+          student:   'New Student Submission - Big Data AI Club',
+          professor: 'New Professor Submission - Big Data AI Club',
+          employee:  'New Employee Submission - Big Data AI Club',
+          admin:     'New Admin Submission - Big Data AI Club',
+          test:      'TEST Submission - Big Data AI Club',
+        };
+        document.getElementById('emailSubject').value = subjectMap[role] || 'New Submission - Big Data AI Club';
       }
     };
     window.lockForm = function() {
@@ -584,6 +594,13 @@
     const auth     = getAuth(app);
     const provider = new GoogleAuthProvider();
 
+    var ROLE_CONFIG = {
+      admin:     { label: '&#9881; Admin',       style: 'background:#1A2340;color:#F8C200;border:1px solid #F8C200;' },
+      professor: { label: '&#128218; Professor',  style: 'background:#FFF8EC;color:#9a6f00;' },
+      student:   { label: '&#127891; Student',    style: 'background:#EEF2FF;color:#4361EE;' },
+      employee:  { label: '&#128084; Employee',   style: 'background:#E8F5E9;color:#2E7D32;' },
+      test:      { label: '&#128295; Test',       style: 'background:#F3E5F5;color:#6A1B9A;' },
+    };
     function showSignedIn(user, role) {
       document.getElementById('tbNotSigned').style.display = 'none';
       var si = document.getElementById('tbSignedIn');
@@ -591,8 +608,10 @@
       document.getElementById('tbAvatar').src = user.photoURL || '';
       document.getElementById('tbName').textContent = user.displayName || user.email;
       var roleEl = document.getElementById('tbRole');
-      roleEl.innerHTML = role === 'student' ? '&#127891; Student' : '&#128218; Professor';
-      roleEl.className = 'tb-role ' + role;
+      var cfg = ROLE_CONFIG[role] || { label: role, style: '' };
+      roleEl.innerHTML = cfg.label;
+      roleEl.className = 'tb-role';
+      roleEl.style.cssText = cfg.style + 'font-size:0.78em;font-weight:700;padding:2px 9px;border-radius:20px;letter-spacing:0.05em;';
     }
     function showSignedOut() {
       document.getElementById('tbNotSigned').style.display = 'flex';
