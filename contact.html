@@ -86,22 +86,175 @@
     @keyframes spin { to { transform: rotate(360deg); } }
     #formWrapper { display: none; }
     @media(max-width:480px){ .login-gate{margin:30px 16px;padding:32px 24px;} .auth-topbar{padding:8px 14px;} }
+  
+    /* ── Auth Top Bar ── */
+    .auth-topbar {
+      background: var(--navy, #0F1F3D);
+      padding: 8px 24px;
+      display: flex;
+      align-items: center;
+      justify-content: flex-end;
+      gap: 10px;
+      font-size: 0.82em;
+      min-height: 38px;
+      position: relative;
+      z-index: 200;
+    }
+    .auth-topbar .not-signed {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      color: rgba(255,255,255,0.55);
+    }
+    .auth-topbar .not-signed span { font-style: italic; }
+    .tb-signin-btn {
+      background: rgba(255,255,255,0.12);
+      border: 1px solid rgba(255,255,255,0.25);
+      border-radius: 6px;
+      color: rgba(255,255,255,0.9);
+      padding: 4px 12px;
+      cursor: pointer;
+      font-size: 0.85em;
+      font-family: inherit;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      transition: background 0.18s, border-color 0.18s;
+    }
+    .tb-signin-btn:hover { background: rgba(255,255,255,0.22); border-color: rgba(255,255,255,0.4); }
+    .tb-signin-btn img { width: 14px; height: 14px; }
+
+    .auth-topbar .signed-in {
+      display: none;
+      align-items: center;
+      gap: 10px;
+    }
+    .auth-topbar img.avatar {
+      width: 26px; height: 26px;
+      border-radius: 50%;
+      border: 1.5px solid rgba(255,255,255,0.35);
+    }
+    .auth-topbar .tb-name { color: rgba(255,255,255,0.92); font-weight: 600; }
+    .auth-topbar .tb-role {
+      font-size: 0.78em; font-weight: 700;
+      padding: 2px 9px; border-radius: 20px; letter-spacing: 0.05em;
+    }
+    .tb-role.student   { background: #EEF2FF; color: #4361EE; }
+    .tb-role.professor { background: #FFF8EC; color: #9a6f00; }
+    .tb-signout {
+      background: rgba(255,255,255,0.1);
+      border: 1px solid rgba(255,255,255,0.2);
+      border-radius: 5px; color: rgba(255,255,255,0.75);
+      padding: 3px 10px; cursor: pointer;
+      font-size: 0.82em; font-family: inherit;
+      transition: background 0.18s, color 0.18s;
+    }
+    .tb-signout:hover { background: rgba(255,255,255,0.22); color: #fff; }
+
+    /* Sign-in popup from topbar */
+    .tb-popup-overlay {
+      display: none;
+      position: fixed; inset: 0;
+      background: rgba(10,16,32,0.6);
+      z-index: 9998;
+      align-items: flex-start;
+      justify-content: flex-end;
+      padding-top: 42px;
+      padding-right: 24px;
+    }
+    .tb-popup-overlay.open { display: flex; }
+    .tb-popup {
+      background: #fff;
+      border-radius: 12px;
+      padding: 28px 28px 24px;
+      width: 300px;
+      box-shadow: 0 12px 40px rgba(0,0,0,0.25);
+      text-align: center;
+      animation: popIn 0.2s ease;
+    }
+    @keyframes popIn { from { opacity:0; transform:translateY(-8px); } to { opacity:1; transform:translateY(0); } }
+    .tb-popup h3 {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      font-size: 1em; font-weight: 800;
+      color: #0F1F3D; margin-bottom: 6px;
+    }
+    .tb-popup p { font-size: 0.82em; color: #5E6E8A; margin-bottom: 18px; line-height: 1.5; }
+    .tb-google-btn {
+      display: inline-flex; align-items: center; gap: 10px;
+      background: #fff; border: 1.5px solid #E2E7F0;
+      border-radius: 8px; padding: 10px 20px;
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      font-size: 0.92em; font-weight: 600; color: #1A2340;
+      cursor: pointer; width: 100%; justify-content: center;
+      transition: box-shadow 0.2s, border-color 0.2s;
+    }
+    .tb-google-btn:hover { box-shadow: 0 4px 14px rgba(0,0,0,0.1); border-color: #aaa; }
+    .tb-google-btn img { width: 18px; height: 18px; }
+    .tb-popup-close {
+      position: absolute; top: 10px; right: 14px;
+      background: none; border: none; font-size: 1.3em;
+      cursor: pointer; color: #888; line-height: 1;
+    }
+    .tb-access-denied {
+      display: none; margin-top: 12px; padding: 10px 14px;
+      background: #FFF3F3; border: 1px solid #FFCDD2;
+      border-radius: 8px; font-size: 0.82em; color: #C62828; line-height: 1.5;
+    }
+    .tb-spinner {
+      display: none; width: 28px; height: 28px;
+      border: 3px solid #E2E7F0; border-top-color: #4361EE;
+      border-radius: 50%; animation: spin 0.8s linear infinite;
+      margin: 12px auto;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    @media(max-width:768px){
+      .auth-topbar{ padding: 7px 14px; }
+      .auth-topbar .tb-name{ display: none; }
+      .tb-popup-overlay{ padding-right: 10px; }
+      .tb-popup{ width: calc(100vw - 20px); }
+    }
   </style>
 </head>
 <body>
 
   <!-- ── AUTH TOP BAR ── -->
+  <!-- ── AUTH TOP BAR ── -->
   <div class="auth-topbar">
-    <span class="not-signed" id="tbNotSigned">Not signed in</span>
+    <div class="not-signed" id="tbNotSigned">
+      <span>Not signed in</span>
+      <button class="tb-signin-btn" onclick="openSignInPopup()">
+        <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" alt="">
+        Sign in
+      </button>
+    </div>
     <div class="signed-in" id="tbSignedIn">
       <img class="avatar" id="tbAvatar" src="" alt="">
       <span class="tb-name" id="tbName"></span>
       <span class="tb-role" id="tbRole"></span>
-      <button class="tb-signout" onclick="signOut()">Sign out</button>
+      <button class="tb-signout" onclick="tbSignOut()">Sign out</button>
     </div>
   </div>
 
-  <header>
+  <!-- Sign-in popup -->
+  <div class="tb-popup-overlay" id="tbPopupOverlay" onclick="if(event.target===this)closeSignInPopup()">
+    <div class="tb-popup" style="position:relative;">
+      <button class="tb-popup-close" onclick="closeSignInPopup()">&#10005;</button>
+      <h3>Sign in to your account</h3>
+      <p>Use your approved Google account to access Submit and Contact pages.</p>
+      <div class="tb-spinner" id="tbSpinner"></div>
+      <button class="tb-google-btn" id="tbGoogleBtn" onclick="tbSignIn()">
+        <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" alt="Google">
+        Sign in with Google
+      </button>
+      <div class="tb-access-denied" id="tbAccessDenied">
+        &#9888; <strong>Access denied.</strong><br>
+        <span id="tbDeniedEmail"></span> is not approved.<br>
+        Contact Club Manager to request access.
+      </div>
+    </div>
+  </div>
+<header>
     <div class="logo-container">
       <a href="https://uobaghdad.edu.iq/" target="_blank"><img src="logo3.png" alt="University of Baghdad" class="club-logo"></a>
       <a href="https://en.coai.uobaghdad.edu.iq/" target="_blank"><img src="coai-english-logo.png" alt="College of AI" class="club-logo"></a>
@@ -146,7 +299,7 @@
       <h2>Sign in to Contact Us</h2>
       <p>This page is restricted to approved members.<br>Sign in with your Google account to continue.</p>
       <div class="spinner" id="spinner"></div>
-      <button class="google-btn" id="googleSignInBtn" onclick="signInWithGoogle()">
+      <button class="google-btn" id="googleSignInBtn" onclick="tbSignIn()">
         <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" alt="Google">
         Sign in with Google
       </button>
@@ -183,95 +336,7 @@
   <footer>
     <p>&copy; 2026 <strong>Big Data Artificial Intelligence Club</strong> | Students Scientific Community</p>
     <p>Big Data Department | College of AI | University of Baghdad</p>
-  </footer>
-
-  <script src="approved-users.js"></script>
-  <script type="module">
-    import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js';
-    import { getAuth, signInWithPopup, GoogleAuthProvider, signOut as fbSignOut, onAuthStateChanged }
-      from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js';
-
-    const firebaseConfig = {
-      apiKey: "AIzaSyArF59_11UVHPo9yZW5zg2RYQWaKjIZXYw",
-      authDomain: "bigdataaiclub.firebaseapp.com",
-      projectId: "bigdataaiclub",
-      storageBucket: "bigdataaiclub.firebasestorage.app",
-      messagingSenderId: "877020220761",
-      appId: "1:877020220761:web:6c6dcc22b63fcd2ec15048"
-    };
-
-    const app      = initializeApp(firebaseConfig);
-    const auth     = getAuth(app);
-    const provider = new GoogleAuthProvider();
-
-    function updateTopBar(user, role) {
-      if (user && role) {
-        document.getElementById('tbNotSigned').style.display = 'none';
-        var si = document.getElementById('tbSignedIn');
-        si.style.display = 'flex';
-        document.getElementById('tbAvatar').src = user.photoURL || '';
-        document.getElementById('tbName').textContent = user.displayName || user.email;
-        var roleEl = document.getElementById('tbRole');
-        roleEl.textContent = role === 'student' ? '🎓 Student' : '📚 Professor';
-        roleEl.className = 'tb-role ' + role;
-      } else {
-        document.getElementById('tbNotSigned').style.display = 'inline';
-        document.getElementById('tbSignedIn').style.display = 'none';
-      }
-    }
-
-    window.signInWithGoogle = function() {
-      document.getElementById('spinner').style.display = 'block';
-      document.getElementById('googleSignInBtn').style.display = 'none';
-      document.getElementById('accessDenied').style.display = 'none';
-      signInWithPopup(auth, provider).catch(function(err) {
-        document.getElementById('spinner').style.display = 'none';
-        document.getElementById('googleSignInBtn').style.display = 'flex';
-        console.error('Sign-in error:', err);
-      });
-    };
-
-    window.signOut = function() {
-      fbSignOut(auth).then(function() {
-        document.getElementById('formWrapper').style.display = 'none';
-        document.getElementById('loginGate').style.display = 'block';
-        document.getElementById('accessDenied').style.display = 'none';
-        document.getElementById('googleSignInBtn').style.display = 'flex';
-        updateTopBar(null, null);
-      });
-    };
-
-    onAuthStateChanged(auth, function(user) {
-      document.getElementById('spinner').style.display = 'none';
-      if (!user) {
-        document.getElementById('loginGate').style.display = 'block';
-        document.getElementById('formWrapper').style.display = 'none';
-        document.getElementById('googleSignInBtn').style.display = 'flex';
-        updateTopBar(null, null);
-        return;
-      }
-      var email = user.email;
-      var role  = window.APPROVED_USERS ? window.APPROVED_USERS[email] : undefined;
-      if (!role) {
-        document.getElementById('googleSignInBtn').style.display = 'none';
-        document.getElementById('accessDenied').style.display = 'block';
-        document.getElementById('deniedEmail').textContent = email;
-        updateTopBar(null, null);
-        fbSignOut(auth);
-        return;
-      }
-      // Approved
-      document.getElementById('loginGate').style.display = 'none';
-      document.getElementById('formWrapper').style.display = 'block';
-      document.getElementById('name').value  = user.displayName || '';
-      document.getElementById('email').value = email;
-      document.getElementById('roleInput').value   = role;
-      document.getElementById('googleEmail').value = email;
-      updateTopBar(user, role);
-    });
-  </script>
-
-  <script>
+  </footer><script>
     var toggle=document.querySelector('.nav-toggle'), navLinks=document.querySelector('.nav-links');
     if(toggle&&navLinks){
       toggle.addEventListener('click',function(){navLinks.classList.toggle('open');});
@@ -285,5 +350,23 @@
       });
     }
   </script>
+  <script>
+    // Called by topbar auth when user signs in
+    window.unlockForm = function(user, role) {
+      document.getElementById('loginGate').style.display = 'none';
+      document.getElementById('formWrapper').style.display = 'block';
+      if (document.getElementById('name'))  document.getElementById('name').value  = user.displayName || '';
+      if (document.getElementById('email')) document.getElementById('email').value = user.email || '';
+      if (document.getElementById('roleInput'))   document.getElementById('roleInput').value   = role;
+      if (document.getElementById('googleEmail')) document.getElementById('googleEmail').value = user.email;
+      if (document.getElementById('googleName'))  document.getElementById('googleName').value  = user.displayName || '';
+    };
+    // Called by topbar auth when user signs out
+    window.lockForm = function() {
+      document.getElementById('loginGate').style.display = 'block';
+      document.getElementById('formWrapper').style.display = 'none';
+    };
+  </script>
+  <!-- Firebase Auth Topbar -->
 </body>
 </html>
