@@ -237,9 +237,16 @@
       cursor: pointer; color: #888; line-height: 1;
     }
     .tb-access-denied {
-      display: none; margin-top: 12px; padding: 10px 14px;
-      background: #FFF3F3; border: 1px solid #FFCDD2;
-      border-radius: 8px; font-size: 0.82em; color: #C62828; line-height: 1.5;
+      display: none;
+      margin-top: 14px;
+      padding: 14px 16px;
+      background: #FFF3F3;
+      border: 1.5px solid #FFCDD2;
+      border-radius: 10px;
+      font-size: 0.85em;
+      color: #B71C1C;
+      line-height: 1.7;
+      text-align: left;
     }
     .tb-spinner {
       display: none; width: 28px; height: 28px;
@@ -288,10 +295,11 @@
         <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" alt="Google">
         Sign in with Google
       </button>
-      <div class="tb-access-denied" id="tbAccessDenied">
-        &#9888; <strong>Access denied.</strong><br>
-        <span id="tbDeniedEmail"></span> is not approved.<br>
-        Contact Club Manager to request access.
+                  <div class="tb-access-denied" id="tbAccessDenied">
+        &#128683; <strong>Email not approved</strong><br>
+        <span id="tbDeniedEmail" style="font-weight:600;"></span><br>
+        is not on the approved list.<br><br>
+        Please contact the <strong>Club Manager</strong> to request access.
       </div>
     </div>
   </div>
@@ -348,10 +356,10 @@
         <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" alt="Google">
         Sign in with Google
       </button>
-      <div class="access-denied" id="accessDenied">
-        &#9888; <strong>Access denied.</strong><br>
-        Your account (<span id="deniedEmail"></span>) is not approved.<br>
-        Contact Club Manager to request access.
+            <div class="access-denied" id="accessDenied">
+        &#128683; <strong>Email not approved</strong><br>
+        Your account <strong><span id="deniedEmail"></span></strong> is not on the approved list.<br><br>
+        Please contact the <strong>Club Manager</strong> to request access to this page.
       </div>
     </div>
   </div>
@@ -632,6 +640,7 @@
           document.getElementById('tbGoogleBtn').style.display = 'flex';
           document.getElementById('tbAccessDenied').style.display = 'block';
           document.getElementById('tbDeniedEmail').textContent = user.email;
+          document.getElementById('tbPopupOverlay').classList.add('open');
           fbSignOut(auth);
         }
       } else {
