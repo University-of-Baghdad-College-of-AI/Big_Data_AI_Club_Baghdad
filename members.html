@@ -278,8 +278,7 @@
         a.addEventListener('click', function() { navLinks.classList.remove('open'); });
       });
     }
-  </script>  <!-- Firebase Auth Topbar -->
-  <script src="approved-users.js"></script>
+  </script>
   <script type="module">
     import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js';
     import { getAuth, signInWithPopup, GoogleAuthProvider, signOut as fbSignOut, onAuthStateChanged }
@@ -347,6 +346,89 @@
           showSignedIn(user, role);
           closeSignInPopup();
           // If on gated pages, unlock form
+          if (typeof unlockForm === 'function') unlockForm(user, role);
+        } else {
+          showSignedOut();
+          document.getElementById('tbSpinner').style.display = 'none';
+          document.getElementById('tbGoogleBtn').style.display = 'flex';
+          document.getElementById('tbAccessDenied').style.display = 'block';
+          document.getElementById('tbDeniedEmail').textContent = user.email;
+          fbSignOut(auth);
+        }
+      } else {
+        showSignedOut();
+        if (typeof lockForm === 'function') lockForm();
+      }
+    });
+  </script>
+  <!-- Firebase Auth Topbar -->
+  <script src="approved-users.js"></script>
+  <script type="module">
+    import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js';
+    import { getAuth, signInWithPopup, GoogleAuthProvider, signOut as fbSignOut, onAuthStateChanged }
+      from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js';
+
+    const firebaseConfig = {
+      apiKey: "AIzaSyArF59_11UVHPo9yZW5zg2RYQWaKjIZXYw",
+      authDomain: "bigdataaiclub.firebaseapp.com",
+      projectId: "bigdataaiclub",
+      storageBucket: "bigdataaiclub.firebasestorage.app",
+      messagingSenderId: "877020220761",
+      appId: "1:877020220761:web:6c6dcc22b63fcd2ec15048"
+    };
+    const app      = initializeApp(firebaseConfig);
+    const auth     = getAuth(app);
+    const provider = new GoogleAuthProvider();
+
+    function showSignedIn(user, role) {
+      document.getElementById('tbNotSigned').style.display = 'none';
+      var si = document.getElementById('tbSignedIn');
+      si.style.display = 'flex';
+      document.getElementById('tbAvatar').src = user.photoURL || '';
+      document.getElementById('tbName').textContent = user.displayName || user.email;
+      var roleEl = document.getElementById('tbRole');
+      roleEl.innerHTML = role === 'student' ? '&#127891; Student' : '&#128218; Professor';
+      roleEl.className = 'tb-role ' + role;
+    }
+
+    function showSignedOut() {
+      document.getElementById('tbNotSigned').style.display = 'flex';
+      document.getElementById('tbSignedIn').style.display = 'none';
+    }
+
+    window.openSignInPopup = function() {
+      document.getElementById('tbPopupOverlay').classList.add('open');
+      document.getElementById('tbAccessDenied').style.display = 'none';
+      document.getElementById('tbGoogleBtn').style.display = 'flex';
+      document.getElementById('tbSpinner').style.display = 'none';
+    };
+    window.closeSignInPopup = function() {
+      document.getElementById('tbPopupOverlay').classList.remove('open');
+    };
+    window.tbSignIn = function() {
+      document.getElementById('tbSpinner').style.display = 'block';
+      document.getElementById('tbGoogleBtn').style.display = 'none';
+      document.getElementById('tbAccessDenied').style.display = 'none';
+      signInWithPopup(auth, provider)
+        .then(function() { closeSignInPopup(); })
+        .catch(function(err) {
+          document.getElementById('tbSpinner').style.display = 'none';
+          document.getElementById('tbGoogleBtn').style.display = 'flex';
+        });
+    };
+    window.tbSignOut = function() {
+      fbSignOut(auth).then(function() {
+        showSignedOut();
+        if (typeof lockForm === 'function') lockForm();
+      });
+    };
+
+    onAuthStateChanged(auth, function(user) {
+      if (user) {
+        var role = window.APPROVED_USERS ? window.APPROVED_USERS[user.email] : null;
+        if (role) {
+          showSignedIn(user, role);
+          closeSignInPopup();
           if (typeof unlockForm === 'function') unlockForm(user, role);
         } else {
           showSignedOut();

@@ -13,7 +13,6 @@ var APPROVED_USERS = {
 
   /* ── Professors ── */
   'jalal.hameed@uobaghdad.edu.iq': 'professor',
-  'jalal.hameed15@gmail.com': 'professor',
 
   /* ── Students ── */
   // 'student@gmail.com': 'student',
