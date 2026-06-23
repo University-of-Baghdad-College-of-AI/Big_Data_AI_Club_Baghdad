@@ -686,6 +686,13 @@
     const auth     = getAuth(app);
     const provider = new GoogleAuthProvider();
 
+    var ROLE_CONFIG = {
+      admin:     { label: '&#9881; Admin',       style: 'background:#1A2340;color:#F8C200;border:1px solid #F8C200;' },
+      professor: { label: '&#128218; Professor',  style: 'background:#FFF8EC;color:#9a6f00;' },
+      student:   { label: '&#127891; Student',    style: 'background:#EEF2FF;color:#4361EE;' },
+      employee:  { label: '&#128084; Employee',   style: 'background:#E8F5E9;color:#2E7D32;' },
+      test:      { label: '&#128295; Test',       style: 'background:#F3E5F5;color:#6A1B9A;' },
+    };
     function showSignedIn(user, role) {
       document.getElementById('tbNotSigned').style.display = 'none';
       var si = document.getElementById('tbSignedIn');
@@ -693,8 +700,10 @@
       document.getElementById('tbAvatar').src = user.photoURL || '';
       document.getElementById('tbName').textContent = user.displayName || user.email;
       var roleEl = document.getElementById('tbRole');
-      roleEl.innerHTML = role === 'student' ? '&#127891; Student' : '&#128218; Professor';
-      roleEl.className = 'tb-role ' + role;
+      var cfg = ROLE_CONFIG[role] || { label: role, style: '' };
+      roleEl.innerHTML = cfg.label;
+      roleEl.className = 'tb-role';
+      roleEl.style.cssText = cfg.style + 'font-size:0.78em;font-weight:700;padding:2px 9px;border-radius:20px;letter-spacing:0.05em;';
     }
     function showSignedOut() {
       document.getElementById('tbNotSigned').style.display = 'flex';
@@ -721,11 +730,15 @@
         });
     };
     window.tbSignOut = function() {
+      document.getElementById('signOutModal').style.display = 'flex';
+    };
+    document.getElementById('confirmSignOutBtn').addEventListener('click', function() {
+      document.getElementById('signOutModal').style.display = 'none';
       fbSignOut(auth).then(function() {
         showSignedOut();
         if (typeof lockForm === 'function') lockForm();
       });
-    };
+    });
     onAuthStateChanged(auth, function(user) {
       if (user) {
         var role = window.APPROVED_USERS ? window.APPROVED_USERS[user.email] : null;
@@ -737,9 +750,10 @@
           showSignedOut();
           document.getElementById('tbSpinner').style.display = 'none';
           document.getElementById('tbGoogleBtn').style.display = 'flex';
-          document.getElementById('tbAccessDenied').style.display = 'block';
-          document.getElementById('tbDeniedEmail').textContent = user.email;
-          document.getElementById('tbPopupOverlay').classList.add('open');
+          // Show access denied modal
+          document.getElementById('deniedEmailModal').textContent = user.email;
+          document.getElementById('accessDeniedModal').style.display = 'flex';
+          closeSignInPopup();
           fbSignOut(auth);
         }
       } else {
@@ -748,5 +762,42 @@
       }
     });
   </script>
+
+  <!-- Access Denied Modal -->
+  <div id="accessDeniedModal" style="display:none;position:fixed;inset:0;background:rgba(10,16,32,0.85);z-index:99999;align-items:center;justify-content:center;padding:20px;">
+    <div style="background:#fff;border-radius:14px;max-width:420px;width:100%;padding:36px 32px;text-align:center;box-shadow:0 20px 60px rgba(0,0,0,0.3);animation:popIn 0.25s ease;">
+      <div style="font-size:3em;margin-bottom:12px;">&#128683;</div>
+      <h3 style="font-family:'Plus Jakarta Sans',sans-serif;font-size:1.3em;font-weight:800;color:#1A2340;margin-bottom:8px;">Access Denied</h3>
+      <p style="font-size:0.92em;color:#5E6E8A;margin-bottom:6px;line-height:1.6;">Your account</p>
+      <p style="font-size:0.95em;font-weight:700;color:#C62828;margin-bottom:16px;word-break:break-all;" id="deniedEmailModal"></p>
+      <p style="font-size:0.88em;color:#5E6E8A;line-height:1.6;margin-bottom:24px;">is not on the approved list.<br>Please contact the <strong style="color:#1A2340;">Club Manager</strong> to request access.</p>
+      <button onclick="document.getElementById('accessDeniedModal').style.display='none'" 
+        style="font-family:'Plus Jakarta Sans',sans-serif;font-weight:700;font-size:0.92em;color:#fff;background:#0F1F3D;border:none;border-radius:8px;padding:12px 32px;cursor:pointer;width:100%;transition:background 0.2s;"
+        onmouseover="this.style.background='#1e3a6e'" onmouseout="this.style.background='#0F1F3D'">
+        Close
+      </button>
+    </div>
+  </div>
+
+  <!-- Sign Out Confirmation Modal -->
+  <div id="signOutModal" style="display:none;position:fixed;inset:0;background:rgba(10,16,32,0.85);z-index:99999;align-items:center;justify-content:center;padding:20px;">
+    <div style="background:#fff;border-radius:14px;max-width:380px;width:100%;padding:36px 32px;text-align:center;box-shadow:0 20px 60px rgba(0,0,0,0.3);animation:popIn 0.25s ease;">
+      <div style="font-size:2.8em;margin-bottom:12px;">&#128274;</div>
+      <h3 style="font-family:'Plus Jakarta Sans',sans-serif;font-size:1.2em;font-weight:800;color:#1A2340;margin-bottom:10px;">Sign Out</h3>
+      <p style="font-size:0.9em;color:#5E6E8A;line-height:1.6;margin-bottom:24px;">Are you sure you want to sign out?</p>
+      <div style="display:flex;gap:10px;">
+        <button onclick="document.getElementById('signOutModal').style.display='none'"
+          style="flex:1;font-family:'Plus Jakarta Sans',sans-serif;font-weight:700;font-size:0.92em;color:#1A2340;background:#F4F6FA;border:1.5px solid #E2E7F0;border-radius:8px;padding:11px;cursor:pointer;transition:background 0.2s;"
+          onmouseover="this.style.background='#E2E7F0'" onmouseout="this.style.background='#F4F6FA'">
+          Cancel
+        </button>
+        <button id="confirmSignOutBtn"
+          style="flex:1;font-family:'Plus Jakarta Sans',sans-serif;font-weight:700;font-size:0.92em;color:#fff;background:#C62828;border:none;border-radius:8px;padding:11px;cursor:pointer;transition:background 0.2s;"
+          onmouseover="this.style.background='#B71C1C'" onmouseout="this.style.background='#C62828'">
+          Sign Out
+        </button>
+      </div>
+    </div>
+  </div>
 </body>
 </html>
