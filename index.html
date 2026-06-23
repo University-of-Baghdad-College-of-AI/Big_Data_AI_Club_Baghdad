@@ -766,8 +766,6 @@
   'seminars': [{"type": "trend", "year": "2026", "title": "Large Language Models: Where Are We Heading?", "desc": "Seminar on capabilities, limitations, and future directions of LLMs like GPT and Claude.", "who": "Dr. Jalal Hameed", "date": "June 2026", "link": "#"}, {"type": "research", "year": "2026", "title": "Graph Neural Networks in Practice", "desc": "Deep dive into GCN, GAT, and ST-GNN architectures with real-world examples.", "who": "Club Members", "date": "April 2026", "link": "#"}, {"type": "industry", "year": "2025", "title": "AI Adoption in the Iraqi Tech Sector", "desc": "Panel on challenges and opportunities of AI adoption in Iraq.", "who": "Panel", "date": "March 2025", "link": "#"}, {"type": "discussion", "year": "2025", "title": "Open Discussion: Bias and Fairness in AI", "desc": "Student-led roundtable on algorithmic bias and societal implications of AI systems.", "who": "Club Members", "date": "January 2025", "link": "#"}, {"type": "trend", "year": "2024", "title": "Transformer Models Beyond NLP", "desc": "Exploring transformer architectures in vision, audio, and multimodal tasks.", "who": "Dr. Jalal Hameed", "date": "October 2024", "link": "#"}, {"type": "research", "year": "2024", "title": "Reinforcement Learning: Theory and Applications", "desc": "Overview of RL algorithms including Q-Learning, PPO, and real-world applications.", "who": "Club Members", "date": "September 2024", "link": "#"}],
   'conferences': [{"type": "national", "year": "2026", "title": "National AI Hackathon 2026", "desc": "Club team won 2nd place with an innovative ML-based solution for traffic optimization.", "who": "Club Team", "date": "June 2026", "link": "#"}, {"type": "international", "year": "2026", "title": "IEEE International Conference on Big Data", "desc": "Paper on Big Data clustering techniques presented at the IEEE Big Data conference.", "who": "Dr. Jalal Hameed", "date": "May 2026", "link": "#"}, {"type": "local", "year": "2025", "title": "University of Baghdad Research Symposium", "desc": "Annual symposium showcasing student and college research contributions.", "who": "Club Members", "date": "April 2025", "link": "#"}, {"type": "organized", "year": "2025", "title": "College of AI Annual Tech Summit", "desc": "Club-organized summit for students, professors, and industry professionals.", "who": "Big Data AI Club", "date": "February 2025", "link": "#"}, {"type": "international", "year": "2024", "title": "ICCV Workshop on AI Applications", "desc": "Paper presented at the International Conference on Computer Vision workshop.", "who": "Dr. Jalal Hameed", "date": "October 2024", "link": "#"}, {"type": "national", "year": "2024", "title": "Iraqi National Science Fair", "desc": "Club project showcased at the Iraqi National Science Fair, received commendation.", "who": "Club Members", "date": "May 2024", "link": "#"}],
   'field-visits': [{"type": "tech", "year": "2026", "title": "Visit to Baghdad Tech Hub", "desc": "Members toured Baghdad's leading tech hub, meeting startup founders and AI engineers.", "who": "Club Members", "date": "May 2026", "link": "#"}, {"type": "lab", "year": "2026", "title": "Ministry of Science Research Labs Tour", "desc": "Guided tour of government research labs exploring applied AI projects.", "who": "Club Members", "date": "April 2026", "link": "#"}, {"type": "uni", "year": "2025", "title": "Al-Mustansiriyah University Exchange Visit", "desc": "Inter-university visit to share research and establish collaborative projects.", "who": "Club Members", "date": "March 2025", "link": "#"}, {"type": "gov", "year": "2025", "title": "Iraqi Digital Transformation Authority Visit", "desc": "Meeting officials on AI adoption in Iraq's public services.", "who": "Club Members", "date": "January 2025", "link": "#"}, {"type": "tech", "year": "2024", "title": "Huawei Iraq Office Visit", "desc": "Technical tour of Huawei's Iraq office exploring cloud and AI infrastructure.", "who": "Club Members", "date": "November 2024", "link": "#"}, {"type": "lab", "year": "2024", "title": "TUBITAK Research Center Visit", "desc": "Visit to the applied AI research center to explore joint research opportunities.", "who": "Club Members", "date": "September 2024", "link": "#"}],
-  'students': [],
-  'professors': [],
 };
   </script>
 
@@ -847,42 +845,19 @@
           });
 
           var actMax = maxCount(ACTIVITY_KEYS, year);
-          var subMax = maxCount(SUBMISSION_KEYS, year);
 
-          var html = '<div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;">';
-
-          // Activities bar card
-          html += '<div style="background:var(--white);border:1px solid var(--border);border-radius:12px;padding:20px;">';
-          html += '<div style="font-family:'Plus Jakarta Sans',sans-serif;font-weight:700;font-size:0.95em;color:var(--navy);margin-bottom:16px;display:flex;align-items:center;gap:8px;">&#127919; Activities</div>';
+          var html = '<div style="background:var(--white);border:1px solid var(--border);border-radius:12px;padding:20px;">';
+          html += '<div style="font-family:'Plus Jakarta Sans',sans-serif;font-weight:700;font-size:0.95em;color:var(--navy);margin-bottom:16px;">&#127919; Activities</div>';
           ACTIVITY_KEYS.forEach(function(k) {
             html += barRow(LABELS[k], countFor(k, year), actMax, 'var(--indigo)');
           });
           html += '</div>';
 
-          // Submissions bar card
-          html += '<div style="background:var(--white);border:1px solid var(--border);border-radius:12px;padding:20px;">';
-          html += '<div style="font-family:'Plus Jakarta Sans',sans-serif;font-weight:700;font-size:0.95em;color:var(--navy);margin-bottom:16px;display:flex;align-items:center;gap:8px;">&#128228; Submissions</div>';
-          SUBMISSION_KEYS.forEach(function(k) {
-            html += barRow(LABELS[k], countFor(k, year), subMax, '#F8C200');
-          });
-
-          // Total summary
+          // Summary row
           var totalAct = ACTIVITY_KEYS.reduce(function(s,k){return s+countFor(k,year);},0);
-          var totalSub = SUBMISSION_KEYS.reduce(function(s,k){return s+countFor(k,year);},0);
-          html += '<div style="margin-top:16px;padding-top:14px;border-top:1px solid var(--border);display:flex;justify-content:space-between;">';
-          html += '<span style="font-size:0.82em;color:var(--text-muted);">Total Submissions</span>';
-          html += '<span style="font-weight:700;color:var(--navy);">' + totalSub + '</span>';
-          html += '</div>';
-          html += '</div>';
-
-          html += '</div>';
-
-          // Total activities summary row
           html += '<div style="margin-top:12px;background:var(--navy);border-radius:12px;padding:16px 20px;display:flex;justify-content:space-around;flex-wrap:wrap;gap:12px;">';
           html += '<div style="text-align:center;"><div style="font-size:1.8em;font-weight:800;color:#F8C200;font-family:'Plus Jakarta Sans',sans-serif;">' + totalAct + '</div><div style="font-size:0.78em;color:rgba(255,255,255,0.7);">Activities</div></div>';
-          html += '<div style="text-align:center;"><div style="font-size:1.8em;font-weight:800;color:#F8C200;font-family:'Plus Jakarta Sans',sans-serif;">' + totalSub + '</div><div style="font-size:0.78em;color:rgba(255,255,255,0.7);">Submissions</div></div>';
           html += '<div style="text-align:center;"><div style="font-size:1.8em;font-weight:800;color:#F8C200;font-family:'Plus Jakarta Sans',sans-serif;">' + years.length + '</div><div style="font-size:0.78em;color:rgba(255,255,255,0.7);">Years Active</div></div>';
-          html += '<div style="text-align:center;"><div style="font-size:1.8em;font-weight:800;color:#F8C200;font-family:'Plus Jakarta Sans',sans-serif;">' + (totalAct+totalSub) + '</div><div style="font-size:0.78em;color:rgba(255,255,255,0.7);">Total Entries</div></div>';
           html += '</div>';
 
           document.getElementById('statsBars').innerHTML = html;
