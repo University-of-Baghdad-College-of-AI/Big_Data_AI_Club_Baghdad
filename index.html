@@ -533,15 +533,10 @@
 
 
   <!-- ── STATISTICS SECTION ── -->
-  <div class="news-bar" style="background:#0F1F3D;">
-    <div class="news-bar-inner">
-      <span class="news-label" style="background:#F8C200;color:#0F1F3D;">&#128202; STATS</span>
-      <div class="news-slider-vertical">
-        <div class="slide-track" id="statsTrack">
-          <div class="slide"><p>Loading statistics...</p></div>
-        </div>
-      </div>
-    </div>
+  <!-- ── STATISTICS SECTION ── -->
+  <div class="gallery-section" style="padding-bottom:0;">
+    <div class="gallery-header">&#128202; Club Statistics</div>
+    <div id="statsContainer"></div>
   </div>
 
   <!-- Main sections -->
@@ -775,72 +770,129 @@
   </script>
 
   <script>
-    // ── Stats Ticker ──
+    // ── Statistics ──
     (function() {
-      var ACTIVITY_KEYS = ['workshops','researches','projects','lectures','presentations','seminars','conferences','field-visits'];
-      var LABELS = {
-        workshops:'Workshops', researches:'Researches', projects:'Projects',
-        lectures:'Lectures', presentations:'Presentations', seminars:'Seminars',
-        conferences:'Conferences', 'field-visits':'Field Visits'
-      };
+      function buildStats() {
+        var container = document.getElementById('statsContainer');
+        if (!container) return;
 
-      // Count from embedded allData in each page is not available here
-      // Instead we use STATS_DATA which is synced by GitHub Action
-      // Build slides from STATS_DATA if available, else show placeholder
-      function buildSlides() {
-        var track = document.getElementById('statsTrack');
-        if (!track) return;
+        if (typeof STATS_DATA === 'undefined') {
+          container.innerHTML = '<p style="color:var(--text-muted);padding:20px;">Loading...</p>';
+          return;
+        }
 
-        var slides = [];
+        var ACTIVITY_KEYS = ['workshops','researches','projects','lectures',
+          'presentations','seminars','conferences','field-visits'];
+        var SUBMISSION_KEYS = ['students','professors'];
+        var LABELS = {
+          workshops:'Workshops', researches:'Researches', projects:'Projects',
+          lectures:'Lectures', presentations:'Presentations', seminars:'Seminars',
+          conferences:'Conferences', 'field-visits':'Field Visits',
+          students:'Students', professors:'Professors'
+        };
 
-        if (typeof STATS_DATA !== 'undefined') {
-          // Total activities
-          var total = 0;
-          ACTIVITY_KEYS.forEach(function(k) { total += (STATS_DATA[k]||[]).length; });
-
-          // Get years
-          var years = [];
-          ACTIVITY_KEYS.forEach(function(k) {
-            (STATS_DATA[k]||[]).forEach(function(d) {
-              if (d.year && years.indexOf(d.year) === -1) years.push(d.year);
-            });
+        // Get all years
+        var years = [];
+        Object.values(STATS_DATA).forEach(function(arr) {
+          (arr||[]).forEach(function(d) {
+            if (d.year && years.indexOf(d.year) === -1) years.push(d.year);
           });
-          years.sort().reverse();
+        });
+        years.sort().reverse();
 
-          slides.push('&#127919; Total Activities: <strong>' + total + '</strong>');
-          slides.push('&#128197; Years Active: <strong>' + years.length + '</strong> (' + years.join(', ') + ')');
-        } else {
-          slides.push('&#128202; Statistics loading...');
+        // Count per year per key
+        function countFor(key, year) {
+          return (STATS_DATA[key]||[]).filter(function(d) {
+            return year === 'all' || d.year === year;
+          }).length;
         }
 
-        // Build HTML
-        track.innerHTML = slides.map(function(s) {
-          return '<div class="slide"><p>' + s + '</p></div>';
-        }).join('');
-
-        // Ticker animation
-        var idx = 0;
-        var items = track.querySelectorAll('.slide');
-        if (!items.length) return;
-        function tick() {
-          track.style.transition = 'transform 0.5s ease';
-          track.style.transform = 'translateY(-' + (idx * items[0].offsetHeight) + 'px)';
-          idx = (idx + 1) >= items.length ? 0 : idx + 1;
-          if (idx === 0) {
-            setTimeout(function() {
-              track.style.transition = 'none';
-              track.style.transform = 'translateY(0)';
-            }, 500);
-          }
+        // Find max value for bar scaling
+        function maxCount(keys, year) {
+          var max = 0;
+          keys.forEach(function(k) { max = Math.max(max, countFor(k, year)); });
+          return max || 1;
         }
-        setInterval(tick, 2500);
+
+        // Build bar HTML
+        function barRow(label, count, max, color) {
+          var pct = Math.round((count / max) * 100);
+          return '<div style="margin-bottom:10px;">' +
+            '<div style="display:flex;justify-content:space-between;margin-bottom:4px;">' +
+              '<span style="font-size:0.82em;color:var(--text-muted);font-weight:500;">' + label + '</span>' +
+              '<span style="font-size:0.82em;font-weight:700;color:var(--navy);">' + count + '</span>' +
+            '</div>' +
+            '<div style="background:var(--surface);border-radius:6px;height:10px;overflow:hidden;">' +
+              '<div style="height:100%;width:' + pct + '%;background:' + color + ';border-radius:6px;transition:width 0.6s ease;"></div>' +
+            '</div>' +
+          '</div>';
+        }
+
+        // Year selector
+        var yearBtns = '<div style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:20px;" id="statYearBtns">' +
+          '<button class="filter-btn year-btn active" data-year="all" onclick="renderStatYear('all')">All Years</button>';
+        years.forEach(function(y) {
+          yearBtns += '<button class="filter-btn year-btn" data-year="' + y + '" onclick="renderStatYear('' + y + '')">' + y + '</button>';
+        });
+        yearBtns += '</div>';
+
+        container.innerHTML = yearBtns + '<div id="statsBars"></div>';
+
+        window.renderStatYear = function(year) {
+          // Update active button
+          document.querySelectorAll('#statYearBtns .filter-btn').forEach(function(b) {
+            b.classList.toggle('active', b.dataset.year === year);
+          });
+
+          var actMax = maxCount(ACTIVITY_KEYS, year);
+          var subMax = maxCount(SUBMISSION_KEYS, year);
+
+          var html = '<div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;">';
+
+          // Activities bar card
+          html += '<div style="background:var(--white);border:1px solid var(--border);border-radius:12px;padding:20px;">';
+          html += '<div style="font-family:'Plus Jakarta Sans',sans-serif;font-weight:700;font-size:0.95em;color:var(--navy);margin-bottom:16px;display:flex;align-items:center;gap:8px;">&#127919; Activities</div>';
+          ACTIVITY_KEYS.forEach(function(k) {
+            html += barRow(LABELS[k], countFor(k, year), actMax, 'var(--indigo)');
+          });
+          html += '</div>';
+
+          // Submissions bar card
+          html += '<div style="background:var(--white);border:1px solid var(--border);border-radius:12px;padding:20px;">';
+          html += '<div style="font-family:'Plus Jakarta Sans',sans-serif;font-weight:700;font-size:0.95em;color:var(--navy);margin-bottom:16px;display:flex;align-items:center;gap:8px;">&#128228; Submissions</div>';
+          SUBMISSION_KEYS.forEach(function(k) {
+            html += barRow(LABELS[k], countFor(k, year), subMax, '#F8C200');
+          });
+
+          // Total summary
+          var totalAct = ACTIVITY_KEYS.reduce(function(s,k){return s+countFor(k,year);},0);
+          var totalSub = SUBMISSION_KEYS.reduce(function(s,k){return s+countFor(k,year);},0);
+          html += '<div style="margin-top:16px;padding-top:14px;border-top:1px solid var(--border);display:flex;justify-content:space-between;">';
+          html += '<span style="font-size:0.82em;color:var(--text-muted);">Total Submissions</span>';
+          html += '<span style="font-weight:700;color:var(--navy);">' + totalSub + '</span>';
+          html += '</div>';
+          html += '</div>';
+
+          html += '</div>';
+
+          // Total activities summary row
+          html += '<div style="margin-top:12px;background:var(--navy);border-radius:12px;padding:16px 20px;display:flex;justify-content:space-around;flex-wrap:wrap;gap:12px;">';
+          html += '<div style="text-align:center;"><div style="font-size:1.8em;font-weight:800;color:#F8C200;font-family:'Plus Jakarta Sans',sans-serif;">' + totalAct + '</div><div style="font-size:0.78em;color:rgba(255,255,255,0.7);">Activities</div></div>';
+          html += '<div style="text-align:center;"><div style="font-size:1.8em;font-weight:800;color:#F8C200;font-family:'Plus Jakarta Sans',sans-serif;">' + totalSub + '</div><div style="font-size:0.78em;color:rgba(255,255,255,0.7);">Submissions</div></div>';
+          html += '<div style="text-align:center;"><div style="font-size:1.8em;font-weight:800;color:#F8C200;font-family:'Plus Jakarta Sans',sans-serif;">' + years.length + '</div><div style="font-size:0.78em;color:rgba(255,255,255,0.7);">Years Active</div></div>';
+          html += '<div style="text-align:center;"><div style="font-size:1.8em;font-weight:800;color:#F8C200;font-family:'Plus Jakarta Sans',sans-serif;">' + (totalAct+totalSub) + '</div><div style="font-size:0.78em;color:rgba(255,255,255,0.7);">Total Entries</div></div>';
+          html += '</div>';
+
+          document.getElementById('statsBars').innerHTML = html;
+        };
+
+        renderStatYear('all');
       }
 
-      // Wait for DOM
       if (document.readyState === 'loading') {
-        document.addEventListener('DOMContentLoaded', buildSlides);
+        document.addEventListener('DOMContentLoaded', buildStats);
       } else {
-        buildSlides();
+        buildStats();
       }
     })();
   </script>
