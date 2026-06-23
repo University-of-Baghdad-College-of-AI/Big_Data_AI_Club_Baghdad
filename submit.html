@@ -9,13 +9,12 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
-  <script src="access-codes.js"></script>
   <style>
-    /* ── Gate screen ── */
-    .gate {
-      max-width: 480px;
+    /* ── Login Gate ── */
+    .login-gate {
+      max-width: 460px;
       margin: 60px auto;
-      padding: 40px;
+      padding: 44px 40px;
       background: var(--white);
       border-radius: var(--radius, 12px);
       box-shadow: 0 6px 24px rgba(15,31,61,0.12);
@@ -23,113 +22,106 @@
       border-top: 4px solid var(--indigo);
       text-align: center;
     }
-    .gate-icon { font-size: 2.8em; margin-bottom: 16px; }
-    .gate h2 { font-family: 'Plus Jakarta Sans', sans-serif; font-size: 1.35em; font-weight: 800; color: var(--navy); margin-bottom: 8px; }
-    .gate p { font-size: 0.9em; color: var(--text-muted); margin-bottom: 24px; line-height: 1.6; }
-    .gate-input-row { display: flex; gap: 8px; }
-    .gate-input-row input {
-      flex: 1;
-      font-family: 'Inter', monospace;
-      font-size: 0.95em;
-      padding: 11px 14px;
-      border: 1.5px solid var(--border);
-      border-radius: 8px;
-      outline: none;
-      transition: border-color 0.2s, box-shadow 0.2s;
-      letter-spacing: 0.04em;
-    }
-    .gate-input-row input:focus { border-color: var(--indigo); box-shadow: 0 0 0 3px rgba(67,97,238,0.12); }
-    .gate-btn {
-      font-family: 'Plus Jakarta Sans', sans-serif;
-      font-weight: 700;
-      font-size: 0.92em;
-      padding: 11px 20px;
-      background: var(--indigo);
-      color: #fff;
-      border: none;
-      border-radius: 8px;
-      cursor: pointer;
-      transition: background 0.2s, transform 0.15s;
-      white-space: nowrap;
-    }
-    .gate-btn:hover { background: #3350D0; transform: translateY(-1px); }
-    .gate-error {
-      margin-top: 10px;
-      font-size: 0.83em;
-      color: #C62828;
-      display: none;
-    }
-    .gate-contact {
-      margin-top: 20px;
-      font-size: 0.82em;
-      color: var(--text-muted);
-    }
-    .gate-contact a { color: var(--indigo); text-decoration: none; font-weight: 600; }
+    .login-gate-icon { font-size: 2.8em; margin-bottom: 16px; }
+    .login-gate h2 { font-family: 'Plus Jakarta Sans', sans-serif; font-size: 1.35em; font-weight: 800; color: var(--navy); margin-bottom: 8px; }
+    .login-gate p { font-size: 0.9em; color: var(--text-muted); margin-bottom: 28px; line-height: 1.6; }
 
-    /* Role badge shown after unlock */
-    .role-badge {
+    .google-btn {
       display: inline-flex;
       align-items: center;
-      gap: 6px;
-      font-size: 0.82em;
-      font-weight: 700;
-      padding: 4px 12px;
-      border-radius: 20px;
-      margin-bottom: 16px;
+      gap: 12px;
+      background: var(--white);
+      border: 1.5px solid var(--border);
+      border-radius: 8px;
+      padding: 12px 24px;
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      font-size: 0.95em;
+      font-weight: 600;
+      color: var(--navy);
+      cursor: pointer;
+      transition: box-shadow 0.2s, border-color 0.2s;
+      width: 100%;
+      justify-content: center;
     }
-    .role-badge.student  { background: var(--indigo-pale); color: var(--indigo); }
-    .role-badge.professor { background: #FFF8EC; color: #9a6f00; }
+    .google-btn:hover { box-shadow: 0 4px 14px rgba(0,0,0,0.12); border-color: #aaa; }
+    .google-btn img { width: 20px; height: 20px; }
 
-    /* Form hidden until unlocked */
-    #formWrapper { display: none; }
+    /* Access denied */
+    .access-denied {
+      display: none;
+      background: #FFF3F3;
+      border: 1.5px solid #FFCDD2;
+      border-radius: 10px;
+      padding: 16px 20px;
+      margin-top: 16px;
+      font-size: 0.88em;
+      color: #C62828;
+      line-height: 1.6;
+    }
 
-    /* Sub-type panels */
-    .subtype-panel { display: none; flex-direction: column; gap: 6px; }
-    .subtype-panel.visible { display: flex; }
-
-    /* File error */
-    .file-error { display: none; color: #C62828; font-size: 0.83em; margin-top: -8px; }
-
-    /* Info banner */
-    .info-banner {
+    /* User info bar */
+    .user-bar {
+      display: none;
+      align-items: center;
+      gap: 12px;
       background: var(--indigo-pale);
-      border: 1.5px solid var(--indigo-light);
       border-radius: 10px;
       padding: 12px 16px;
-      font-size: 0.87em;
-      color: var(--navy);
-      line-height: 1.6;
-      margin-bottom: 4px;
+      margin-bottom: 20px;
+      font-size: 0.88em;
     }
+    .user-bar img { width: 32px; height: 32px; border-radius: 50%; }
+    .user-bar .user-info { flex: 1; text-align: left; }
+    .user-bar .user-name { font-weight: 700; color: var(--navy); font-size: 0.95em; }
+    .user-bar .user-email { color: var(--text-muted); font-size: 0.82em; }
+    .user-bar .role-badge { font-size: 0.75em; font-weight: 700; padding: 3px 10px; border-radius: 20px; }
+    .role-badge.student { background: var(--indigo-pale); color: var(--indigo); border: 1px solid var(--indigo-light); }
+    .role-badge.professor { background: #FFF8EC; color: #9a6f00; border: 1px solid #f0d080; }
+    .signout-btn { background: none; border: 1px solid var(--border); border-radius: 6px; padding: 5px 12px; font-size: 0.78em; color: var(--text-muted); cursor: pointer; font-family: 'Inter', sans-serif; transition: all 0.18s; }
+    .signout-btn:hover { border-color: var(--navy); color: var(--navy); }
+
+    /* Loading spinner */
+    .spinner {
+      display: none;
+      width: 36px; height: 36px;
+      border: 3px solid var(--border);
+      border-top-color: var(--indigo);
+      border-radius: 50%;
+      animation: spin 0.8s linear infinite;
+      margin: 20px auto;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    /* Form */
+    #formWrapper { display: none; }
     .form-divider { height: 1px; background: var(--border); margin: 4px 0; }
+    .subtype-panel { display: none; flex-direction: column; gap: 6px; }
+    .subtype-panel.visible { display: flex; }
+    .file-error { display: none; color: #C62828; font-size: 0.83em; margin-top: -8px; }
+    .info-banner { background: var(--indigo-pale); border: 1.5px solid var(--indigo-light); border-radius: 10px; padding: 12px 16px; font-size: 0.87em; color: var(--navy); line-height: 1.6; margin-bottom: 4px; }
+
+    @media (max-width: 480px) { .login-gate { margin: 30px 16px; padding: 32px 24px; } }
   </style>
 </head>
 <body>
 
   <header>
     <div class="logo-container">
-      <a href="https://uobaghdad.edu.iq/" target="_blank">
-        <img src="logo3.png" alt="University of Baghdad Logo" class="club-logo">
-      </a>
-      <a href="https://en.coai.uobaghdad.edu.iq/" target="_blank">
-        <img src="coai-english-logo.png" alt="College of AI Logo" class="club-logo">
-      </a>
+      <a href="https://uobaghdad.edu.iq/" target="_blank"><img src="logo3.png" alt="University of Baghdad" class="club-logo"></a>
+      <a href="https://en.coai.uobaghdad.edu.iq/" target="_blank"><img src="coai-english-logo.png" alt="College of AI" class="club-logo"></a>
     </div>
     <h1><a href="index.html">Big Data Artificial Intelligence Club</a></h1>
     <p>A student-led community exploring Big Data and Artificial Intelligence</p>
   </header>
 
   <nav>
-    <button class="nav-toggle" aria-label="Toggle menu">
-      <span></span><span></span><span></span>
-    </button>
+    <button class="nav-toggle" aria-label="Toggle menu"><span></span><span></span><span></span></button>
     <div class="nav-links">
       <a href="index.html">Home</a>
       <a href="mission.html">Mission</a>
       <div class="dropdown">
         <button class="dropbtn">Activities &#9662;</button>
-        <div class="dropdown-content">
-          <div class="dropdown-content-inner">
+        <div class="dropdown-content"><div class="dropdown-content-inner">
             <a href="workshops.html">Workshops</a>
             <a href="researches.html">Researches</a>
             <a href="projects.html">Projects</a>
@@ -138,69 +130,74 @@
             <a href="seminars.html">Seminars</a>
             <a href="conferences.html">Conferences</a>
             <a href="field-visits.html">Field Visits</a>
-          </div>
-        </div>
+        </div></div>
       </div>
       <a href="members.html">Members</a>
       <a href="announcements.html">Announcements</a>
       <a href="news.html">News</a>
       <div class="dropdown">
         <button class="dropbtn">Submissions &#9662;</button>
-        <div class="dropdown-content">
-          <div class="dropdown-content-inner">
+        <div class="dropdown-content"><div class="dropdown-content-inner">
             <a href="https://university-of-baghdad-college-of-ai.github.io/Big_Data_AI_Club_Students/" target="_blank">Students Work</a>
             <a href="https://university-of-baghdad-college-of-ai.github.io/Big_Data_AI_Club_Professors/" target="_blank">Professors Work</a>
-          </div>
-        </div>
+        </div></div>
       </div>
       <a href="submit.html">Submit</a>
       <a href="contact.html">Contact</a>
     </div>
   </nav>
 
-  <!-- ── GATE ── -->
-  <div id="gateWrapper">
-    <div class="gate">
-      <div class="gate-icon">&#128274;</div>
-      <h2>Access Required</h2>
-      <p>This page is restricted to approved members only.<br>Enter your access code to continue.</p>
-      <div class="gate-input-row">
-        <input type="text" id="codeInput"  autocomplete="off" spellcheck="false">
-        <button class="gate-btn" onclick="checkCode()">Unlock</button>
-      </div>
-      <div class="gate-error" id="gateError">&#9888; Invalid or unrecognised code. Please check and try again.</div>
-      <div class="gate-contact">
-        Don't have a code? Contact Club Manager to request access.
+  <!-- ── LOGIN GATE ── -->
+  <div id="loginGate">
+    <div class="login-gate">
+      <div class="login-gate-icon">&#128274;</div>
+      <h2>Sign in to Submit</h2>
+      <p>This page is restricted to approved members.<br>Sign in with your Google account to continue.</p>
+      <div class="spinner" id="spinner"></div>
+      <button class="google-btn" id="googleSignInBtn" onclick="signInWithGoogle()">
+        <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" alt="Google">
+        Sign in with Google
+      </button>
+      <div class="access-denied" id="accessDenied">
+        &#9888; <strong>Access denied.</strong><br>
+        Your account (<span id="deniedEmail"></span>) is not approved.<br>
+        Contact Club Manager to request access.
       </div>
     </div>
   </div>
 
-  <!-- ── FORM (hidden until unlocked) ── -->
+  <!-- ── FORM (shown after approved login) ── -->
   <div id="formWrapper">
     <section>
       <h2>&#128228; Activity Submission</h2>
 
-      <div id="roleBadge" class="role-badge"></div>
+      <!-- User bar -->
+      <div class="user-bar" id="userBar">
+        <img id="userPhoto" src="" alt="">
+        <div class="user-info">
+          <div class="user-name" id="userName"></div>
+          <div class="user-email" id="userEmail"></div>
+        </div>
+        <span class="role-badge" id="roleBadge"></span>
+        <button class="signout-btn" onclick="signOut()">Sign out</button>
+      </div>
 
       <div class="info-banner" id="infoBanner"></div>
-
-      <p style="color:var(--text-muted);font-size:0.9em;margin-bottom:16px;">
-        Files must be PDF or ZIP only. Club Manager will review and upload your file to the repository.
-      </p>
+      <p style="color:var(--text-muted);font-size:0.9em;margin-bottom:16px;">Files must be PDF or ZIP only. Club Manager will review and upload to the repository.</p>
 
       <form id="submitForm" action="https://formspree.io/f/xqevzekb" method="POST" enctype="multipart/form-data">
         <input type="hidden" name="_subject" id="emailSubject" value="New Activity Submission - Big Data AI Club">
-        <input type="hidden" name="role"       id="roleInput"    value="">
-        <input type="hidden" name="access_code" id="codeUsed"   value="">
+        <input type="hidden" name="role"         id="roleInput"   value="">
+        <input type="hidden" name="google_email" id="googleEmail" value="">
+        <input type="hidden" name="google_name"  id="googleName"  value="">
 
         <div class="form-divider"></div>
 
         <label for="name">Your Name
-          <input type="text" id="name" name="name" placeholder="e.g. Ahmed Ali" required>
+          <input type="text" id="name" name="name" required>
         </label>
-
         <label for="email">Your Email
-          <input type="email" id="email" name="email" placeholder="e.g. ahmed@uobaghdad.edu.iq" required>
+          <input type="email" id="email" name="email" required>
         </label>
 
         <div class="form-divider"></div>
@@ -208,95 +205,55 @@
         <label for="activityType">Activity Type
           <select id="activityType" name="activity_type" required onchange="updateSubtype()">
             <option value="">&#8212; Select activity type &#8212;</option>
-            <option>Workshop</option>
-            <option>Research</option>
-            <option>Project</option>
-            <option>Lecture</option>
-            <option>Presentation</option>
-            <option>Seminar</option>
-            <option>Conference</option>
-            <option>Field Visit</option>
-            <option>Other</option>
+            <option>Workshop</option><option>Research</option><option>Project</option>
+            <option>Lecture</option><option>Presentation</option><option>Seminar</option>
+            <option>Conference</option><option>Field Visit</option><option>Other</option>
           </select>
         </label>
 
-        <!-- Sub-types -->
         <div class="subtype-panel" id="subProject">
-          <label>Project Type
-            <select name="project_type">
-              <option value="">&#8212; Select &#8212;</option>
-              <option>Research</option><option>Software</option>
-              <option>Data Analysis</option><option>AI Model</option><option>Other</option>
-            </select>
-          </label>
+          <label>Project Type<select name="project_type"><option value="">&#8212; Select &#8212;</option>
+            <option>Research</option><option>Software</option><option>Data Analysis</option><option>AI Model</option><option>Other</option>
+          </select></label>
         </div>
         <div class="subtype-panel" id="subResearch">
-          <label>Research Field
-            <select name="research_field">
-              <option value="">&#8212; Select &#8212;</option>
-              <option>Artificial Intelligence</option><option>Big Data</option>
-              <option>NLP</option><option>Computer Vision</option>
-              <option>Bioinformatics</option><option>Machine Learning</option><option>Other</option>
-            </select>
-          </label>
+          <label>Research Field<select name="research_field"><option value="">&#8212; Select &#8212;</option>
+            <option>Artificial Intelligence</option><option>Big Data</option><option>NLP</option>
+            <option>Computer Vision</option><option>Bioinformatics</option><option>Machine Learning</option><option>Other</option>
+          </select></label>
         </div>
         <div class="subtype-panel" id="subWorkshop">
-          <label>Workshop Level
-            <select name="workshop_level">
-              <option value="">&#8212; Select &#8212;</option>
-              <option>Beginner</option><option>Intermediate</option><option>Advanced</option>
-            </select>
-          </label>
+          <label>Workshop Level<select name="workshop_level"><option value="">&#8212; Select &#8212;</option>
+            <option>Beginner</option><option>Intermediate</option><option>Advanced</option>
+          </select></label>
         </div>
         <div class="subtype-panel" id="subLecture">
-          <label>Lecture Type
-            <select name="lecture_type">
-              <option value="">&#8212; Select &#8212;</option>
-              <option>Introductory</option><option>Advanced</option>
-              <option>Guest Lecture</option><option>Tutorial</option>
-            </select>
-          </label>
+          <label>Lecture Type<select name="lecture_type"><option value="">&#8212; Select &#8212;</option>
+            <option>Introductory</option><option>Advanced</option><option>Guest Lecture</option><option>Tutorial</option>
+          </select></label>
         </div>
         <div class="subtype-panel" id="subConference">
-          <label>Conference Type
-            <select name="conference_type">
-              <option value="">&#8212; Select &#8212;</option>
-              <option>International</option><option>National</option>
-              <option>Local</option><option>Organized by Club</option>
-            </select>
-          </label>
+          <label>Conference Type<select name="conference_type"><option value="">&#8212; Select &#8212;</option>
+            <option>International</option><option>National</option><option>Local</option><option>Organized by Club</option>
+          </select></label>
         </div>
         <div class="subtype-panel" id="subPresentation">
-          <label>Presentation Type
-            <select name="presentation_type">
-              <option value="">&#8212; Select &#8212;</option>
-              <option>Project Demo</option><option>Research Results</option>
-              <option>Keynote</option><option>Live Demo</option>
-            </select>
-          </label>
+          <label>Presentation Type<select name="presentation_type"><option value="">&#8212; Select &#8212;</option>
+            <option>Project Demo</option><option>Research Results</option><option>Keynote</option><option>Live Demo</option>
+          </select></label>
         </div>
         <div class="subtype-panel" id="subSeminar">
-          <label>Seminar Type
-            <select name="seminar_type">
-              <option value="">&#8212; Select &#8212;</option>
-              <option>Trend Discussion</option><option>Research Seminar</option>
-              <option>Industry Talk</option><option>Open Discussion</option>
-            </select>
-          </label>
+          <label>Seminar Type<select name="seminar_type"><option value="">&#8212; Select &#8212;</option>
+            <option>Trend Discussion</option><option>Research Seminar</option><option>Industry Talk</option><option>Open Discussion</option>
+          </select></label>
         </div>
         <div class="subtype-panel" id="subFieldVisit">
-          <label>Visit Type
-            <select name="visit_type">
-              <option value="">&#8212; Select &#8212;</option>
-              <option>Tech Company</option><option>Research Lab</option>
-              <option>University</option><option>Government Institution</option>
-            </select>
-          </label>
+          <label>Visit Type<select name="visit_type"><option value="">&#8212; Select &#8212;</option>
+            <option>Tech Company</option><option>Research Lab</option><option>University</option><option>Government Institution</option>
+          </select></label>
         </div>
         <div class="subtype-panel" id="subOther">
-          <label>Please Specify
-            <input type="text" name="other_type" placeholder="Describe the activity type">
-          </label>
+          <label>Please Specify<input type="text" name="other_type" placeholder="Describe the activity type"></label>
         </div>
 
         <div class="form-divider"></div>
@@ -304,19 +261,15 @@
         <label for="activityTitle">Activity Title
           <input type="text" id="activityTitle" name="activity_title" placeholder="e.g. Machine Learning for Healthcare" required>
         </label>
-
         <label for="activityYear">Year
           <select id="activityYear" name="year" required>
             <option value="">&#8212; Select year &#8212;</option>
-            <option>2026</option><option>2025</option>
-            <option>2024</option><option>2023</option>
+            <option>2026</option><option>2025</option><option>2024</option><option>2023</option>
           </select>
         </label>
-
         <label for="description">Description
-          <textarea id="description" name="description" placeholder="Briefly describe your activity, goals, methods, and outcomes..." required></textarea>
+          <textarea id="description" name="description" placeholder="Describe your activity, goals, methods, and outcomes..." required></textarea>
         </label>
-
         <label for="file">Upload File
           <span style="font-size:0.82em;font-weight:400;color:var(--text-muted);margin-left:6px;">(PDF or ZIP only, max 10MB)</span>
           <input type="file" id="file" name="file" accept=".pdf,.zip" required>
@@ -333,50 +286,118 @@
     <p>Big Data Department | College of AI | University of Baghdad</p>
   </footer>
 
-  <script>
-    // ── Code check ──
-    function checkCode() {
-      var code = document.getElementById('codeInput').value.trim();
-      var role = APPROVED_CODES[code];
-      if (!role) {
-        document.getElementById('gateError').style.display = 'block';
+  <!-- Firebase SDK -->
+  <script type="module">
+    import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js';
+    import { getAuth, signInWithPopup, GoogleAuthProvider, signOut as fbSignOut, onAuthStateChanged }
+      from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js';
+
+    const firebaseConfig = {
+      apiKey: "AIzaSyArF59_11UVHPo9yZW5zg2RYQWaKjIZXYw",
+      authDomain: "bigdataaiclub.firebaseapp.com",
+      projectId: "bigdataaiclub",
+      storageBucket: "bigdataaiclub.firebasestorage.app",
+      messagingSenderId: "877020220761",
+      appId: "1:877020220761:web:6c6dcc22b63fcd2ec15048"
+    };
+
+    const app      = initializeApp(firebaseConfig);
+    const auth     = getAuth(app);
+    const provider = new GoogleAuthProvider();
+
+    // ── APPROVED USERS ──
+    // Add approved email → role pairs here
+    // 'student' or 'professor'
+    const APPROVED_USERS = {
+      'jalal.hameed@uobaghdad.edu.iq': 'professor',
+      // Add more approved users below:
+      // 'student@example.com': 'student',
+      // 'professor@example.com': 'professor',
+    };
+
+    window.signInWithGoogle = function() {
+      document.getElementById('spinner').style.display = 'block';
+      document.getElementById('googleSignInBtn').style.display = 'none';
+      document.getElementById('accessDenied').style.display = 'none';
+
+      signInWithPopup(auth, provider)
+        .then(function(result) {
+          // handled by onAuthStateChanged
+        })
+        .catch(function(err) {
+          document.getElementById('spinner').style.display = 'none';
+          document.getElementById('googleSignInBtn').style.display = 'flex';
+          console.error('Sign-in error:', err);
+        });
+    };
+
+    window.signOut = function() {
+      fbSignOut(auth).then(function() {
+        document.getElementById('formWrapper').style.display = 'none';
+        document.getElementById('loginGate').style.display = 'block';
+        document.getElementById('accessDenied').style.display = 'none';
+        document.getElementById('googleSignInBtn').style.display = 'flex';
+      });
+    };
+
+    onAuthStateChanged(auth, function(user) {
+      document.getElementById('spinner').style.display = 'none';
+
+      if (!user) {
+        document.getElementById('loginGate').style.display = 'block';
+        document.getElementById('formWrapper').style.display = 'none';
+        document.getElementById('googleSignInBtn').style.display = 'flex';
         return;
       }
-      // Store in session
-      sessionStorage.setItem('bdai_code', code);
-      sessionStorage.setItem('bdai_role', role);
-      unlockForm(code, role);
-    }
 
-    function unlockForm(code, role) {
-      document.getElementById('gateWrapper').style.display = 'none';
+      var email = user.email;
+      var role  = APPROVED_USERS[email];
+
+      if (!role) {
+        // Not approved
+        document.getElementById('googleSignInBtn').style.display = 'none';
+        document.getElementById('accessDenied').style.display = 'block';
+        document.getElementById('deniedEmail').textContent = email;
+        fbSignOut(auth);
+        return;
+      }
+
+      // Approved — show form
+      document.getElementById('loginGate').style.display = 'none';
       document.getElementById('formWrapper').style.display = 'block';
 
-      // Set hidden fields
-      document.getElementById('roleInput').value = role;
-      document.getElementById('codeUsed').value  = code;
+      // User bar
+      var bar = document.getElementById('userBar');
+      bar.style.display = 'flex';
+      document.getElementById('userPhoto').src  = user.photoURL || '';
+      document.getElementById('userName').textContent  = user.displayName || '';
+      document.getElementById('userEmail').textContent = email;
 
-      // Role badge + banner
-      var badge  = document.getElementById('roleBadge');
+      var badge = document.getElementById('roleBadge');
+      badge.textContent  = role === 'student' ? '&#127891; Student' : '&#128218; Professor';
+      badge.innerHTML    = role === 'student' ? '&#127891; Student' : '&#128218; Professor';
+      badge.className    = 'role-badge ' + role;
+
+      // Pre-fill form
+      document.getElementById('name').value  = user.displayName || '';
+      document.getElementById('email').value = email;
+      document.getElementById('roleInput').value   = role;
+      document.getElementById('googleEmail').value = email;
+      document.getElementById('googleName').value  = user.displayName || '';
+
+      // Banner
       var banner = document.getElementById('infoBanner');
       if (role === 'student') {
-        badge.className  = 'role-badge student';
-        badge.innerHTML  = '&#127891; Student';
         banner.innerHTML = '&#127891; Your file will be added to <strong>Big_Data_AI_Club_Students/submissions/[year]/</strong> after review.';
         document.getElementById('emailSubject').value = 'New Student Submission - Big Data AI Club';
       } else {
-        badge.className  = 'role-badge professor';
-        badge.innerHTML  = '&#128218; Professor';
         banner.innerHTML = '&#128218; Your file will be added to <strong>Big_Data_AI_Club_Professors/submissions/[year]/</strong> after review.';
         document.getElementById('emailSubject').value = 'New Professor Submission - Big Data AI Club';
       }
-    }
-
-    // Allow Enter key on code input
-    document.getElementById('codeInput').addEventListener('keydown', function(e) {
-      if (e.key === 'Enter') checkCode();
     });
+  </script>
 
+  <script>
     // Sub-type panels
     var subtypeMap = {
       'Project':'subProject','Research':'subResearch','Workshop':'subWorkshop',
@@ -385,50 +406,32 @@
     };
     function updateSubtype() {
       var val = document.getElementById('activityType').value;
-      Object.values(subtypeMap).forEach(function(id) {
-        var el = document.getElementById(id);
-        if (el) el.classList.remove('visible');
-      });
-      if (val && subtypeMap[val]) {
-        var p = document.getElementById(subtypeMap[val]);
-        if (p) p.classList.add('visible');
-      }
+      Object.values(subtypeMap).forEach(function(id){ var el=document.getElementById(id); if(el) el.classList.remove('visible'); });
+      if (val && subtypeMap[val]) { var p=document.getElementById(subtypeMap[val]); if(p) p.classList.add('visible'); }
     }
 
     // File validation
     document.getElementById('file').addEventListener('change', function() {
-      var errEl = document.getElementById('fileError');
-      var name  = this.files[0] ? this.files[0].name.toLowerCase() : '';
+      var name = this.files[0] ? this.files[0].name.toLowerCase() : '';
+      var err  = document.getElementById('fileError');
       if (name && !name.endsWith('.pdf') && !name.endsWith('.zip')) {
-        errEl.style.display = 'block';
-        this.value = '';
-      } else {
-        errEl.style.display = 'none';
-      }
+        err.style.display = 'block'; this.value = '';
+      } else { err.style.display = 'none'; }
     });
 
-    // Restore session if already unlocked this session
-    var savedCode = sessionStorage.getItem('bdai_code');
-    var savedRole = sessionStorage.getItem('bdai_role');
-    if (savedCode && savedRole && APPROVED_CODES[savedCode] === savedRole) {
-      unlockForm(savedCode, savedRole);
-    }
-
     // Mobile nav
-    var toggle = document.querySelector('.nav-toggle');
-    var navLinks = document.querySelector('.nav-links');
-    if (toggle && navLinks) {
-      toggle.addEventListener('click', function() { navLinks.classList.toggle('open'); });
-      document.querySelectorAll('.dropdown').forEach(function(dd) {
-        dd.querySelector('.dropbtn').addEventListener('click', function(e) {
-          if (window.innerWidth <= 768) { e.preventDefault(); e.stopPropagation(); dd.classList.toggle('open'); }
+    var toggle=document.querySelector('.nav-toggle'), navLinks=document.querySelector('.nav-links');
+    if(toggle&&navLinks){
+      toggle.addEventListener('click',function(){navLinks.classList.toggle('open');});
+      document.querySelectorAll('.dropdown').forEach(function(dd){
+        dd.querySelector('.dropbtn').addEventListener('click',function(e){
+          if(window.innerWidth<=768){e.preventDefault();e.stopPropagation();dd.classList.toggle('open');}
         });
       });
-      document.querySelectorAll('.nav-links a').forEach(function(a) {
-        a.addEventListener('click', function() { navLinks.classList.remove('open'); });
+      document.querySelectorAll('.nav-links a').forEach(function(a){
+        a.addEventListener('click',function(){navLinks.classList.remove('open');});
       });
     }
   </script>
-
 </body>
 </html>
