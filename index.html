@@ -352,71 +352,6 @@
       .tb-popup-overlay{ padding-right: 10px; }
       .tb-popup{ width: calc(100vw - 20px); }
     }
-  
-    /* ── Statistics ── */
-    .stat-card {
-      position: relative;
-      aspect-ratio: 1 / 1;
-      border-radius: 8px;
-      overflow: hidden;
-      background: var(--navy);
-      border: 1px solid var(--border);
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      gap: 8px;
-      transition: box-shadow 0.2s, transform 0.2s;
-      cursor: default;
-    }
-    .stat-card:hover { box-shadow: var(--shadow-md); transform: translateY(-2px); }
-    .stat-number {
-      font-family: 'Plus Jakarta Sans', sans-serif;
-      font-size: 2.4em;
-      font-weight: 800;
-      color: #F8C200;
-      line-height: 1;
-    }
-    .stat-label {
-      font-size: 0.78em;
-      color: rgba(255,255,255,0.75);
-      font-weight: 600;
-      text-align: center;
-      padding: 0 8px;
-      letter-spacing: 0.02em;
-    }
-    .stat-year-btn {
-      font-family: 'Plus Jakarta Sans', sans-serif;
-      font-size: 0.82em;
-      font-weight: 600;
-      padding: 6px 16px;
-      border-radius: 20px;
-      border: 1.5px solid var(--border);
-      background: var(--white);
-      color: var(--text-muted);
-      cursor: pointer;
-      transition: all 0.18s;
-    }
-    .stat-year-btn:hover { border-color: var(--indigo); color: var(--indigo); }
-    .stat-year-btn.active { background: var(--navy); color: #fff; border-color: var(--navy); }
-    .breakdown-item {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      padding: 9px 14px;
-      background: var(--surface);
-      border-radius: 8px;
-      font-size: 0.85em;
-      transition: background 0.18s;
-    }
-    .breakdown-item:hover { background: var(--indigo-pale); }
-    .breakdown-label { color: var(--text-muted); }
-    .breakdown-count {
-      font-family: 'Plus Jakarta Sans', sans-serif;
-      font-weight: 700;
-      color: var(--navy);
-      font-size: 1em;
-    }
   </style>
 </head>
 <body>
@@ -598,14 +533,15 @@
 
 
   <!-- ── STATISTICS SECTION ── -->
-  <div class="gallery-section" style="padding-bottom:0;">
-    <div class="gallery-header">&#128202; Club Statistics</div>
-
-    <!-- Year filter buttons -->
-    <div style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:16px;" id="statsYearBtns"></div>
-
-    <!-- Stat cards in gallery grid style -->
-    <div class="gallery-grid" id="statsGrid" style="margin-bottom:16px;"></div>
+  <div class="news-bar" style="background:#0F1F3D;">
+    <div class="news-bar-inner">
+      <span class="news-label" style="background:#F8C200;color:#0F1F3D;">&#128202; STATS</span>
+      <div class="news-slider-vertical">
+        <div class="slide-track" id="statsTrack">
+          <div class="slide"><p>Loading statistics...</p></div>
+        </div>
+      </div>
+    </div>
   </div>
 
   <!-- Main sections -->
@@ -822,7 +758,10 @@
 
 
   <script>
-    // ── Statistics ──
+    });
+  </script>
+
+  <script>
     var STATS_DATA = {
   'workshops': [{"type": "ml", "year": "2026", "title": "Intro to Machine Learning with Scikit-Learn", "desc": "A practical workshop covering supervised learning, model evaluation, and pipeline building using Python's Scikit-Learn library.", "who": "Dr. Jalal Hameed", "date": "June 2026", "link": "#"}, {"type": "bigdata", "year": "2026", "title": "Apache Spark for Large-Scale Data Processing", "desc": "Hands-on session on distributed data processing using Apache Spark, covering RDDs, DataFrames, and Spark SQL.", "who": "Club Members", "date": "April 2026", "link": "#"}, {"type": "programming", "year": "2025", "title": "Python for Data Science Bootcamp", "desc": "Two-day intensive covering NumPy, Pandas, Matplotlib, and data wrangling for beginners.", "who": "Club Members", "date": "March 2025", "link": "#"}, {"type": "tools", "year": "2025", "title": "Git & GitHub for Collaborative Projects", "desc": "Introduction to version control, branching strategies, and collaborative workflows.", "who": "Club Members", "date": "February 2025", "link": "#"}, {"type": "bigdata", "year": "2024", "title": "Hadoop Ecosystem Overview", "desc": "Introduction to HDFS, MapReduce, Hive, and Pig for big data storage and processing.", "who": "Dr. Jalal Hameed", "date": "November 2024", "link": "#"}, {"type": "ml", "year": "2024", "title": "Deep Learning with TensorFlow", "desc": "Hands-on workshop covering neural networks, CNNs, and RNNs using TensorFlow and Keras.", "who": "Club Members", "date": "September 2024", "link": "#"}],
   'researches': [{"type": "nlp", "year": "2026", "title": "Multilingual Text Classification with Transformers", "desc": "Parameter-efficient fine-tuning for multilingual text classification using adapter-based methods.", "who": "Dr. Jalal Hameed", "date": "June 2026", "link": "#"}, {"type": "ai", "year": "2026", "title": "Video Fake Frame Detection using VIA-Net", "desc": "Novel deep learning architecture for detecting manipulated frames in video content.", "who": "Dr. Jalal Hameed", "date": "May 2026", "link": "#"}, {"type": "bigdata", "year": "2026", "title": "SDG Classification using SciBERT-GraphSAGE", "desc": "Hybrid NLP and graph learning framework mapping research to UN Sustainable Development Goals.", "who": "Dr. Ahmed Ali", "date": "April 2026", "link": "#"}, {"type": "bio", "year": "2025", "title": "AI Platform for Disease Spread During Arbaeen", "desc": "GNN models predicting infectious disease spread in large crowd gatherings.", "who": "Dr. Jalal Hameed", "date": "March 2025", "link": "#"}, {"type": "ai", "year": "2025", "title": "Predictive Analytics for Student Performance", "desc": "Using academic data and ML models to predict and improve student outcomes.", "who": "Student Team", "date": "January 2025", "link": "#"}, {"type": "nlp", "year": "2024", "title": "Arabic Sentiment Analysis using BERT", "desc": "Fine-tuned Arabic BERT model for sentiment classification across social media datasets.", "who": "Club Members", "date": "October 2024", "link": "#"}],
@@ -833,90 +772,77 @@
   'conferences': [{"type": "national", "year": "2026", "title": "National AI Hackathon 2026", "desc": "Club team won 2nd place with an innovative ML-based solution for traffic optimization.", "who": "Club Team", "date": "June 2026", "link": "#"}, {"type": "international", "year": "2026", "title": "IEEE International Conference on Big Data", "desc": "Paper on Big Data clustering techniques presented at the IEEE Big Data conference.", "who": "Dr. Jalal Hameed", "date": "May 2026", "link": "#"}, {"type": "local", "year": "2025", "title": "University of Baghdad Research Symposium", "desc": "Annual symposium showcasing student and college research contributions.", "who": "Club Members", "date": "April 2025", "link": "#"}, {"type": "organized", "year": "2025", "title": "College of AI Annual Tech Summit", "desc": "Club-organized summit for students, professors, and industry professionals.", "who": "Big Data AI Club", "date": "February 2025", "link": "#"}, {"type": "international", "year": "2024", "title": "ICCV Workshop on AI Applications", "desc": "Paper presented at the International Conference on Computer Vision workshop.", "who": "Dr. Jalal Hameed", "date": "October 2024", "link": "#"}, {"type": "national", "year": "2024", "title": "Iraqi National Science Fair", "desc": "Club project showcased at the Iraqi National Science Fair, received commendation.", "who": "Club Members", "date": "May 2024", "link": "#"}],
   'field-visits': [{"type": "tech", "year": "2026", "title": "Visit to Baghdad Tech Hub", "desc": "Members toured Baghdad's leading tech hub, meeting startup founders and AI engineers.", "who": "Club Members", "date": "May 2026", "link": "#"}, {"type": "lab", "year": "2026", "title": "Ministry of Science Research Labs Tour", "desc": "Guided tour of government research labs exploring applied AI projects.", "who": "Club Members", "date": "April 2026", "link": "#"}, {"type": "uni", "year": "2025", "title": "Al-Mustansiriyah University Exchange Visit", "desc": "Inter-university visit to share research and establish collaborative projects.", "who": "Club Members", "date": "March 2025", "link": "#"}, {"type": "gov", "year": "2025", "title": "Iraqi Digital Transformation Authority Visit", "desc": "Meeting officials on AI adoption in Iraq's public services.", "who": "Club Members", "date": "January 2025", "link": "#"}, {"type": "tech", "year": "2024", "title": "Huawei Iraq Office Visit", "desc": "Technical tour of Huawei's Iraq office exploring cloud and AI infrastructure.", "who": "Club Members", "date": "November 2024", "link": "#"}, {"type": "lab", "year": "2024", "title": "TUBITAK Research Center Visit", "desc": "Visit to the applied AI research center to explore joint research opportunities.", "who": "Club Members", "date": "September 2024", "link": "#"}],
 };
+  </script>
 
-    var ACTIVITY_LABELS = {
-      workshops: '&#128218; Workshops',
-      researches: '&#128300; Researches',
-      projects: '&#128295; Projects',
-      lectures: '&#127979; Lectures',
-      presentations: '&#128202; Presentations',
-      seminars: '&#127891; Seminars',
-      conferences: '&#127970; Conferences',
-      'field-visits': '&#127758; Field Visits',
-      students: '&#127891; Student Submissions',
-      professors: '&#128218; Professor Submissions'
-    };
+  <script>
+    // ── Stats Ticker ──
+    (function() {
+      var ACTIVITY_KEYS = ['workshops','researches','projects','lectures','presentations','seminars','conferences','field-visits'];
+      var LABELS = {
+        workshops:'Workshops', researches:'Researches', projects:'Projects',
+        lectures:'Lectures', presentations:'Presentations', seminars:'Seminars',
+        conferences:'Conferences', 'field-visits':'Field Visits'
+      };
 
-    var ACTIVITY_KEYS = ['workshops','researches','projects','lectures','presentations','seminars','conferences','field-visits'];
-    var SUBMISSION_KEYS = ['students','professors'];
-    var statsActiveYear = 'all';
+      // Count from embedded allData in each page is not available here
+      // Instead we use STATS_DATA which is synced by GitHub Action
+      // Build slides from STATS_DATA if available, else show placeholder
+      function buildSlides() {
+        var track = document.getElementById('statsTrack');
+        if (!track) return;
 
-    function getYears() {
-      var years = [];
-      Object.values(STATS_DATA).forEach(function(arr) {
-        arr.forEach(function(d) {
-          if (d.year && years.indexOf(d.year) === -1) years.push(d.year);
-        });
-      });
-      return years.sort().reverse();
-    }
+        var slides = [];
 
-    function countFor(key, year) {
-      var arr = STATS_DATA[key] || [];
-      if (year === 'all') return arr.length;
-      return arr.filter(function(d) { return d.year === year; }).length;
-    }
+        if (typeof STATS_DATA !== 'undefined') {
+          // Total activities
+          var total = 0;
+          ACTIVITY_KEYS.forEach(function(k) { total += (STATS_DATA[k]||[]).length; });
 
-    function renderStats(year) {
-      var totalActivities = ACTIVITY_KEYS.reduce(function(s, k) { return s + countFor(k, year); }, 0);
-      var totalSubmissions = SUBMISSION_KEYS.reduce(function(s, k) { return s + countFor(k, year); }, 0);
-      var years = getYears();
-      var yearsActive = year === 'all' ? years.length : 1;
-      var totalAll = totalActivities + totalSubmissions;
+          // Get years
+          var years = [];
+          ACTIVITY_KEYS.forEach(function(k) {
+            (STATS_DATA[k]||[]).forEach(function(d) {
+              if (d.year && years.indexOf(d.year) === -1) years.push(d.year);
+            });
+          });
+          years.sort().reverse();
 
-      // Main stat cards
-      var grid = document.getElementById('statsGrid');
-      if (!grid) return;
-      var totalAll = totalActivities + totalSubmissions;
-      var stats = [
-        { num: totalActivities, icon: '&#127919;', label: 'Activities' },
-        { num: totalSubmissions,icon: '&#128228;', label: 'Submissions' },
-        { num: yearsActive,     icon: '&#128197;', label: year === 'all' ? 'Years Active' : 'Year '+year },
-        { num: totalAll,        icon: '&#128202;', label: 'Total Entries' },
-      ];
-      grid.innerHTML = stats.map(function(s) {
-        return '<div class="stat-card">'+
-          '<div style="font-size:1.8em;opacity:0.7;">'+s.icon+'</div>'+
-          '<div class="stat-number">'+s.num+'</div>'+
-          '<div class="stat-label">'+s.label+'</div>'+
-        '</div>';
-      }).join('');
-    }
+          slides.push('&#127919; Total Activities: <strong>' + total + '</strong>');
+          slides.push('&#128197; Years Active: <strong>' + years.length + '</strong> (' + years.join(', ') + ')');
+        } else {
+          slides.push('&#128202; Statistics loading...');
+        }
 
-    function renderYearBtns() {
-      var years = getYears();
-      var container = document.getElementById('statsYearBtns');
-      if (!container) return;
-      var html = '<button class="stat-year-btn active" data-year="all">All Years</button>';
-      years.forEach(function(y) {
-        html += '<button class="stat-year-btn" data-year="'+y+'">'+y+'</button>';
-      });
-      container.innerHTML = html;
-      container.querySelectorAll('.stat-year-btn').forEach(function(btn) {
-        btn.addEventListener('click', function() {
-          container.querySelectorAll('.stat-year-btn').forEach(function(b) { b.classList.remove('active'); });
-          btn.classList.add('active');
-          statsActiveYear = btn.dataset.year;
-          renderStats(statsActiveYear);
-        });
-      });
-    }
+        // Build HTML
+        track.innerHTML = slides.map(function(s) {
+          return '<div class="slide"><p>' + s + '</p></div>';
+        }).join('');
 
-    // Init stats
-    document.addEventListener('DOMContentLoaded', function() {
-      renderYearBtns();
-      renderStats('all');
-    });
+        // Ticker animation
+        var idx = 0;
+        var items = track.querySelectorAll('.slide');
+        if (!items.length) return;
+        function tick() {
+          track.style.transition = 'transform 0.5s ease';
+          track.style.transform = 'translateY(-' + (idx * items[0].offsetHeight) + 'px)';
+          idx = (idx + 1) >= items.length ? 0 : idx + 1;
+          if (idx === 0) {
+            setTimeout(function() {
+              track.style.transition = 'none';
+              track.style.transform = 'translateY(0)';
+            }, 500);
+          }
+        }
+        setInterval(tick, 2500);
+      }
+
+      // Wait for DOM
+      if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', buildSlides);
+      } else {
+        buildSlides();
+      }
+    })();
   </script>
 
   <!-- Firebase Auth Topbar -->
