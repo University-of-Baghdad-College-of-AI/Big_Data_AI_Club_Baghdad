@@ -286,7 +286,7 @@
     <p>Big Data Department | College of AI | University of Baghdad</p>
   </footer>
 
-  <!-- Firebase SDK -->
+  <script src="approved-users.js"></script>
   <script type="module">
     import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js';
     import { getAuth, signInWithPopup, GoogleAuthProvider, signOut as fbSignOut, onAuthStateChanged }
@@ -305,30 +305,15 @@
     const auth     = getAuth(app);
     const provider = new GoogleAuthProvider();
 
-    // ── APPROVED USERS ──
-    // Add approved email → role pairs here
-    // 'student' or 'professor'
-    const APPROVED_USERS = {
-      'jalal.hameed@uobaghdad.edu.iq': 'professor',
-      // Add more approved users below:
-      // 'student@example.com': 'student',
-      // 'professor@example.com': 'professor',
-    };
-
     window.signInWithGoogle = function() {
       document.getElementById('spinner').style.display = 'block';
       document.getElementById('googleSignInBtn').style.display = 'none';
       document.getElementById('accessDenied').style.display = 'none';
-
-      signInWithPopup(auth, provider)
-        .then(function(result) {
-          // handled by onAuthStateChanged
-        })
-        .catch(function(err) {
-          document.getElementById('spinner').style.display = 'none';
-          document.getElementById('googleSignInBtn').style.display = 'flex';
-          console.error('Sign-in error:', err);
-        });
+      signInWithPopup(auth, provider).catch(function(err){
+        document.getElementById('spinner').style.display = 'none';
+        document.getElementById('googleSignInBtn').style.display = 'flex';
+        console.error('Sign-in error:', err);
+      });
     };
 
     window.signOut = function() {
@@ -342,50 +327,36 @@
 
     onAuthStateChanged(auth, function(user) {
       document.getElementById('spinner').style.display = 'none';
-
       if (!user) {
         document.getElementById('loginGate').style.display = 'block';
         document.getElementById('formWrapper').style.display = 'none';
         document.getElementById('googleSignInBtn').style.display = 'flex';
         return;
       }
-
       var email = user.email;
       var role  = APPROVED_USERS[email];
-
       if (!role) {
-        // Not approved
         document.getElementById('googleSignInBtn').style.display = 'none';
         document.getElementById('accessDenied').style.display = 'block';
         document.getElementById('deniedEmail').textContent = email;
         fbSignOut(auth);
         return;
       }
-
-      // Approved — show form
       document.getElementById('loginGate').style.display = 'none';
       document.getElementById('formWrapper').style.display = 'block';
-
-      // User bar
       var bar = document.getElementById('userBar');
       bar.style.display = 'flex';
-      document.getElementById('userPhoto').src  = user.photoURL || '';
+      document.getElementById('userPhoto').src = user.photoURL || '';
       document.getElementById('userName').textContent  = user.displayName || '';
       document.getElementById('userEmail').textContent = email;
-
       var badge = document.getElementById('roleBadge');
-      badge.textContent  = role === 'student' ? '&#127891; Student' : '&#128218; Professor';
-      badge.innerHTML    = role === 'student' ? '&#127891; Student' : '&#128218; Professor';
-      badge.className    = 'role-badge ' + role;
-
-      // Pre-fill form
+      badge.innerHTML = role === 'student' ? '&#127891; Student' : '&#128218; Professor';
+      badge.className = 'role-badge ' + role;
       document.getElementById('name').value  = user.displayName || '';
       document.getElementById('email').value = email;
       document.getElementById('roleInput').value   = role;
       document.getElementById('googleEmail').value = email;
       document.getElementById('googleName').value  = user.displayName || '';
-
-      // Banner
       var banner = document.getElementById('infoBanner');
       if (role === 'student') {
         banner.innerHTML = '&#127891; Your file will be added to <strong>Big_Data_AI_Club_Students/submissions/[year]/</strong> after review.';
