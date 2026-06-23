@@ -120,9 +120,46 @@
       border-radius: 2px;
       padding: 0 1px;
     }
+  
+    /* ── Auth Top Bar ── */
+    .auth-topbar {
+      background: var(--navy);
+      padding: 8px 24px;
+      display: flex;
+      align-items: center;
+      justify-content: flex-end;
+      gap: 10px;
+      font-size: 0.82em;
+      min-height: 38px;
+    }
+    .auth-topbar .not-signed { color: rgba(255,255,255,0.45); font-style: italic; }
+    .auth-topbar .signed-in { display: none; align-items: center; gap: 10px; }
+    .auth-topbar img.avatar { width: 24px; height: 24px; border-radius: 50%; border: 1.5px solid rgba(255,255,255,0.3); }
+    .auth-topbar .tb-name { color: rgba(255,255,255,0.9); font-weight: 600; }
+    .auth-topbar .tb-role { font-size: 0.78em; font-weight: 700; padding: 2px 8px; border-radius: 20px; letter-spacing: 0.05em; }
+    .tb-role.student   { background: var(--indigo-pale,#EEF2FF); color: #4361EE; }
+    .tb-role.professor { background: #FFF8EC; color: #9a6f00; }
+    .tb-signout {
+      background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.2);
+      border-radius: 5px; color: rgba(255,255,255,0.75); padding: 3px 10px;
+      cursor: pointer; font-size: 0.82em; font-family: inherit;
+      transition: background 0.18s, color 0.18s;
+    }
+    .tb-signout:hover { background: rgba(255,255,255,0.22); color: #fff; }
+    @media(max-width:768px){ .auth-topbar{ padding: 7px 14px; } .auth-topbar .tb-name{ display:none; } }
   </style>
 </head>
 <body>
+
+    <div class="auth-topbar">
+    <span class="not-signed" id="tbNotSigned">Not signed in</span>
+    <div class="signed-in" id="tbSignedIn">
+      <img class="avatar" id="tbAvatar" src="" alt="">
+      <span class="tb-name" id="tbName"></span>
+      <span class="tb-role" id="tbRole"></span>
+      <button class="tb-signout" id="tbSignout">Sign out</button>
+    </div>
+  </div>
 
   <header>
     <div class="logo-container">
@@ -237,7 +274,7 @@
     "year"  : "2026",
     "title" : "Introduction to Artificial Intelligence",
     "desc"  : "Foundational lecture covering the history, key concepts, and current landscape of AI.",
-    "who"   : "Dr. Jalal S. Hameed",
+    "who"   : "Dr. Jalal Hameed",
     "date"  : "June 2026",
     "link"  : "#"
   },
@@ -247,7 +284,7 @@
     "year"  : "2026",
     "title" : "AI Ethics and Responsible Innovation",
     "desc"  : "Ethical challenges in AI including bias, fairness, transparency, and accountability.",
-    "who"   : "Dr. Samer Ali",
+    "who"   : "Dr. Rana",
     "date"  : "May 2026",
     "link"  : "#"
   },
@@ -274,21 +311,21 @@
 
   {
     "type"  : "ai",
-    "year"  : "2025",
+    "year"  : "2024",
     "title" : "Neural Networks from Scratch",
     "desc"  : "Building and training neural networks from first principles using Python and NumPy.",
-    "who"   : "Dr. Jalal S. Hameed",
-    "date"  : "November 2025",
+    "who"   : "Dr. Jalal Hameed",
+    "date"  : "November 2024",
     "link"  : "#"
   },
 
   {
     "type"  : "bigdata",
-    "year"  : "2025",
+    "year"  : "2024",
     "title" : "Introduction to Cloud Computing for Data Science",
     "desc"  : "Overview of AWS, GCP, and Azure for scalable data storage and ML workloads.",
     "who"   : "Guest Speaker",
-    "date"  : "September 2025",
+    "date"  : "September 2024",
     "link"  : "#"
   }
 
@@ -476,6 +513,50 @@
 
     buildYearFilters(allData);
     renderPage();
+  </script>
+  <script src="approved-users.js"></script>
+  <script type="module">
+    import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js';
+    import { getAuth, onAuthStateChanged, signOut as fbSignOut }
+      from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js';
+
+    const firebaseConfig = {
+      apiKey: "AIzaSyArF59_11UVHPo9yZW5zg2RYQWaKjIZXYw",
+      authDomain: "bigdataaiclub.firebaseapp.com",
+      projectId: "bigdataaiclub",
+      storageBucket: "bigdataaiclub.firebasestorage.app",
+      messagingSenderId: "877020220761",
+      appId: "1:877020220761:web:6c6dcc22b63fcd2ec15048"
+    };
+
+    const app  = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+
+    onAuthStateChanged(auth, function(user) {
+      if (user) {
+        var role = window.APPROVED_USERS ? window.APPROVED_USERS[user.email] : null;
+        if (role) {
+          document.getElementById('tbNotSigned').style.display = 'none';
+          var si = document.getElementById('tbSignedIn');
+          si.style.display = 'flex';
+          document.getElementById('tbAvatar').src = user.photoURL || '';
+          document.getElementById('tbName').textContent = user.displayName || user.email;
+          var roleEl = document.getElementById('tbRole');
+          roleEl.innerHTML = role === 'student' ? '&#127891; Student' : '&#128218; Professor';
+          roleEl.className = 'tb-role ' + role;
+        }
+      } else {
+        document.getElementById('tbNotSigned').style.display = 'inline';
+        document.getElementById('tbSignedIn').style.display = 'none';
+      }
+    });
+
+    document.getElementById('tbSignout').addEventListener('click', function() {
+      fbSignOut(auth).then(function() {
+        document.getElementById('tbNotSigned').style.display = 'inline';
+        document.getElementById('tbSignedIn').style.display = 'none';
+      });
+    });
   </script>
 </body>
 </html>

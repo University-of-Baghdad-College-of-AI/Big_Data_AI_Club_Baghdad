@@ -10,6 +10,32 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
   <style>
+
+    /* ── Top Auth Bar ── */
+    .auth-topbar {
+      background: var(--navy);
+      padding: 8px 24px;
+      display: flex;
+      align-items: center;
+      justify-content: flex-end;
+      gap: 10px;
+      font-size: 0.82em;
+      min-height: 38px;
+    }
+    .auth-topbar .not-signed { color: rgba(255,255,255,0.55); }
+    .auth-topbar .signed-in { display: none; align-items: center; gap: 10px; }
+    .auth-topbar img.avatar { width: 24px; height: 24px; border-radius: 50%; border: 1.5px solid rgba(255,255,255,0.3); }
+    .auth-topbar .tb-name { color: rgba(255,255,255,0.9); font-weight: 600; }
+    .auth-topbar .tb-role { font-size: 0.82em; font-weight: 700; padding: 2px 8px; border-radius: 20px; letter-spacing: 0.05em; }
+    .tb-role.student   { background: var(--indigo-pale); color: var(--indigo); }
+    .tb-role.professor { background: #FFF8EC; color: #9a6f00; }
+    .tb-signout {
+      background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.2);
+      border-radius: 5px; color: rgba(255,255,255,0.75); padding: 3px 10px;
+      cursor: pointer; font-size: 0.85em; font-family: 'Inter',sans-serif;
+      transition: background 0.18s, color 0.18s;
+    }
+    .tb-signout:hover { background: rgba(255,255,255,0.2); color: #fff; }
     /* ── Login Gate ── */
     .login-gate {
       max-width: 460px;
@@ -104,6 +130,17 @@
   </style>
 </head>
 <body>
+
+  <!-- ── AUTH TOP BAR ── -->
+  <div class="auth-topbar">
+    <span class="not-signed" id="tbNotSigned">Not signed in</span>
+    <div class="signed-in" id="tbSignedIn">
+      <img class="avatar" id="tbAvatar" src="" alt="">
+      <span class="tb-name" id="tbName"></span>
+      <span class="tb-role" id="tbRole"></span>
+      <button class="tb-signout" onclick="signOut()">Sign out</button>
+    </div>
+  </div>
 
   <header>
     <div class="logo-container">
@@ -305,6 +342,23 @@
     const auth     = getAuth(app);
     const provider = new GoogleAuthProvider();
 
+
+    function updateTopBar(user, role) {
+      if (user && role) {
+        document.getElementById('tbNotSigned').style.display = 'none';
+        var si = document.getElementById('tbSignedIn');
+        si.style.display = 'flex';
+        document.getElementById('tbAvatar').src = user.photoURL || '';
+        document.getElementById('tbName').textContent = user.displayName || user.email;
+        var roleEl = document.getElementById('tbRole');
+        roleEl.textContent = role === 'student' ? '🎓 Student' : '📚 Professor';
+        roleEl.className = 'tb-role ' + role;
+      } else {
+        document.getElementById('tbNotSigned').style.display = 'inline';
+        document.getElementById('tbSignedIn').style.display = 'none';
+      }
+    }
+
     window.signInWithGoogle = function() {
       document.getElementById('spinner').style.display = 'block';
       document.getElementById('googleSignInBtn').style.display = 'none';
@@ -322,6 +376,7 @@
         document.getElementById('loginGate').style.display = 'block';
         document.getElementById('accessDenied').style.display = 'none';
         document.getElementById('googleSignInBtn').style.display = 'flex';
+        updateTopBar(null, null);
       });
     };
 
@@ -331,14 +386,16 @@
         document.getElementById('loginGate').style.display = 'block';
         document.getElementById('formWrapper').style.display = 'none';
         document.getElementById('googleSignInBtn').style.display = 'flex';
+        updateTopBar(null, null);
         return;
       }
       var email = user.email;
-      var role  = APPROVED_USERS[email];
+      var role  = window.APPROVED_USERS ? window.APPROVED_USERS[email] : undefined;
       if (!role) {
         document.getElementById('googleSignInBtn').style.display = 'none';
         document.getElementById('accessDenied').style.display = 'block';
         document.getElementById('deniedEmail').textContent = email;
+        updateTopBar(null, null);
         fbSignOut(auth);
         return;
       }
@@ -357,6 +414,7 @@
       document.getElementById('roleInput').value   = role;
       document.getElementById('googleEmail').value = email;
       document.getElementById('googleName').value  = user.displayName || '';
+      updateTopBar(user, role);
       var banner = document.getElementById('infoBanner');
       if (role === 'student') {
         banner.innerHTML = '&#127891; Your file will be added to <strong>Big_Data_AI_Club_Students/submissions/[year]/</strong> after review.';
