@@ -855,7 +855,8 @@
 
       var years = getYears();
       var btnsDiv = document.createElement('div');
-      btnsDiv.style.cssText = 'display:flex;gap:6px;flex-wrap:wrap;margin-bottom:20px;';
+      btnsDiv.className = 'filter-bar';
+      btnsDiv.style.cssText = 'margin-bottom:20px;';
       btnsDiv.id = 'statYearBtns';
 
       function makeBtn(label, year) {
