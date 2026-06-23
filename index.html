@@ -879,10 +879,12 @@
       // Main stat cards
       var grid = document.getElementById('statsGrid');
       if (!grid) return;
+      var totalAll = totalActivities + totalSubmissions;
       var stats = [
         { num: totalActivities, icon: '&#127919;', label: 'Activities' },
         { num: totalSubmissions,icon: '&#128228;', label: 'Submissions' },
         { num: yearsActive,     icon: '&#128197;', label: year === 'all' ? 'Years Active' : 'Year '+year },
+        { num: totalAll,        icon: '&#128202;', label: 'Total Entries' },
       ];
       grid.innerHTML = stats.map(function(s) {
         return '<div class="stat-card">'+
