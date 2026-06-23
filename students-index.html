@@ -1,0 +1,744 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Students Work - Big Data AI Club</title>
+  <link rel="icon" type="image/png" href="favicon.png">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+  <style>
+    *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+    :root{--navy:#0F1F3D;--indigo:#4361EE;--indigo-light:#6B83F2;--indigo-pale:#EEF2FF;--gold:#F8C200;--white:#FFFFFF;--surface:#F4F6FA;--card:#FFFFFF;--border:#E2E7F0;--text-main:#1A2340;--text-muted:#5E6E8A;--shadow-sm:0 2px 8px rgba(15,31,61,.08);--shadow-md:0 6px 24px rgba(15,31,61,.13);--radius:12px;}
+    html{font-family:'Inter',system-ui,sans-serif;font-size:16px;color:var(--text-main);background:var(--surface);line-height:1.65;-webkit-font-smoothing:antialiased;}
+    header{text-align:center;padding:32px 24px 24px;background:var(--white);border-bottom:1px solid var(--border);box-shadow:var(--shadow-sm);}
+    .logo-container{display:flex;justify-content:center;align-items:center;gap:28px;margin-bottom:14px;flex-wrap:wrap;}
+    .club-logo{height:68px;max-width:180px;object-fit:contain;transition:transform .25s;}
+    .club-logo:hover{transform:scale(1.05);}
+    header h1{font-family:'Plus Jakarta Sans',sans-serif;font-size:2em;font-weight:800;color:var(--navy);margin:0 0 6px;letter-spacing:-.4px;}
+    header h1 a{color:inherit;text-decoration:none;}
+    header p{font-size:.97em;color:var(--text-muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+    nav{display:flex;align-items:center;justify-content:center;flex-wrap:wrap;background:var(--navy);padding:0 16px;box-shadow:0 4px 16px rgba(15,31,61,.2);position:sticky;top:0;z-index:100;}
+    nav a{color:rgba(255,255,255,.85);text-decoration:none;padding:15px 16px;font-size:.9em;font-weight:600;transition:color .18s,background .18s;position:relative;display:inline-block;white-space:nowrap;}
+    nav a:hover{color:#fff;background:rgba(255,255,255,.08);border-radius:6px;}
+    nav a::after{content:'';position:absolute;bottom:8px;left:16px;right:16px;height:2px;background:var(--gold);border-radius:2px;transform:scaleX(0);transition:transform .22s;}
+    nav a:hover::after{transform:scaleX(1);}
+    section{max-width:1040px;margin:36px auto;padding:36px 40px;background:var(--card);border-radius:var(--radius);box-shadow:var(--shadow-sm);border:1px solid var(--border);}
+    section h2{font-family:'Plus Jakarta Sans',sans-serif;font-size:1.45em;font-weight:700;color:var(--navy);margin:0 0 8px;display:flex;align-items:center;gap:10px;}
+    section h2::before{content:'';display:inline-block;width:7px;height:7px;border-radius:50%;flex-shrink:0;}
+    section>p{color:var(--text-muted);line-height:1.75;margin-bottom:4px;}
+    footer{text-align:center;padding:28px 24px;background:var(--navy);color:rgba(255,255,255,.65);font-size:.86em;margin-top:52px;line-height:1.9;}
+    footer strong{color:rgba(255,255,255,.92);font-weight:600;}
+    footer a{color:rgba(255,255,255,.75);text-decoration:none;}
+    footer a:hover{color:#fff;}
+    /* Filters */
+    .filter-row{display:flex;gap:24px;flex-wrap:wrap;margin:20px 0 0;align-items:flex-start;}
+    .filter-group{display:flex;flex-direction:column;gap:6px;}
+    .filter-group label{font-size:.75em;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--text-muted);}
+    .filter-bar{display:flex;gap:6px;flex-wrap:wrap;}
+    .filter-btn{font-family:'Plus Jakarta Sans',sans-serif;font-size:.82em;font-weight:600;padding:6px 14px;border-radius:20px;border:1.5px solid var(--border);background:var(--white);color:var(--text-muted);cursor:pointer;transition:all .18s;}
+    .filter-btn:hover{border-color:var(--indigo);color:var(--indigo);}
+    .filter-btn.active{background:var(--indigo);color:#fff;border-color:var(--indigo);}
+    .filter-btn.year-btn.active{background:var(--navy);border-color:var(--navy);color:#fff;}
+    .results-count{font-size:.83em;color:var(--text-muted);margin:14px 0 16px;}
+    .results-count strong{color:var(--navy);}
+    /* Cards */
+    .cards-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:16px;}
+    .card{background:var(--white);border:1px solid var(--border);border-radius:10px;padding:20px;transition:box-shadow .2s,transform .2s;display:flex;flex-direction:column;gap:10px;}
+    .card:hover{box-shadow:var(--shadow-md);transform:translateY(-2px);}
+    .card-badges{display:flex;gap:6px;flex-wrap:wrap;}
+    .badge{display:inline-block;font-size:.70em;font-weight:700;letter-spacing:.07em;text-transform:uppercase;padding:3px 10px;border-radius:20px;}
+    .badge-year{background:var(--surface);color:var(--navy);border:1px solid var(--border);}
+    .badge-research{background:var(--indigo-pale);color:var(--indigo);}
+    .badge-software{background:#FFF3E0;color:#E65100;}
+    .badge-data{background:#F3E5F5;color:#6A1B9A;}
+    .badge-ai{background:#EDF7EE;color:#2E7D32;}
+    .badge-publication{background:#EDF7EE;color:#2E7D32;}
+    .badge-lecture{background:var(--indigo-pale);color:var(--indigo);}
+    .badge-workshop{background:#FCE4EC;color:#880E4F;}
+    .badge-resource{background:#FFF8E1;color:#F57F17;}
+    .badge-file{background:#E3F2FD;color:#0D47A1;}
+    .card h3{font-family:'Plus Jakarta Sans',sans-serif;font-size:1em;font-weight:700;color:var(--navy);line-height:1.3;}
+    .card p{font-size:.87em;color:var(--text-muted);line-height:1.55;flex:1;}
+    .card-meta{font-size:.78em;color:var(--text-muted);display:flex;gap:12px;flex-wrap:wrap;}
+    .card-meta span{display:flex;align-items:center;gap:4px;}
+    .view-btn{display:inline-flex;align-items:center;gap:6px;font-size:.83em;font-weight:600;color:var(--indigo);background:var(--indigo-pale);border:none;border-radius:6px;padding:7px 14px;cursor:pointer;font-family:'Plus Jakarta Sans',sans-serif;transition:background .18s,gap .2s;margin-top:4px;text-decoration:none;}
+    .view-btn:hover{background:#dce4fd;gap:10px;}
+    /* Pagination */
+    .pagination{display:flex;align-items:center;justify-content:center;gap:6px;margin-top:28px;flex-wrap:wrap;}
+    .page-btn{font-family:'Plus Jakarta Sans',sans-serif;font-size:.88em;font-weight:600;min-width:36px;height:36px;border-radius:8px;border:1.5px solid var(--border);background:var(--white);color:var(--text-muted);cursor:pointer;transition:all .18s;padding:0 10px;}
+    .page-btn:hover{border-color:var(--indigo);color:var(--indigo);}
+    .page-btn.active{background:var(--indigo);color:#fff;border-color:var(--indigo);}
+    .page-btn:disabled{opacity:.35;cursor:not-allowed;}
+    .no-results{text-align:center;padding:48px 20px;color:var(--text-muted);display:none;}
+    /* Modal */
+    .modal-overlay{display:none;position:fixed;inset:0;background:rgba(10,16,32,.88);z-index:9999;align-items:center;justify-content:center;padding:20px;}
+    .modal-overlay.open{display:flex;}
+    .modal{background:var(--white);border-radius:14px;max-width:580px;width:100%;max-height:90vh;overflow-y:auto;box-shadow:0 20px 60px rgba(0,0,0,.35);position:relative;}
+    .modal-header{padding:24px 28px 0;display:flex;align-items:flex-start;justify-content:space-between;gap:12px;}
+    .modal-close{background:none;border:none;font-size:1.6em;cursor:pointer;color:var(--text-muted);line-height:1;flex-shrink:0;}
+    .modal-close:hover{color:var(--navy);}
+    .modal-body{padding:16px 28px 28px;}
+    .modal-badges{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:14px;}
+    .modal h2{font-family:'Plus Jakarta Sans',sans-serif;font-size:1.2em;font-weight:800;color:var(--navy);line-height:1.3;margin:0;}
+    .modal-desc{font-size:.93em;color:var(--text-main);line-height:1.75;margin:14px 0 18px;}
+    .modal-meta{display:flex;flex-direction:column;gap:8px;margin-bottom:20px;}
+    .modal-meta-row{display:flex;align-items:center;gap:10px;font-size:.87em;color:var(--text-muted);}
+    .modal-meta-row strong{color:var(--navy);min-width:60px;}
+    .modal-link{display:inline-flex;align-items:center;gap:8px;font-family:'Plus Jakarta Sans',sans-serif;font-weight:700;font-size:.92em;color:#fff;background:var(--indigo);padding:11px 24px;border-radius:8px;text-decoration:none;transition:background .2s,transform .15s;box-shadow:0 4px 14px rgba(67,97,238,.3);}
+    .modal-link:hover{background:#3350D0;transform:translateY(-1px);}
+    @media(max-width:768px){header{padding:24px 20px 18px;}header h1{font-size:1.35em;}.club-logo{height:52px;}section{margin:16px 12px;padding:22px 18px;}.cards-grid{grid-template-columns:1fr;}.filter-row{gap:16px;}.modal-body,.modal-header{padding-left:20px;padding-right:20px;}}
+    section{border-left:4px solid var(--indigo);}
+    section h2::before{background:var(--indigo);}
+  
+    /* Search bar */
+    .search-bar {
+      position: relative;
+      margin-bottom: 20px;
+    }
+    .search-bar input {
+      width: 100%;
+      padding: 12px 44px 12px 16px;
+      font-family: 'Inter', sans-serif;
+      font-size: 0.95em;
+      color: var(--text-main);
+      background: var(--white);
+      border: 1.5px solid var(--border);
+      border-radius: 10px;
+      outline: none;
+      transition: border-color 0.2s, box-shadow 0.2s;
+    }
+    .search-bar input:focus {
+      border-color: var(--indigo);
+      box-shadow: 0 0 0 3px rgba(67,97,238,0.12);
+    }
+    .search-bar input::placeholder { color: #B0BCD0; }
+    .search-icon {
+      position: absolute;
+      right: 14px;
+      top: 50%;
+      transform: translateY(-50%);
+      color: var(--text-muted);
+      pointer-events: none;
+      font-size: 1em;
+    }
+    .search-bar .clear-btn {
+      position: absolute;
+      right: 14px;
+      top: 50%;
+      transform: translateY(-50%);
+      background: none;
+      border: none;
+      cursor: pointer;
+      color: var(--text-muted);
+      font-size: 1.1em;
+      display: none;
+      padding: 0;
+    }
+    .search-bar input:not(:placeholder-shown) ~ .clear-btn { display: block; }
+    .search-bar input:not(:placeholder-shown) ~ .search-icon { display: none; }
+    mark {
+      background: #FFF3CD;
+      color: var(--navy);
+      border-radius: 2px;
+      padding: 0 1px;
+    }
+  
+    /* ── Auth Top Bar ── */
+    .auth-topbar {
+      background: var(--navy);
+      padding: 8px 24px;
+      display: flex;
+      align-items: center;
+      justify-content: flex-end;
+      gap: 10px;
+      font-size: 0.82em;
+      min-height: 38px;
+    }
+    .auth-topbar .not-signed { color: rgba(255,255,255,0.45); font-style: italic; }
+    .auth-topbar .signed-in { display: none; align-items: center; gap: 10px; }
+    .auth-topbar img.avatar { width: 24px; height: 24px; border-radius: 50%; border: 1.5px solid rgba(255,255,255,0.3); }
+    .auth-topbar .tb-name { color: rgba(255,255,255,0.9); font-weight: 600; }
+    .auth-topbar .tb-role { font-size: 0.78em; font-weight: 700; padding: 2px 8px; border-radius: 20px; letter-spacing: 0.05em; }
+    .tb-role.student   { background: var(--indigo-pale,#EEF2FF); color: #4361EE; }
+    .tb-role.professor { background: #FFF8EC; color: #9a6f00; }
+    .tb-signout {
+      background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.2);
+      border-radius: 5px; color: rgba(255,255,255,0.75); padding: 3px 10px;
+      cursor: pointer; font-size: 0.82em; font-family: inherit;
+      transition: background 0.18s, color 0.18s;
+    }
+    .tb-signout:hover { background: rgba(255,255,255,0.22); color: #fff; }
+    @media(max-width:768px){ .auth-topbar{ padding: 7px 14px; } .auth-topbar .tb-name{ display:none; } }
+  
+    /* ── Auth Top Bar ── */
+    .auth-topbar {
+      background: var(--navy, #0F1F3D);
+      padding: 8px 24px;
+      display: flex;
+      align-items: center;
+      justify-content: flex-end;
+      gap: 10px;
+      font-size: 0.82em;
+      min-height: 38px;
+      position: relative;
+      z-index: 200;
+    }
+    .auth-topbar .not-signed {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      color: rgba(255,255,255,0.55);
+    }
+    .auth-topbar .not-signed span { font-style: italic; }
+    .tb-signin-btn {
+      background: rgba(255,255,255,0.12);
+      border: 1px solid rgba(255,255,255,0.25);
+      border-radius: 6px;
+      color: rgba(255,255,255,0.9);
+      padding: 4px 12px;
+      cursor: pointer;
+      font-size: 0.85em;
+      font-family: inherit;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      transition: background 0.18s, border-color 0.18s;
+    }
+    .tb-signin-btn:hover { background: rgba(255,255,255,0.22); border-color: rgba(255,255,255,0.4); }
+    .tb-signin-btn img { width: 14px; height: 14px; }
+
+    .auth-topbar .signed-in {
+      display: none;
+      align-items: center;
+      gap: 10px;
+    }
+    .auth-topbar img.avatar {
+      width: 26px; height: 26px;
+      border-radius: 50%;
+      border: 1.5px solid rgba(255,255,255,0.35);
+    }
+    .auth-topbar .tb-name { color: rgba(255,255,255,0.92); font-weight: 600; }
+    .auth-topbar .tb-role {
+      font-size: 0.78em; font-weight: 700;
+      padding: 2px 9px; border-radius: 20px; letter-spacing: 0.05em;
+    }
+    .tb-role.student   { background: #EEF2FF; color: #4361EE; }
+    .tb-role.professor { background: #FFF8EC; color: #9a6f00; }
+    .tb-signout {
+      background: rgba(255,255,255,0.1);
+      border: 1px solid rgba(255,255,255,0.2);
+      border-radius: 5px; color: rgba(255,255,255,0.75);
+      padding: 3px 10px; cursor: pointer;
+      font-size: 0.82em; font-family: inherit;
+      transition: background 0.18s, color 0.18s;
+    }
+    .tb-signout:hover { background: rgba(255,255,255,0.22); color: #fff; }
+
+    /* Sign-in popup from topbar */
+    .tb-popup-overlay {
+      display: none;
+      position: fixed; inset: 0;
+      background: rgba(10,16,32,0.6);
+      z-index: 9998;
+      align-items: flex-start;
+      justify-content: flex-end;
+      padding-top: 42px;
+      padding-right: 24px;
+    }
+    .tb-popup-overlay.open { display: flex; }
+    .tb-popup {
+      background: #fff;
+      border-radius: 12px;
+      padding: 28px 28px 24px;
+      width: 300px;
+      box-shadow: 0 12px 40px rgba(0,0,0,0.25);
+      text-align: center;
+      animation: popIn 0.2s ease;
+    }
+    @keyframes popIn { from { opacity:0; transform:translateY(-8px); } to { opacity:1; transform:translateY(0); } }
+    .tb-popup h3 {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      font-size: 1em; font-weight: 800;
+      color: #0F1F3D; margin-bottom: 6px;
+    }
+    .tb-popup p { font-size: 0.82em; color: #5E6E8A; margin-bottom: 18px; line-height: 1.5; }
+    .tb-google-btn {
+      display: inline-flex; align-items: center; gap: 10px;
+      background: #fff; border: 1.5px solid #E2E7F0;
+      border-radius: 8px; padding: 10px 20px;
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      font-size: 0.92em; font-weight: 600; color: #1A2340;
+      cursor: pointer; width: 100%; justify-content: center;
+      transition: box-shadow 0.2s, border-color 0.2s;
+    }
+    .tb-google-btn:hover { box-shadow: 0 4px 14px rgba(0,0,0,0.1); border-color: #aaa; }
+    .tb-google-btn img { width: 18px; height: 18px; }
+    .tb-popup-close {
+      position: absolute; top: 10px; right: 14px;
+      background: none; border: none; font-size: 1.3em;
+      cursor: pointer; color: #888; line-height: 1;
+    }
+    .tb-access-denied {
+      display: none; margin-top: 12px; padding: 10px 14px;
+      background: #FFF3F3; border: 1px solid #FFCDD2;
+      border-radius: 8px; font-size: 0.82em; color: #C62828; line-height: 1.5;
+    }
+    .tb-spinner {
+      display: none; width: 28px; height: 28px;
+      border: 3px solid #E2E7F0; border-top-color: #4361EE;
+      border-radius: 50%; animation: spin 0.8s linear infinite;
+      margin: 12px auto;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    @media(max-width:768px){
+      .auth-topbar{ padding: 7px 14px; }
+      .auth-topbar .tb-name{ display: none; }
+      .tb-popup-overlay{ padding-right: 10px; }
+      .tb-popup{ width: calc(100vw - 20px); }
+    }
+  </style>
+</head>
+<body>
+  <!-- ── AUTH TOP BAR ── -->
+  <div class="auth-topbar">
+    <div class="not-signed" id="tbNotSigned">
+      <span>Not signed in</span>
+      <button class="tb-signin-btn" onclick="openSignInPopup()">
+        <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" alt="">
+        Sign in
+      </button>
+    </div>
+    <div class="signed-in" id="tbSignedIn">
+      <img class="avatar" id="tbAvatar" src="" alt="">
+      <span class="tb-name" id="tbName"></span>
+      <span class="tb-role" id="tbRole"></span>
+      <button class="tb-signout" onclick="tbSignOut()">Sign out</button>
+    </div>
+  </div>
+
+  <!-- Sign-in popup -->
+  <div class="tb-popup-overlay" id="tbPopupOverlay" onclick="if(event.target===this)closeSignInPopup()">
+    <div class="tb-popup" style="position:relative;">
+      <button class="tb-popup-close" onclick="closeSignInPopup()">&#10005;</button>
+      <h3>Sign in to your account</h3>
+      <p>Use your approved Google account to access Submit and Contact pages.</p>
+      <div class="tb-spinner" id="tbSpinner"></div>
+      <button class="tb-google-btn" id="tbGoogleBtn" onclick="tbSignIn()">
+        <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" alt="Google">
+        Sign in with Google
+      </button>
+            <div class="tb-access-denied" id="tbAccessDenied">
+        &#128683; <strong>Email not approved</strong><br>
+        <span id="tbDeniedEmail" style="font-weight:600;"></span><br>
+        is not on the approved list.<br><br>
+        Please contact the <strong>Club Manager</strong> to request access.
+      </div>
+    </div>
+  </div>
+<header>
+    <div class="logo-container">
+      <a href="https://uobaghdad.edu.iq/" target="_blank"><img src="https://university-of-baghdad-college-of-ai.github.io/Big_Data_AI_Club_Baghdad/logo3.png" alt="University of Baghdad" class="club-logo"></a>
+      <a href="https://en.coai.uobaghdad.edu.iq/" target="_blank"><img src="https://university-of-baghdad-college-of-ai.github.io/Big_Data_AI_Club_Baghdad/coai-english-logo.png" alt="College of AI" class="club-logo"></a>
+    </div>
+    <h1><a href="https://university-of-baghdad-college-of-ai.github.io/Big_Data_AI_Club_Baghdad/">Big Data Artificial Intelligence Club</a></h1>
+    <p>Students Work Repository</p>
+  </header>
+  <nav>
+    <a href="https://university-of-baghdad-college-of-ai.github.io/Big_Data_AI_Club_Baghdad/">&#8592; Main Site</a>
+    <a href="https://university-of-baghdad-college-of-ai.github.io/Big_Data_AI_Club_Baghdad/submit.html">Submit Work</a>
+    <a href="https://university-of-baghdad-college-of-ai.github.io/Big_Data_AI_Club_Professors/">Professors Work</a>
+  </nav>
+  <section>
+    <h2>&#127891; Students Work</h2>
+    <p>Browse projects, research, and contributions by club students. Data loaded from the repository.</p>
+    <div class="search-bar">
+      <input type="text" id="searchInput" placeholder="&#128269; Search by title, description, author...">
+      <span class="search-icon">&#128269;</span>
+      <button class="clear-btn" onclick="document.getElementById('searchInput').value='';document.getElementById('searchInput').dispatchEvent(new Event('input'))">&#10005;</button>
+    </div>
+    <div class="filter-row">
+      <div class="filter-group">
+        <label>By Type</label>
+        <div class="filter-bar" id="typeFilters">
+          <button class="filter-btn active" data-type="all">All Types</button>
+          <button class="filter-btn" data-type="research">Research</button>
+          <button class="filter-btn" data-type="software">Software</button>
+          <button class="filter-btn" data-type="data">Data Analysis</button>
+          <button class="filter-btn" data-type="ai">AI Model</button>
+        </div>
+      </div>
+      <div class="filter-group">
+        <label>By Year</label>
+        <div class="filter-bar" id="yearFilters"><button class="filter-btn year-btn active" data-year="all">All Years</button></div>
+      </div>
+    </div>
+    <div class="results-count" id="resultsCount">Loading...</div>
+    <div class="cards-grid" id="cardsGrid"><p style="color:var(--text-muted);font-size:.9em;">Loading submissions...</p></div>
+    <div class="pagination" id="pagination"></div>
+    <div class="no-results" id="noResults">
+      <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+      <p>No submissions match the selected filters.</p>
+    </div>
+  </section>
+
+  <div class="modal-overlay" id="modal" onclick="if(event.target===this)closeModal()">
+    <div class="modal">
+      <div class="modal-header">
+        <div id="modalBadges" class="modal-badges"></div>
+        <button class="modal-close" onclick="closeModal()">&#10005;</button>
+      </div>
+      <div class="modal-body">
+        <h2 id="modalTitle"></h2>
+        <p class="modal-desc" id="modalDesc"></p>
+        <div class="modal-meta">
+          <div class="modal-meta-row"><strong>&#128100; Who</strong><span id="modalWho"></span></div>
+          <div class="modal-meta-row"><strong>&#128197; Date</strong><span id="modalDate"></span></div>
+        </div>
+        <a href="#" id="modalLink" class="modal-link" target="_blank">View Full Details &#8594;</a>
+      </div>
+    </div>
+  </div>
+  <footer>
+    <p>&copy; 2026 <strong>Big Data Artificial Intelligence Club</strong> | Students Work Repository</p>
+    <p>Big Data Department | College of AI | University of Baghdad</p>
+    <p style="margin-top:6px;"><a href="https://university-of-baghdad-college-of-ai.github.io/Big_Data_AI_Club_Baghdad/">&#8592; Back to Main Website</a></p>
+  </footer>
+            <script>
+    var allData = [];
+    var activeType = 'all', activeYear = 'all', searchQuery = '';
+    var ITEMS_PER_PAGE = 9, currentPage = 1;
+
+    function buildYearFilters(data) {
+      var years = [];
+      data.forEach(function(d){ if(d.year && years.indexOf(d.year)===-1) years.push(d.year); });
+      years.sort().reverse();
+      var container = document.getElementById('yearFilters');
+      if(!container) return;
+      container.innerHTML = '<button class="filter-btn year-btn active" data-year="all">All Years</button>';
+      years.forEach(function(y){
+        var btn = document.createElement('button');
+        btn.className = 'filter-btn year-btn';
+        btn.dataset.year = y;
+        btn.textContent = y;
+        container.appendChild(btn);
+      });
+      container.querySelectorAll('.filter-btn').forEach(function(btn){
+        btn.addEventListener('click', function(){
+          container.querySelectorAll('.filter-btn').forEach(function(b){b.classList.remove('active');});
+          btn.classList.add('active');
+          activeYear = btn.dataset.year;
+          currentPage = 1; renderPage();
+        });
+      });
+    }
+
+    function typeLabel(t){
+      var map={research:'Research',software:'Software',data:'Data Analysis',ai:'AI Model',
+        publication:'Publication',lecture:'Lecture',workshop:'Workshop',resource:'Resource',
+        project:'Project',presentation:'Presentation',seminar:'Seminar',
+        conference:'Conference',file:'File'};
+      return map[t]||t;
+    }
+
+    function highlight(text, query){
+      if(!query) return text;
+      var escaped = query.replace(/[.*+?^${}()|[\]\\]/g,'\\$&');
+      return text.replace(new RegExp('('+escaped+')', 'gi'), '<mark>$1</mark>');
+    }
+
+    function matchesSearch(d){
+      if(!searchQuery) return true;
+      return (d.title||'').toLowerCase().indexOf(searchQuery)!==-1 ||
+             (d.desc||'').toLowerCase().indexOf(searchQuery)!==-1 ||
+             (d.who||'').toLowerCase().indexOf(searchQuery)!==-1 ||
+             (d.year||'').toLowerCase().indexOf(searchQuery)!==-1;
+    }
+
+    function cardHTML(d, idx){
+      var q = searchQuery;
+      return '<div class="card">'+
+        '<div class="card-badges">'+
+          '<span class="badge badge-'+(d.type||'file')+'">'+typeLabel(d.type||'file')+'</span>'+
+          '<span class="badge badge-year">'+(d.year||'')+'</span>'+
+        '</div>'+
+        '<h3>'+highlight(d.title||'', q)+'</h3>'+
+        '<p>'+highlight(d.desc||'No description provided.', q)+'</p>'+
+        '<div class="card-meta">'+
+          '<span>&#128100; '+highlight(d.who||'—', q)+'</span>'+
+          '<span>&#128197; '+(d.date||d.year||'')+'</span>'+
+        '</div>'+
+        '<button class="view-btn" data-idx="'+idx+'">View Details &#8594;</button>'+
+      '</div>';
+    }
+
+    function renderPage(){
+      var matched = [], matchedIdx = [];
+      allData.forEach(function(d, i){
+        if((activeType==='all'||d.type===activeType) &&
+           (activeYear==='all'||d.year===activeYear) &&
+           matchesSearch(d)){
+          matched.push(d); matchedIdx.push(i);
+        }
+      });
+      var total = matched.length;
+      var totalPages = Math.max(1, Math.ceil(total/ITEMS_PER_PAGE));
+      if(currentPage>totalPages) currentPage=totalPages;
+      var start = (currentPage-1)*ITEMS_PER_PAGE;
+      var slice = matched.slice(start, start+ITEMS_PER_PAGE);
+      var sliceIdx = matchedIdx.slice(start, start+ITEMS_PER_PAGE);
+      var grid = document.getElementById('cardsGrid');
+      if(total===0){
+        grid.innerHTML = '<p style="color:var(--text-muted);grid-column:1/-1;text-align:center;padding:40px;">No submissions yet.</p>';
+      } else {
+        grid.innerHTML = slice.map(function(d,i){ return cardHTML(d, sliceIdx[i]); }).join('');
+        grid.querySelectorAll('.view-btn').forEach(function(btn){
+          btn.addEventListener('click', function(){ openModal(allData[parseInt(btn.dataset.idx)]); });
+        });
+      }
+      var rc = document.getElementById('resultsCount');
+      if(rc) rc.innerHTML = '<strong>'+total+'</strong> submission'+(total!==1?'s':'')+' found'+
+        (searchQuery?' for <em>"'+searchQuery+'"</em>':'')+
+        (totalPages>1?' &nbsp;|&nbsp; Page '+currentPage+' of '+totalPages:'');
+      renderPagination(totalPages);
+    }
+
+    function renderPagination(totalPages){
+      var pg = document.getElementById('pagination');
+      if(!pg) return; pg.innerHTML='';
+      if(totalPages<=1) return;
+      function mkBtn(label,p,disabled,active){
+        var b=document.createElement('button');
+        b.className='page-btn'+(active?' active':'');
+        b.innerHTML=label; b.disabled=disabled;
+        b.onclick=function(){currentPage=p;renderPage();window.scrollTo({top:0,behavior:'smooth'});};
+        pg.appendChild(b);
+      }
+      mkBtn('&#8592; Prev',currentPage-1,currentPage===1,false);
+      for(var p=1;p<=totalPages;p++) mkBtn(p,p,false,p===currentPage);
+      mkBtn('Next &#8594;',currentPage+1,currentPage===totalPages,false);
+    }
+
+    function openModal(d){
+      document.getElementById('modalBadges').innerHTML=
+        '<span class="badge badge-'+(d.type||'file')+'">'+typeLabel(d.type||'file')+'</span>'+
+        '<span class="badge badge-year">'+(d.year||'')+'</span>';
+      document.getElementById('modalTitle').textContent = d.title||'';
+      document.getElementById('modalDesc').textContent  = d.desc||'No description available.';
+      document.getElementById('modalWho').textContent   = d.who||'—';
+      document.getElementById('modalDate').textContent  = d.date||d.year||'—';
+      var lnk = document.getElementById('modalLink');
+      if(d.link&&d.link!=='#'){
+        lnk.href=d.link; lnk.style.display='inline-flex'; lnk.onclick=null;
+      } else {
+        lnk.href='#'; lnk.style.display='inline-flex';
+        lnk.onclick=function(e){e.preventDefault();alert('No link available yet.');};
+      }
+      document.getElementById('modal').classList.add('open');
+      document.body.style.overflow='hidden';
+    }
+    function closeModal(){
+      document.getElementById('modal').classList.remove('open');
+      document.body.style.overflow='';
+    }
+    document.addEventListener('keydown',function(e){if(e.key==='Escape')closeModal();});
+
+    var searchInput = document.getElementById('searchInput');
+    if(searchInput){
+      searchInput.addEventListener('input', function(){
+        searchQuery = this.value.toLowerCase().trim();
+        currentPage = 1; renderPage();
+      });
+    }
+
+    document.querySelectorAll('#typeFilters .filter-btn').forEach(function(btn){
+      btn.addEventListener('click',function(){
+        document.querySelectorAll('#typeFilters .filter-btn').forEach(function(b){b.classList.remove('active');});
+        btn.classList.add('active'); activeType=btn.dataset.type; currentPage=1; renderPage();
+      });
+    });
+
+    // Fetch submissions from GitHub
+    // For each .json file found, use its metadata
+    // For .pdf/.zip without a matching .json, use filename parsing as fallback
+    document.getElementById('cardsGrid').innerHTML =
+      '<p style="color:var(--text-muted);font-size:.9em;padding:20px;">Loading submissions...</p>';
+
+    fetch('https://api.github.com/repos/University-of-Baghdad-College-of-AI/Big_Data_AI_Club_Students/contents/submissions',
+      {headers:{'Accept':'application/vnd.github.v3+json','X-GitHub-Api-Version':'2022-11-28'}})
+      .then(function(r){ return r.ok ? r.json() : []; })
+      .then(function(folders){
+        if(!Array.isArray(folders)){ renderPage(); return; }
+        var promises = folders.filter(function(f){ return f.type==='dir'; }).map(function(folder){
+          return fetch(folder.url,{headers:{'Accept':'application/vnd.github.v3+json'}})
+            .then(function(r){ return r.ok ? r.json() : []; })
+            .then(function(files){
+              if(!Array.isArray(files)) return [];
+
+              // Separate JSON metadata files from actual submission files
+              var jsonFiles = {};
+              var submissionFiles = [];
+              files.forEach(function(f){
+                if(/\.json$/i.test(f.name)) {
+                  var key = f.name.replace(/\.json$/i,'');
+                  jsonFiles[key] = f.download_url;
+                } else if(/\.(pdf|zip)$/i.test(f.name)) {
+                  submissionFiles.push(f);
+                }
+              });
+
+              // For each submission file, fetch its JSON if available
+              var itemPromises = submissionFiles.map(function(file){
+                var base = file.name.replace(/\.(pdf|zip)$/i,'');
+                var jsonUrl = jsonFiles[base];
+
+                if(jsonUrl){
+                  // Has companion JSON — fetch metadata
+                  return fetch(jsonUrl)
+                    .then(function(r){ return r.ok ? r.json() : null; })
+                    .then(function(meta){
+                      if(!meta) throw new Error('bad json');
+                      return {
+                        type:  meta.type  || 'file',
+                        year:  meta.year  || folder.name,
+                        title: meta.title || base.replace(/-/g,' '),
+                        desc:  meta.desc  || '',
+                        who:   meta.who   || 'Student',
+                        date:  meta.date  || folder.name,
+                        link:  meta.link  || file.download_url
+                      };
+                    })
+                    .catch(function(){
+                      // JSON fetch failed — fallback to filename
+                      return fallbackParse(file, folder.name);
+                    });
+                } else {
+                  // No JSON — parse from filename
+                  return Promise.resolve(fallbackParse(file, folder.name));
+                }
+              });
+
+              return Promise.all(itemPromises);
+            })
+            .catch(function(){ return []; });
+        });
+        return Promise.all(promises);
+      })
+      .then(function(groups){
+        if(Array.isArray(groups)) groups.forEach(function(g){ if(Array.isArray(g)) allData=allData.concat(g); });
+        buildYearFilters(allData);
+        renderPage();
+      })
+      .catch(function(){ renderPage(); });
+
+    function fallbackParse(file, folderYear){
+      var base  = file.name.replace(/\.(pdf|zip)$/i,'');
+      var parts = base.split('_');
+      var who   = parts.length > 1 ? parts[0].replace(/-/g,' ') : 'Student';
+      var title = parts.length > 1 ? parts.slice(1).join(' ').replace(/-/g,' ') : base.replace(/-/g,' ');
+      return {type:'file',year:folderYear,title:title,desc:'',who:who,date:folderYear,link:file.download_url};
+    }
+  </script>
+
+  <!-- Access Denied Modal -->
+  <div id="accessDeniedModal" style="display:none;position:fixed;inset:0;background:rgba(10,16,32,0.85);z-index:99999;align-items:center;justify-content:center;padding:20px;">
+    <div style="background:#fff;border-radius:14px;max-width:420px;width:100%;padding:36px 32px;text-align:center;box-shadow:0 20px 60px rgba(0,0,0,0.3);">
+      <div style="font-size:3em;margin-bottom:12px;">&#128683;</div>
+      <h3 style="font-family:'Plus Jakarta Sans',sans-serif;font-size:1.3em;font-weight:800;color:#1A2340;margin-bottom:8px;">Access Denied</h3>
+      <p style="font-size:0.92em;color:#5E6E8A;margin-bottom:6px;line-height:1.6;">Your account</p>
+      <p style="font-size:0.95em;font-weight:700;color:#C62828;margin-bottom:16px;word-break:break-all;" id="deniedEmailModal"></p>
+      <p style="font-size:0.88em;color:#5E6E8A;line-height:1.6;margin-bottom:24px;">is not on the approved list.<br>Please contact the <strong style="color:#1A2340;">Club Manager</strong> to request access.</p>
+      <button onclick="document.getElementById('accessDeniedModal').style.display='none'"
+        style="font-family:'Plus Jakarta Sans',sans-serif;font-weight:700;font-size:0.92em;color:#fff;background:#0F1F3D;border:none;border-radius:8px;padding:12px 32px;cursor:pointer;width:100%;">Close</button>
+    </div>
+  </div>
+
+  <!-- Sign Out Confirmation Modal -->
+  <div id="signOutModal" style="display:none;position:fixed;inset:0;background:rgba(10,16,32,0.85);z-index:99999;align-items:center;justify-content:center;padding:20px;">
+    <div style="background:#fff;border-radius:14px;max-width:380px;width:100%;padding:36px 32px;text-align:center;box-shadow:0 20px 60px rgba(0,0,0,0.3);">
+      <div style="font-size:2.8em;margin-bottom:12px;">&#128274;</div>
+      <h3 style="font-family:'Plus Jakarta Sans',sans-serif;font-size:1.2em;font-weight:800;color:#1A2340;margin-bottom:10px;">Sign Out</h3>
+      <p style="font-size:0.9em;color:#5E6E8A;line-height:1.6;margin-bottom:24px;">Are you sure you want to sign out?</p>
+      <div style="display:flex;gap:10px;">
+        <button onclick="document.getElementById('signOutModal').style.display='none'"
+          style="flex:1;font-family:'Plus Jakarta Sans',sans-serif;font-weight:700;font-size:0.92em;color:#1A2340;background:#F4F6FA;border:1.5px solid #E2E7F0;border-radius:8px;padding:11px;cursor:pointer;">Cancel</button>
+        <button id="confirmSignOutBtn"
+          style="flex:1;font-family:'Plus Jakarta Sans',sans-serif;font-weight:700;font-size:0.92em;color:#fff;background:#C62828;border:none;border-radius:8px;padding:11px;cursor:pointer;">Sign Out</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Firebase Auth Topbar -->
+  <script src="https://university-of-baghdad-college-of-ai.github.io/Big_Data_AI_Club_Baghdad/approved-users.js"></script>
+  <script type="module">
+    import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js';
+    import { getAuth, signInWithPopup, GoogleAuthProvider, signOut as fbSignOut, onAuthStateChanged }
+      from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js';
+    const firebaseConfig = {
+      apiKey: "AIzaSyArF59_11UVHPo9yZW5zg2RYQWaKjIZXYw",
+      authDomain: "bigdataaiclub.firebaseapp.com",
+      projectId: "bigdataaiclub",
+      storageBucket: "bigdataaiclub.firebasestorage.app",
+      messagingSenderId: "877020220761",
+      appId: "1:877020220761:web:6c6dcc22b63fcd2ec15048"
+    };
+    const app=initializeApp(firebaseConfig), auth=getAuth(app), provider=new GoogleAuthProvider();
+    var ROLE_CONFIG={
+      admin:{label:'&#9881; Admin',style:'background:#1A2340;color:#F8C200;border:1px solid #F8C200;'},
+      professor:{label:'&#128218; Professor',style:'background:#FFF8EC;color:#9a6f00;'},
+      student:{label:'&#127891; Student',style:'background:#EEF2FF;color:#4361EE;'},
+      employee:{label:'&#128084; Employee',style:'background:#E8F5E9;color:#2E7D32;'},
+      test:{label:'&#128295; Test',style:'background:#F3E5F5;color:#6A1B9A;'},
+    };
+    function showSignedIn(user,role){
+      document.getElementById('tbNotSigned').style.display='none';
+      var si=document.getElementById('tbSignedIn'); si.style.display='flex';
+      document.getElementById('tbAvatar').src=user.photoURL||'';
+      document.getElementById('tbName').textContent=user.displayName||user.email;
+      var roleEl=document.getElementById('tbRole');
+      var cfg=ROLE_CONFIG[role]||{label:role,style:''};
+      roleEl.innerHTML=cfg.label; roleEl.className='tb-role';
+      roleEl.style.cssText=cfg.style+'font-size:0.78em;font-weight:700;padding:2px 9px;border-radius:20px;letter-spacing:0.05em;';
+    }
+    function showSignedOut(){
+      document.getElementById('tbNotSigned').style.display='flex';
+      document.getElementById('tbSignedIn').style.display='none';
+    }
+    window.openSignInPopup=function(){
+      document.getElementById('tbPopupOverlay').classList.add('open');
+      document.getElementById('tbAccessDenied').style.display='none';
+      document.getElementById('tbGoogleBtn').style.display='flex';
+      document.getElementById('tbSpinner').style.display='none';
+    };
+    window.closeSignInPopup=function(){document.getElementById('tbPopupOverlay').classList.remove('open');};
+    window.tbSignIn=function(){
+      document.getElementById('tbSpinner').style.display='block';
+      document.getElementById('tbGoogleBtn').style.display='none';
+      document.getElementById('tbAccessDenied').style.display='none';
+      signInWithPopup(auth,provider).then(function(){closeSignInPopup();}).catch(function(){
+        document.getElementById('tbSpinner').style.display='none';
+        document.getElementById('tbGoogleBtn').style.display='flex';
+      });
+    };
+    window.tbSignOut=function(){document.getElementById('signOutModal').style.display='flex';};
+    document.getElementById('confirmSignOutBtn').addEventListener('click',function(){
+      document.getElementById('signOutModal').style.display='none';
+      fbSignOut(auth).then(function(){showSignedOut();});
+    });
+    onAuthStateChanged(auth,function(user){
+      if(user){
+        var role=window.APPROVED_USERS?window.APPROVED_USERS[user.email]:null;
+        if(role){showSignedIn(user,role);closeSignInPopup();}
+        else{
+          showSignedOut();
+          document.getElementById('deniedEmailModal').textContent=user.email;
+          document.getElementById('accessDeniedModal').style.display='flex';
+          closeSignInPopup(); fbSignOut(auth);
+        }
+      } else { showSignedOut(); }
+    });
+  </script>
+</body>
+</html>
