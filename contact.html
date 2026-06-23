@@ -10,28 +10,96 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
   <style>
-    .login-gate { max-width:460px; margin:60px auto; padding:44px 40px; background:var(--white); border-radius:var(--radius,12px); box-shadow:0 6px 24px rgba(15,31,61,.12); border:1px solid var(--border); border-top:4px solid var(--indigo); text-align:center; }
-    .login-gate-icon { font-size:2.8em; margin-bottom:16px; }
-    .login-gate h2 { font-family:'Plus Jakarta Sans',sans-serif; font-size:1.35em; font-weight:800; color:var(--navy); margin-bottom:8px; }
-    .login-gate p { font-size:.9em; color:var(--text-muted); margin-bottom:28px; line-height:1.6; }
-    .google-btn { display:inline-flex; align-items:center; gap:12px; background:var(--white); border:1.5px solid var(--border); border-radius:8px; padding:12px 24px; font-family:'Plus Jakarta Sans',sans-serif; font-size:.95em; font-weight:600; color:var(--navy); cursor:pointer; transition:box-shadow .2s,border-color .2s; width:100%; justify-content:center; }
-    .google-btn:hover { box-shadow:0 4px 14px rgba(0,0,0,.12); border-color:#aaa; }
-    .google-btn img { width:20px; height:20px; }
-    .access-denied { display:none; background:#FFF3F3; border:1.5px solid #FFCDD2; border-radius:10px; padding:16px 20px; margin-top:16px; font-size:.88em; color:#C62828; line-height:1.6; }
-    .user-bar { display:none; align-items:center; gap:12px; background:var(--indigo-pale); border-radius:10px; padding:12px 16px; margin-bottom:20px; font-size:.88em; }
-    .user-bar img { width:32px; height:32px; border-radius:50%; }
-    .user-bar .user-info { flex:1; text-align:left; }
-    .user-bar .user-name { font-weight:700; color:var(--navy); font-size:.95em; }
-    .user-bar .user-email { color:var(--text-muted); font-size:.82em; }
-    .signout-btn { background:none; border:1px solid var(--border); border-radius:6px; padding:5px 12px; font-size:.78em; color:var(--text-muted); cursor:pointer; transition:all .18s; }
-    .signout-btn:hover { border-color:var(--navy); color:var(--navy); }
-    .spinner { display:none; width:36px; height:36px; border:3px solid var(--border); border-top-color:var(--indigo); border-radius:50%; animation:spin .8s linear infinite; margin:20px auto; }
-    @keyframes spin { to { transform:rotate(360deg); } }
-    #formWrapper { display:none; }
-    @media(max-width:480px){ .login-gate{margin:30px 16px;padding:32px 24px;} }
+    /* ── Top Auth Bar ── */
+    .auth-topbar {
+      background: var(--navy);
+      padding: 8px 24px;
+      display: flex;
+      align-items: center;
+      justify-content: flex-end;
+      gap: 10px;
+      font-size: 0.82em;
+      min-height: 38px;
+    }
+    .auth-topbar .not-signed { color: rgba(255,255,255,0.55); }
+    .auth-topbar .signed-in {
+      display: none;
+      align-items: center;
+      gap: 10px;
+    }
+    .auth-topbar img.avatar {
+      width: 24px; height: 24px;
+      border-radius: 50%;
+      border: 1.5px solid rgba(255,255,255,0.3);
+    }
+    .auth-topbar .tb-name { color: rgba(255,255,255,0.9); font-weight: 600; }
+    .auth-topbar .tb-role {
+      font-size: 0.82em; font-weight: 700; padding: 2px 8px;
+      border-radius: 20px; letter-spacing: 0.05em;
+    }
+    .tb-role.student  { background: var(--indigo-pale); color: var(--indigo); }
+    .tb-role.professor{ background: #FFF8EC; color: #9a6f00; }
+    .tb-signout {
+      background: rgba(255,255,255,0.1);
+      border: 1px solid rgba(255,255,255,0.2);
+      border-radius: 5px;
+      color: rgba(255,255,255,0.75);
+      padding: 3px 10px;
+      cursor: pointer;
+      font-size: 0.85em;
+      font-family: 'Inter', sans-serif;
+      transition: background 0.18s, color 0.18s;
+    }
+    .tb-signout:hover { background: rgba(255,255,255,0.2); color: #fff; }
+
+    /* ── Login Gate ── */
+    .login-gate {
+      max-width: 460px; margin: 60px auto; padding: 44px 40px;
+      background: var(--white); border-radius: var(--radius, 12px);
+      box-shadow: 0 6px 24px rgba(15,31,61,.12);
+      border: 1px solid var(--border); border-top: 4px solid var(--indigo);
+      text-align: center;
+    }
+    .login-gate-icon { font-size: 2.8em; margin-bottom: 16px; }
+    .login-gate h2 { font-family: 'Plus Jakarta Sans',sans-serif; font-size: 1.35em; font-weight: 800; color: var(--navy); margin-bottom: 8px; }
+    .login-gate p { font-size: .9em; color: var(--text-muted); margin-bottom: 28px; line-height: 1.6; }
+    .google-btn {
+      display: inline-flex; align-items: center; gap: 12px;
+      background: var(--white); border: 1.5px solid var(--border); border-radius: 8px;
+      padding: 12px 24px; font-family: 'Plus Jakarta Sans',sans-serif;
+      font-size: .95em; font-weight: 600; color: var(--navy);
+      cursor: pointer; transition: box-shadow .2s, border-color .2s;
+      width: 100%; justify-content: center;
+    }
+    .google-btn:hover { box-shadow: 0 4px 14px rgba(0,0,0,.12); border-color: #aaa; }
+    .google-btn img { width: 20px; height: 20px; }
+    .access-denied {
+      display: none; background: #FFF3F3; border: 1.5px solid #FFCDD2;
+      border-radius: 10px; padding: 16px 20px; margin-top: 16px;
+      font-size: .88em; color: #C62828; line-height: 1.6;
+    }
+    .spinner {
+      display: none; width: 36px; height: 36px;
+      border: 3px solid var(--border); border-top-color: var(--indigo);
+      border-radius: 50%; animation: spin .8s linear infinite; margin: 20px auto;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+    #formWrapper { display: none; }
+    @media(max-width:480px){ .login-gate{margin:30px 16px;padding:32px 24px;} .auth-topbar{padding:8px 14px;} }
   </style>
 </head>
 <body>
+
+  <!-- ── AUTH TOP BAR ── -->
+  <div class="auth-topbar">
+    <span class="not-signed" id="tbNotSigned">Not signed in</span>
+    <div class="signed-in" id="tbSignedIn">
+      <img class="avatar" id="tbAvatar" src="" alt="">
+      <span class="tb-name" id="tbName"></span>
+      <span class="tb-role" id="tbRole"></span>
+      <button class="tb-signout" onclick="signOut()">Sign out</button>
+    </div>
+  </div>
 
   <header>
     <div class="logo-container">
@@ -50,10 +118,10 @@
       <div class="dropdown">
         <button class="dropbtn">Activities &#9662;</button>
         <div class="dropdown-content"><div class="dropdown-content-inner">
-            <a href="workshops.html">Workshops</a><a href="researches.html">Researches</a>
-            <a href="projects.html">Projects</a><a href="lectures.html">Lectures</a>
-            <a href="presentations.html">Presentations</a><a href="seminars.html">Seminars</a>
-            <a href="conferences.html">Conferences</a><a href="field-visits.html">Field Visits</a>
+          <a href="workshops.html">Workshops</a><a href="researches.html">Researches</a>
+          <a href="projects.html">Projects</a><a href="lectures.html">Lectures</a>
+          <a href="presentations.html">Presentations</a><a href="seminars.html">Seminars</a>
+          <a href="conferences.html">Conferences</a><a href="field-visits.html">Field Visits</a>
         </div></div>
       </div>
       <a href="members.html">Members</a>
@@ -62,8 +130,8 @@
       <div class="dropdown">
         <button class="dropbtn">Submissions &#9662;</button>
         <div class="dropdown-content"><div class="dropdown-content-inner">
-            <a href="https://university-of-baghdad-college-of-ai.github.io/Big_Data_AI_Club_Students/" target="_blank">Students Work</a>
-            <a href="https://university-of-baghdad-college-of-ai.github.io/Big_Data_AI_Club_Professors/" target="_blank">Professors Work</a>
+          <a href="https://university-of-baghdad-college-of-ai.github.io/Big_Data_AI_Club_Students/" target="_blank">Students Work</a>
+          <a href="https://university-of-baghdad-college-of-ai.github.io/Big_Data_AI_Club_Professors/" target="_blank">Professors Work</a>
         </div></div>
       </div>
       <a href="submit.html">Submit</a>
@@ -90,18 +158,10 @@
     </div>
   </div>
 
-  <!-- ── FORM ── -->
+  <!-- ── CONTACT FORM ── -->
   <div id="formWrapper">
     <section>
       <h2>&#128235; Contact Us</h2>
-      <div class="user-bar" id="userBar">
-        <img id="userPhoto" src="" alt="">
-        <div class="user-info">
-          <div class="user-name" id="userName"></div>
-          <div class="user-email" id="userEmail"></div>
-        </div>
-        <button class="signout-btn" onclick="signOut()">Sign out</button>
-      </div>
       <form action="https://formspree.io/f/xqevzekb" method="POST">
         <input type="hidden" name="_subject" value="New Contact Message - Big Data AI Club">
         <input type="hidden" name="role"         id="roleInput"   value="">
@@ -125,6 +185,7 @@
     <p>Big Data Department | College of AI | University of Baghdad</p>
   </footer>
 
+  <script src="approved-users.js"></script>
   <script type="module">
     import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js';
     import { getAuth, signInWithPopup, GoogleAuthProvider, signOut as fbSignOut, onAuthStateChanged }
@@ -139,31 +200,44 @@
       appId: "1:877020220761:web:6c6dcc22b63fcd2ec15048"
     };
 
-    const app = initializeApp(firebaseConfig);
-    const auth = getAuth(app);
+    const app      = initializeApp(firebaseConfig);
+    const auth     = getAuth(app);
     const provider = new GoogleAuthProvider();
 
-    // ── APPROVED USERS ── add emails here
-    const APPROVED_USERS = {
-      'jalal.hameed@uobaghdad.edu.iq': 'professor',
-      // 'student@example.com': 'student',
-    };
+    function updateTopBar(user, role) {
+      if (user && role) {
+        document.getElementById('tbNotSigned').style.display = 'none';
+        var si = document.getElementById('tbSignedIn');
+        si.style.display = 'flex';
+        document.getElementById('tbAvatar').src = user.photoURL || '';
+        document.getElementById('tbName').textContent = user.displayName || user.email;
+        var roleEl = document.getElementById('tbRole');
+        roleEl.textContent = role === 'student' ? '🎓 Student' : '📚 Professor';
+        roleEl.className = 'tb-role ' + role;
+      } else {
+        document.getElementById('tbNotSigned').style.display = 'inline';
+        document.getElementById('tbSignedIn').style.display = 'none';
+      }
+    }
 
     window.signInWithGoogle = function() {
       document.getElementById('spinner').style.display = 'block';
       document.getElementById('googleSignInBtn').style.display = 'none';
-      signInWithPopup(auth, provider).catch(function(err){
+      document.getElementById('accessDenied').style.display = 'none';
+      signInWithPopup(auth, provider).catch(function(err) {
         document.getElementById('spinner').style.display = 'none';
         document.getElementById('googleSignInBtn').style.display = 'flex';
+        console.error('Sign-in error:', err);
       });
     };
 
     window.signOut = function() {
-      fbSignOut(auth).then(function(){
+      fbSignOut(auth).then(function() {
         document.getElementById('formWrapper').style.display = 'none';
         document.getElementById('loginGate').style.display = 'block';
-        document.getElementById('googleSignInBtn').style.display = 'flex';
         document.getElementById('accessDenied').style.display = 'none';
+        document.getElementById('googleSignInBtn').style.display = 'flex';
+        updateTopBar(null, null);
       });
     };
 
@@ -173,28 +247,27 @@
         document.getElementById('loginGate').style.display = 'block';
         document.getElementById('formWrapper').style.display = 'none';
         document.getElementById('googleSignInBtn').style.display = 'flex';
+        updateTopBar(null, null);
         return;
       }
       var email = user.email;
-      var role  = APPROVED_USERS[email];
+      var role  = window.APPROVED_USERS ? window.APPROVED_USERS[email] : undefined;
       if (!role) {
         document.getElementById('googleSignInBtn').style.display = 'none';
         document.getElementById('accessDenied').style.display = 'block';
         document.getElementById('deniedEmail').textContent = email;
+        updateTopBar(null, null);
         fbSignOut(auth);
         return;
       }
+      // Approved
       document.getElementById('loginGate').style.display = 'none';
       document.getElementById('formWrapper').style.display = 'block';
-      var bar = document.getElementById('userBar');
-      bar.style.display = 'flex';
-      document.getElementById('userPhoto').src = user.photoURL || '';
-      document.getElementById('userName').textContent  = user.displayName || '';
-      document.getElementById('userEmail').textContent = email;
       document.getElementById('name').value  = user.displayName || '';
       document.getElementById('email').value = email;
       document.getElementById('roleInput').value   = role;
       document.getElementById('googleEmail').value = email;
+      updateTopBar(user, role);
     });
   </script>
 
