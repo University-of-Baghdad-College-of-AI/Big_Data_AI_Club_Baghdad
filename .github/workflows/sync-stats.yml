@@ -1,1 +1,91 @@
+name: Sync Statistics to index.html
 
+on:
+  push:
+    paths:
+      - 'workshops.html'
+      - 'researches.html'
+      - 'projects.html'
+      - 'lectures.html'
+      - 'presentations.html'
+      - 'seminars.html'
+      - 'conferences.html'
+      - 'field-visits.html'
+      - 'students-index.html'
+      - 'professors-index.html'
+
+jobs:
+  sync-stats:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Sync stats data into index.html
+        run: |
+          python3 << 'PYEOF'
+          import re, json, os
+
+          activity_files = {
+              'workshops':     'workshops.html',
+              'researches':    'researches.html',
+              'projects':      'projects.html',
+              'lectures':      'lectures.html',
+              'presentations': 'presentations.html',
+              'seminars':      'seminars.html',
+              'conferences':   'conferences.html',
+              'field-visits':  'field-visits.html',
+              'students':      'students-index.html',
+              'professors':    'professors-index.html',
+          }
+
+          all_data = {}
+          for name, path in activity_files.items():
+              if not os.path.exists(path):
+                  print(f"SKIP (not found): {path}")
+                  continue
+              with open(path) as f:
+                  content = f.read()
+              m = re.search(r'var allData = (\[.*?\]);', content, re.DOTALL)
+              if m:
+                  try:
+                      all_data[name] = json.loads(m.group(1))
+                      print(f"  {name}: {len(all_data[name])} items")
+                  except Exception as e:
+                      print(f"  ERROR {name}: {e}")
+
+          # Build new STATS_DATA
+          stats_js = "var STATS_DATA = {\n"
+          for name, data in all_data.items():
+              stats_js += f"  '{name}': {json.dumps(data, ensure_ascii=False)},\n"
+          stats_js += "};"
+
+          # Update index.html
+          with open('index.html') as f:
+              content = f.read()
+
+          new_content = re.sub(
+              r'var STATS_DATA = \{.*?\};',
+              stats_js,
+              content,
+              flags=re.DOTALL
+          )
+
+          if new_content != content:
+              with open('index.html', 'w') as f:
+                  f.write(new_content)
+              print("index.html updated with fresh stats data")
+          else:
+              print("No changes needed")
+          PYEOF
+
+      - name: Commit updated index.html
+        run: |
+          git config user.name  "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add index.html
+          git diff --cached --quiet || git commit -m "Auto-sync statistics data in index.html"
+          git push
