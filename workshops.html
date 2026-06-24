@@ -339,6 +339,7 @@
             <a href="seminars.html">Seminars</a>
             <a href="conferences.html">Conferences</a>
             <a href="field-visits.html">Field Visits</a>
+            <a href="internships.html">Internships</a>
         </div></div>
       </div>
       <a href="members.html">Members</a>
@@ -443,41 +444,41 @@
 
   {
     "type"  : "programming",
-    "year"  : "2026",
+    "year"  : "2025",
     "title" : "Python for Data Science Bootcamp",
     "desc"  : "Two-day intensive covering NumPy, Pandas, Matplotlib, and data wrangling for beginners.",
     "who"   : "Club Members",
-    "date"  : "March 2026",
+    "date"  : "March 2025",
     "link"  : "#"
   },
 
   {
     "type"  : "tools",
-    "year"  : "2026",
+    "year"  : "2025",
     "title" : "Git & GitHub for Collaborative Projects",
     "desc"  : "Introduction to version control, branching strategies, and collaborative workflows.",
     "who"   : "Club Members",
-    "date"  : "February 2026",
+    "date"  : "February 2025",
     "link"  : "#"
   },
 
   {
     "type"  : "bigdata",
-    "year"  : "2025",
+    "year"  : "2024",
     "title" : "Hadoop Ecosystem Overview",
     "desc"  : "Introduction to HDFS, MapReduce, Hive, and Pig for big data storage and processing.",
-    "who"   : "Dr. Suhad Faisal",
-    "date"  : "November 2025",
+    "who"   : "Dr. Jalal Hameed",
+    "date"  : "November 2024",
     "link"  : "#"
   },
 
   {
     "type"  : "ml",
-    "year"  : "2025",
+    "year"  : "2024",
     "title" : "Deep Learning with TensorFlow",
     "desc"  : "Hands-on workshop covering neural networks, CNNs, and RNNs using TensorFlow and Keras.",
     "who"   : "Club Members",
-    "date"  : "March 2025",
+    "date"  : "September 2024",
     "link"  : "#"
   }
 
@@ -576,6 +577,23 @@
           matchedIdx.push(i);
         }
       });
+      // Sort by year desc, then date desc
+      var combined = matched.map(function(d,i){ return {d:d, idx:matchedIdx[i]}; });
+      combined.sort(function(a,b){
+        var ay = parseInt(a.d.year)||0, by = parseInt(b.d.year)||0;
+        if(by !== ay) return by - ay;
+        // Compare date strings (e.g. "June 2026" vs "March 2026")
+        var months = {january:1,february:2,march:3,april:4,may:5,june:6,
+                      july:7,august:8,september:9,october:10,november:11,december:12};
+        function monthNum(dateStr){
+          if(!dateStr) return 0;
+          var parts = (dateStr+'').toLowerCase().split(' ');
+          return months[parts[0]] || 0;
+        }
+        return monthNum(b.d.date) - monthNum(a.d.date);
+      });
+      matched = combined.map(function(c){ return c.d; });
+      matchedIdx = combined.map(function(c){ return c.idx; });
       var total = matched.length;
       var totalPages = Math.max(1, Math.ceil(total/ITEMS_PER_PAGE));
       if(currentPage>totalPages) currentPage=totalPages;

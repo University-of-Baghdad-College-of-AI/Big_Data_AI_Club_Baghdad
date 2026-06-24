@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Presentations - Big Data AI Club</title>
+  <title>Internships - Big Data AI Club</title>
   <link rel="stylesheet" href="style.css">
   <link rel="icon" type="image/png" href="favicon.png">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -358,8 +358,8 @@
   </nav>
 
   <section>
-    <h2>&#128202; Presentations</h2>
-    <p>Member and guest presentations showcasing projects, findings, and innovations.</p>
+    <h2>&#127979; Summer Internships</h2>
+    <p>Summer internship programs at companies, research labs, government institutions, and universities.</p>
 
     <div class="search-bar">
       <input type="text" id="searchInput" placeholder="&#128269; Search by title, description, author...">
@@ -371,10 +371,10 @@
         <label>By Type</label>
         <div class="filter-bar" id="typeFilters">
           <button class="filter-btn active" data-type="all">All Types</button>
-          <button class="filter-btn" data-type="project">Project</button>
-          <button class="filter-btn" data-type="research">Research</button>
-          <button class="filter-btn" data-type="demo">Demo</button>
-          <button class="filter-btn" data-type="keynote">Keynote</button>
+          <button class="filter-btn" data-type="tech">Tech Company</button>
+          <button class="filter-btn" data-type="industry">Industry</button>
+          <button class="filter-btn" data-type="academic">Academic</button>
+          <button class="filter-btn" data-type="gov">Government</button>
         </div>
       </div>
       <div class="filter-group">
@@ -385,7 +385,7 @@
 
     <div class="results-count" id="resultsCount">Loading...</div>
     <div class="cards-grid" id="cardsGrid">
-      <p style="color:var(--text-muted);font-size:.9em;">Loading presentations...</p>
+      <p style="color:var(--text-muted);font-size:.9em;">Loading workshops...</p>
     </div>
     <div class="pagination" id="pagination"></div>
     <div class="no-results" id="noResults">
@@ -423,62 +423,62 @@
     var allData = [
 
   {
-    "type"  : "project",
+    "type"  : "tech",
     "year"  : "2026",
-    "title" : "Smart Campus IoT Dashboard Demo",
-    "desc"  : "Live demo of the IoT dashboard monitoring College of AI campus facilities.",
+    "title" : "AI Research Internship at Ministry of Science",
+    "desc"  : "Club members completed a summer internship at the Ministry of Science research labs, working on AI-driven data analysis projects.",
+    "who"   : "Club Members",
+    "date"  : "July 2026",
+    "link"  : "#"
+  },
+
+  {
+    "type"  : "industry",
+    "year"  : "2026",
+    "title" : "Big Data Internship at Huawei Iraq",
+    "desc"  : "Selected students interned at Huawei Iraq, gaining hands-on experience with cloud computing and big data infrastructure.",
     "who"   : "Student Team",
     "date"  : "June 2026",
     "link"  : "#"
   },
 
   {
-    "type"  : "research",
-    "year"  : "2026",
-    "title" : "Big Data Clustering — Results Presentation",
-    "desc"  : "Findings from the Big Data clustering research project targeting Q1 publication.",
-    "who"   : "Dr. Jalal Hameed",
-    "date"  : "May 2026",
-    "link"  : "#"
-  },
-
-  {
-    "type"  : "demo",
+    "type"  : "academic",
     "year"  : "2025",
-    "title" : "Arabic NLP Text Classifier Live Demo",
-    "desc"  : "Interactive demo of Arabic text classification using transformer fine-tuning.",
-    "who"   : "Student Team",
-    "date"  : "April 2025",
-    "link"  : "#"
-  },
-
-  {
-    "type"  : "keynote",
-    "year"  : "2025",
-    "title" : "The Future of AI in Iraq",
-    "desc"  : "Keynote exploring opportunities and challenges of AI adoption in Iraq.",
-    "who"   : "Guest Speaker",
-    "date"  : "February 2025",
-    "link"  : "#"
-  },
-
-  {
-    "type"  : "research",
-    "year"  : "2024",
-    "title" : "Graph Neural Networks: Applications and Results",
-    "desc"  : "GNN research outcomes including node classification and link prediction tasks.",
+    "title" : "Research Internship at Al-Mustansiriyah University",
+    "desc"  : "Collaborative research internship with Al-Mustansiriyah University's Computer Science department exploring NLP applications.",
     "who"   : "Club Members",
-    "date"  : "November 2024",
+    "date"  : "July 2025",
     "link"  : "#"
   },
 
   {
-    "type"  : "project",
-    "year"  : "2024",
-    "title" : "Student Performance Analytics — Final Presentation",
-    "desc"  : "Final presentation of predictive analytics project for student performance.",
+    "type"  : "industry",
+    "year"  : "2025",
+    "title" : "Data Science Internship at Baghdad Tech Hub",
+    "desc"  : "Students worked with local startups on real-world data science projects including predictive analytics and visualization.",
     "who"   : "Student Team",
-    "date"  : "June 2024",
+    "date"  : "June 2025",
+    "link"  : "#"
+  },
+
+  {
+    "type"  : "gov",
+    "year"  : "2025",
+    "title" : "Digital Transformation Internship",
+    "desc"  : "Internship with the Iraqi Digital Transformation Authority, contributing to AI adoption initiatives in public services.",
+    "who"   : "Club Members",
+    "date"  : "August 2025",
+    "link"  : "#"
+  },
+
+  {
+    "type"  : "academic",
+    "year"  : "2024",
+    "title" : "Summer Research Program — College of AI",
+    "desc"  : "Internal summer research program where students worked alongside professors on ongoing AI and Big Data research projects.",
+    "who"   : "Student Team",
+    "date"  : "July 2024",
     "link"  : "#"
   }
 

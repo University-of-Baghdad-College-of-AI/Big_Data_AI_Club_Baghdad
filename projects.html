@@ -339,6 +339,7 @@
             <a href="seminars.html">Seminars</a>
             <a href="conferences.html">Conferences</a>
             <a href="field-visits.html">Field Visits</a>
+            <a href="internships.html">Internships</a>
         </div></div>
       </div>
       <a href="members.html">Members</a>
@@ -456,7 +457,7 @@
     "year"  : "2026",
     "title" : "Video Fake Frame Detection — VIA-Net",
     "desc"  : "Deep learning architecture for detecting manipulated frames in video content.",
-    "who"   : "Dr. Jalal S. Hameed",
+    "who"   : "Dr. Jalal Hameed",
     "date"  : "May 2026",
     "link"  : "#"
   },
@@ -466,7 +467,7 @@
     "year"  : "2026",
     "title" : "Arbaeen Disease Spread Prediction",
     "desc"  : "GNN-based platform predicting disease spread during large crowd gatherings.",
-    "who"   : "Dr. Jalal S. Hameed",
+    "who"   : "Dr. Jalal Hameed",
     "date"  : "April 2026",
     "link"  : "#"
   },
@@ -527,47 +528,47 @@
     "title" : "Student Performance Predictive Analytics",
     "desc"  : "Using academic records to predict student outcomes and recommend early interventions.",
     "who"   : "Student Team",
-    "date"  : "December 2025",
+    "date"  : "February 2025",
     "link"  : "#"
   },
 
   {
     "type"  : "research",
-    "year"  : "2025",
+    "year"  : "2024",
     "title" : "Intro to AI & Big Data",
     "desc"  : "Foundational project exploring core AI and Big Data concepts and applications.",
     "who"   : "Club Members",
-    "date"  : "October 2025",
+    "date"  : "September 2024",
     "link"  : "#"
   },
 
   {
     "type"  : "data",
-    "year"  : "2025",
+    "year"  : "2024",
     "title" : "Baghdad Traffic Pattern Analysis",
     "desc"  : "Analysis of traffic flow in Baghdad using GPS data and statistical modeling.",
     "who"   : "Student Team",
-    "date"  : "October 2025",
+    "date"  : "October 2024",
     "link"  : "#"
   },
 
   {
     "type"  : "software",
-    "year"  : "2025",
+    "year"  : "2024",
     "title" : "Arabic Chatbot for Student Support",
     "desc"  : "ML-powered Arabic chatbot helping students navigate university services.",
     "who"   : "Student Team",
-    "date"  : "October 2025",
+    "date"  : "November 2024",
     "link"  : "#"
   },
 
   {
     "type"  : "ai",
-    "year"  : "2025",
+    "year"  : "2024",
     "title" : "Face Recognition Attendance System",
     "desc"  : "Automated attendance tracking using deep learning face recognition for classrooms.",
     "who"   : "Student Team",
-    "date"  : "June 2025",
+    "date"  : "December 2024",
     "link"  : "#"
   }
 
@@ -666,6 +667,23 @@
           matchedIdx.push(i);
         }
       });
+      // Sort by year desc, then date desc
+      var combined = matched.map(function(d,i){ return {d:d, idx:matchedIdx[i]}; });
+      combined.sort(function(a,b){
+        var ay = parseInt(a.d.year)||0, by = parseInt(b.d.year)||0;
+        if(by !== ay) return by - ay;
+        // Compare date strings (e.g. "June 2026" vs "March 2026")
+        var months = {january:1,february:2,march:3,april:4,may:5,june:6,
+                      july:7,august:8,september:9,october:10,november:11,december:12};
+        function monthNum(dateStr){
+          if(!dateStr) return 0;
+          var parts = (dateStr+'').toLowerCase().split(' ');
+          return months[parts[0]] || 0;
+        }
+        return monthNum(b.d.date) - monthNum(a.d.date);
+      });
+      matched = combined.map(function(c){ return c.d; });
+      matchedIdx = combined.map(function(c){ return c.idx; });
       var total = matched.length;
       var totalPages = Math.max(1, Math.ceil(total/ITEMS_PER_PAGE));
       if(currentPage>totalPages) currentPage=totalPages;
