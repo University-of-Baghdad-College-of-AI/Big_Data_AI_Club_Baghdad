@@ -11,8 +11,7 @@ on:
       - 'seminars.html'
       - 'conferences.html'
       - 'field-visits.html'
-      - 'students-index.html'
-      - 'professors-index.html'
+      - 'internships.html'
 
 jobs:
   sync-stats:
@@ -21,7 +20,7 @@ jobs:
       contents: write
 
     steps:
-      - name: Checkout Baghdad repo
+      - name: Checkout
         uses: actions/checkout@v4
 
       - name: Run sync script
