@@ -493,10 +493,30 @@
   },
 
   {
+    "type"  : "research",
+    "year"  : "2025",
+    "title" : "SDG Classification using SciBERT-GraphSAGE",
+    "desc"  : "Hybrid NLP and graph framework mapping UoB research publications to UN SDGs.",
+    "who"   : "Dr. Ahmed Ali",
+    "date"  : "March 2025",
+    "link"  : "#"
+  },
+
+  {
     "type"  : "ai",
     "year"  : "2025",
     "title" : "Arabic NLP Text Classifier",
     "desc"  : "Arabic text classification using parameter-efficient transformer fine-tuning.",
+    "who"   : "Student Team",
+    "date"  : "February 2025",
+    "link"  : "#"
+  },
+
+  {
+    "type"  : "data",
+    "year"  : "2025",
+    "title" : "Student Performance Predictive Analytics",
+    "desc"  : "Using academic records to predict student outcomes and recommend early interventions.",
     "who"   : "Student Team",
     "date"  : "February 2025",
     "link"  : "#"
@@ -513,42 +533,12 @@
   },
 
   {
-    "type"  : "research",
-    "year"  : "2025",
-    "title" : "SDG Classification using SciBERT-GraphSAGE",
-    "desc"  : "Hybrid NLP and graph framework mapping UoB research publications to UN SDGs.",
-    "who"   : "Dr. Ahmed Ali",
-    "date"  : "March 2025",
-    "link"  : "#"
-  },
-
-  {
-    "type"  : "data",
-    "year"  : "2025",
-    "title" : "Student Performance Predictive Analytics",
-    "desc"  : "Using academic records to predict student outcomes and recommend early interventions.",
-    "who"   : "Student Team",
-    "date"  : "February 2025",
-    "link"  : "#"
-  },
-
-  {
-    "type"  : "research",
+    "type"  : "ai",
     "year"  : "2024",
-    "title" : "Intro to AI & Big Data",
-    "desc"  : "Foundational project exploring core AI and Big Data concepts and applications.",
-    "who"   : "Club Members",
-    "date"  : "September 2024",
-    "link"  : "#"
-  },
-
-  {
-    "type"  : "data",
-    "year"  : "2024",
-    "title" : "Baghdad Traffic Pattern Analysis",
-    "desc"  : "Analysis of traffic flow in Baghdad using GPS data and statistical modeling.",
+    "title" : "Face Recognition Attendance System",
+    "desc"  : "Automated attendance tracking using deep learning face recognition for classrooms.",
     "who"   : "Student Team",
-    "date"  : "October 2024",
+    "date"  : "December 2024",
     "link"  : "#"
   },
 
@@ -563,12 +553,22 @@
   },
 
   {
-    "type"  : "ai",
+    "type"  : "data",
     "year"  : "2024",
-    "title" : "Face Recognition Attendance System",
-    "desc"  : "Automated attendance tracking using deep learning face recognition for classrooms.",
+    "title" : "Baghdad Traffic Pattern Analysis",
+    "desc"  : "Analysis of traffic flow in Baghdad using GPS data and statistical modeling.",
     "who"   : "Student Team",
-    "date"  : "December 2024",
+    "date"  : "October 2024",
+    "link"  : "#"
+  },
+
+  {
+    "type"  : "research",
+    "year"  : "2024",
+    "title" : "Intro to AI & Big Data",
+    "desc"  : "Foundational project exploring core AI and Big Data concepts and applications.",
+    "who"   : "Club Members",
+    "date"  : "September 2024",
     "link"  : "#"
   }
 
@@ -681,6 +681,18 @@
           return months[parts[0]] || 0;
         }
         return monthNum(b.d.date) - monthNum(a.d.date);
+      });
+      matched = combined.map(function(c){ return c.d; });
+      matchedIdx = combined.map(function(c){ return c.idx; });
+      // Sort newest first automatically
+      var MONTHS = {january:1,february:2,march:3,april:4,may:5,june:6,
+                    july:7,august:8,september:9,october:10,november:11,december:12};
+      function monthNum(s){ var p=(s||'').toLowerCase().split(' '); return MONTHS[p[0]]||0; }
+      var combined = matched.map(function(d,i){ return {d:d,idx:matchedIdx[i]}; });
+      combined.sort(function(a,b){
+        var ay=parseInt(a.d.year)||0, by=parseInt(b.d.year)||0;
+        if(by!==ay) return by-ay;
+        return monthNum(b.d.date)-monthNum(a.d.date);
       });
       matched = combined.map(function(c){ return c.d; });
       matchedIdx = combined.map(function(c){ return c.idx; });
