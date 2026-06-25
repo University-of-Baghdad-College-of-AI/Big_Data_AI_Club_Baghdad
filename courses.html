@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Presentations - Big Data AI Club</title>
+  <title>Courses - Big Data AI Club</title>
   <link rel="stylesheet" href="style.css">
   <link rel="icon" type="image/png" href="favicon.png">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -359,8 +359,8 @@
   </nav>
 
   <section>
-    <h2>&#128202; Presentations</h2>
-    <p>Member and guest presentations showcasing projects, findings, and innovations.</p>
+    <h2>&#127979; Courses</h2>
+    <p>Educational courses offered by the club covering AI, Big Data, machine learning, and programming topics.</p>
 
     <div class="search-bar">
       <input type="text" id="searchInput" placeholder="&#128269; Search by title, description, author...">
@@ -372,10 +372,11 @@
         <label>By Type</label>
         <div class="filter-bar" id="typeFilters">
           <button class="filter-btn active" data-type="all">All Types</button>
-          <button class="filter-btn" data-type="project">Project</button>
-          <button class="filter-btn" data-type="research">Research</button>
-          <button class="filter-btn" data-type="demo">Demo</button>
-          <button class="filter-btn" data-type="keynote">Keynote</button>
+          <button class="filter-btn" data-type="ml">Machine Learning</button>
+          <button class="filter-btn" data-type="bigdata">Big Data</button>
+          <button class="filter-btn" data-type="ai">Artificial Intelligence</button>
+          <button class="filter-btn" data-type="nlp">NLP</button>
+          <button class="filter-btn" data-type="programming">Programming</button>
         </div>
       </div>
       <div class="filter-group">
@@ -386,7 +387,7 @@
 
     <div class="results-count" id="resultsCount">Loading...</div>
     <div class="cards-grid" id="cardsGrid">
-      <p style="color:var(--text-muted);font-size:.9em;">Loading presentations...</p>
+      <p style="color:var(--text-muted);font-size:.9em;">Loading workshops...</p>
     </div>
     <div class="pagination" id="pagination"></div>
     <div class="no-results" id="noResults">
@@ -424,42 +425,62 @@
     var allData = [
 
   {
-    "type"  : "project",
+    "type"  : "ml",
     "year"  : "2026",
-    "title" : "Smart Campus IoT Dashboard Demo",
-    "desc"  : "Live demo of the IoT dashboard monitoring College of AI campus facilities.",
-    "who"   : "Student Team",
+    "title" : "Machine Learning Fundamentals",
+    "desc"  : "Comprehensive course covering supervised and unsupervised learning, model evaluation, and practical implementation using Python and Scikit-Learn.",
+    "who"   : "Dr. Jalal Hameed",
     "date"  : "June 2026",
     "link"  : "#"
   },
 
   {
-    "type"  : "research",
+    "type"  : "bigdata",
     "year"  : "2026",
-    "title" : "Big Data Clustering — Results Presentation",
-    "desc"  : "Findings from the Big Data clustering research project targeting Q1 publication.",
+    "title" : "Big Data Engineering with Apache Spark",
+    "desc"  : "Hands-on course on large-scale data processing using Apache Spark, covering RDDs, DataFrames, Spark SQL, and streaming.",
     "who"   : "Dr. Jalal Hameed",
-    "date"  : "May 2026",
+    "date"  : "April 2026",
     "link"  : "#"
   },
 
   {
-    "type"  : "demo",
-    "year"  : "2025",
-    "title" : "Arabic NLP Text Classifier Live Demo",
-    "desc"  : "Interactive demo of Arabic text classification using transformer fine-tuning.",
-    "who"   : "Student Team",
-    "date"  : "April 2025",
+    "type"  : "ai",
+    "year"  : "2026",
+    "title" : "Deep Learning and Neural Networks",
+    "desc"  : "Advanced course on deep learning architectures including CNNs, RNNs, Transformers, and practical applications using TensorFlow and PyTorch.",
+    "who"   : "Dr. Jalal Hameed",
+    "date"  : "March 2026",
     "link"  : "#"
   },
 
   {
-    "type"  : "keynote",
+    "type"  : "nlp",
     "year"  : "2025",
-    "title" : "The Future of AI in Iraq",
-    "desc"  : "Keynote exploring opportunities and challenges of AI adoption in Iraq.",
-    "who"   : "Guest Speaker",
-    "date"  : "February 2025",
+    "title" : "Natural Language Processing with Transformers",
+    "desc"  : "Course covering modern NLP techniques including BERT, GPT, and fine-tuning pre-trained models for text classification, NER, and generation.",
+    "who"   : "Dr. Jalal Hameed",
+    "date"  : "September 2025",
+    "link"  : "#"
+  },
+
+  {
+    "type"  : "programming",
+    "year"  : "2025",
+    "title" : "Python for Data Science",
+    "desc"  : "Foundational course covering Python programming, NumPy, Pandas, Matplotlib, and data wrangling for data science workflows.",
+    "who"   : "Club Members",
+    "date"  : "June 2025",
+    "link"  : "#"
+  },
+
+  {
+    "type"  : "bigdata",
+    "year"  : "2025",
+    "title" : "Database Systems and NoSQL",
+    "desc"  : "Course on relational and NoSQL databases including SQL, MongoDB, Cassandra, and Redis for big data applications.",
+    "who"   : "Club Members",
+    "date"  : "March 2025",
     "link"  : "#"
   }
 

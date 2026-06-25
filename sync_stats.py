@@ -10,6 +10,7 @@ activity_files = {
     'conferences':   'conferences.html',
     'field-visits':  'field-visits.html',
     'internships':   'internships.html',
+    'courses':       'courses.html',
 }
 
 all_data = {}

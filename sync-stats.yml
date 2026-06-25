@@ -12,6 +12,7 @@ on:
       - 'conferences.html'
       - 'field-visits.html'
       - 'internships.html'
+      - 'courses.html'
 
 jobs:
   sync-stats:
