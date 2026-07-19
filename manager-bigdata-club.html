@@ -22,11 +22,11 @@
     #loginScreen{display:flex;align-items:center;justify-content:center;min-height:100vh;padding:20px;}
     .login-box{background:var(--white);border-radius:14px;padding:48px 40px;max-width:420px;width:100%;
       box-shadow:var(--shadow);border-top:4px solid var(--indigo);text-align:center;}
-    .login-box h1{font-family:'Plus Jakarta Sans',sans-serif;font-size:1.5em;font-weight:800;color:var(--navy);margin-bottom:8px;}
+    .login-box h1{font-family:sans-serif;font-size:1.5em;font-weight:800;color:var(--navy);margin-bottom:8px;}
     .login-box p{color:var(--muted);font-size:.9em;margin-bottom:28px;}
     .google-btn{display:inline-flex;align-items:center;gap:12px;background:var(--white);
       border:1.5px solid var(--border);border-radius:8px;padding:12px 24px;
-      font-family:'Plus Jakarta Sans',sans-serif;font-size:.95em;font-weight:600;color:var(--navy);
+      font-family:sans-serif;font-size:.95em;font-weight:600;color:var(--navy);
       cursor:pointer;width:100%;justify-content:center;transition:box-shadow .2s,border-color .2s;}
     .google-btn:hover{box-shadow:0 4px 14px rgba(0,0,0,.1);border-color:#aaa;}
     .google-btn img{width:20px;}
@@ -38,7 +38,7 @@
     #appShell{display:none;min-height:100vh;}
     .topbar{background:var(--navy);padding:0 24px;height:56px;display:flex;align-items:center;
       justify-content:space-between;position:sticky;top:0;z-index:100;}
-    .topbar-title{font-family:'Plus Jakarta Sans',sans-serif;font-weight:800;color:var(--white);font-size:1.05em;}
+    .topbar-title{font-family:sans-serif;font-weight:800;color:var(--white);font-size:1.05em;}
     .topbar-title span{color:var(--gold);}
     .topbar-user{display:flex;align-items:center;gap:10px;}
     .topbar-user img{width:28px;height:28px;border-radius:50%;border:2px solid rgba(255,255,255,.3);}
@@ -66,18 +66,18 @@
     /* ── Main ── */
     .main{flex:1;padding:28px;overflow-y:auto;}
     .page-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:24px;}
-    .page-title{font-family:'Plus Jakarta Sans',sans-serif;font-size:1.3em;font-weight:800;color:var(--navy);}
+    .page-title{font-family:sans-serif;font-size:1.3em;font-weight:800;color:var(--navy);}
     .page-subtitle{font-size:.85em;color:var(--muted);margin-top:2px;}
 
     /* ── Cards ── */
     .stat-row{display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:14px;margin-bottom:24px;}
     .stat-card{background:var(--white);border:1px solid var(--border);border-radius:var(--radius);
       padding:18px;text-align:center;}
-    .stat-card .num{font-family:'Plus Jakarta Sans',sans-serif;font-size:2em;font-weight:800;color:var(--indigo);}
+    .stat-card .num{font-family:sans-serif;font-size:2em;font-weight:800;color:var(--indigo);}
     .stat-card .lbl{font-size:.78em;color:var(--muted);margin-top:4px;}
 
     /* ── Buttons ── */
-    .btn{font-family:'Plus Jakarta Sans',sans-serif;font-size:.88em;font-weight:700;
+    .btn{font-family:sans-serif;font-size:.88em;font-weight:700;
       padding:9px 20px;border-radius:8px;border:none;cursor:pointer;transition:all .18s;
       display:inline-flex;align-items:center;gap:6px;}
     .btn-primary{background:var(--indigo);color:#fff;}
@@ -114,7 +114,7 @@
     .modal{background:var(--white);border-radius:14px;max-width:620px;width:100%;
       max-height:90vh;overflow-y:auto;box-shadow:0 20px 60px rgba(0,0,0,.3);}
     .modal-header{padding:24px 28px 0;display:flex;justify-content:space-between;align-items:center;}
-    .modal-header h3{font-family:'Plus Jakarta Sans',sans-serif;font-weight:800;color:var(--navy);font-size:1.1em;}
+    .modal-header h3{font-family:sans-serif;font-weight:800;color:var(--navy);font-size:1.1em;}
     .modal-close{background:none;border:none;font-size:1.5em;cursor:pointer;color:var(--muted);}
     .modal-body{padding:20px 28px 28px;}
 
@@ -149,7 +149,7 @@
     .saving-box p{font-weight:600;color:var(--navy);}
 
     .access-denied{text-align:center;padding:60px 20px;}
-    .access-denied h2{color:#C62828;font-family:'Plus Jakarta Sans',sans-serif;}
+    .access-denied h2{color:#C62828;font-family:sans-serif;}
 
     @media(max-width:768px){
       .sidebar{display:none;}
@@ -823,7 +823,7 @@ function renderTable(page, data) {
   var cfg4 = PAGE_CONFIG[page];
   if (cfg4 && cfg4.submissionsRepo && (page === 'students' || page === 'professors')) {
     html += '<div style="margin-top:24px;">' +
-      '<div style="font-family:'Plus Jakarta Sans',sans-serif;font-weight:700;font-size:1em;color:var(--navy);margin-bottom:12px;">📁 Uploaded Files (submissions folder)</div>' +
+      '<div style="font-family:sans-serif;font-weight:700;font-size:1em;color:var(--navy);margin-bottom:12px;">📁 Uploaded Files (submissions folder)</div>' +
       '<div id="uploadedFilesSection"><p style="color:var(--muted);font-size:.88em;">Loading uploaded files...</p></div>' +
     '</div>';
   }
