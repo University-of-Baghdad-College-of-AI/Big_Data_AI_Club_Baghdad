@@ -484,10 +484,19 @@ function renderTable(page, data, originalHtml) {
       html += '<td style="color:var(--muted);">' + (item.who||'—') + '</td>';
       html += '<td style="color:var(--muted);">' + (item.date||'—') + '</td>';
     }
-    html += '<td><div class="btn-group">' +
-      '<button class="btn btn-secondary btn-sm edit-btn" data-idx="' + i + '">✏️ Edit</button>' +
-      '<button class="btn btn-danger btn-sm del-btn" data-idx="' + i + '">🗑️</button>' +
+    if (mode === 'members') {
+      html += '<td><div class="btn-group">' +
+        '<button class="btn btn-secondary btn-sm mu-btn" data-idx="' + i + '">↑</button>' +
+        '<button class="btn btn-secondary btn-sm md-btn" data-idx="' + i + '">↓</button>' +
+        '<button class="btn btn-secondary btn-sm edit-btn" data-idx="' + i + '">✏️</button>' +
+        '<button class="btn btn-danger btn-sm del-btn" data-idx="' + i + '">🗑️</button>' +
       '</div></td>';
+    } else {
+      html += '<td><div class="btn-group">' +
+        '<button class="btn btn-secondary btn-sm edit-btn" data-idx="' + i + '">✏️ Edit</button>' +
+        '<button class="btn btn-danger btn-sm del-btn" data-idx="' + i + '">🗑️</button>' +
+      '</div></td>';
+    }
     html += '</tr>';
   });
   html += '</tbody></table></div>';
@@ -514,6 +523,68 @@ function renderTable(page, data, originalHtml) {
   });
   mc.querySelectorAll('.del-btn').forEach(function(btn) {
     btn.addEventListener('click', function() { openDeleteModal(parseInt(btn.dataset.idx)); });
+  });
+
+  function reorderAndSave(fromIdx, toIdx) {
+    if (toIdx < 0 || toIdx >= currentData.length) return;
+    var tmp = currentData[fromIdx];
+    currentData[fromIdx] = currentData[toIdx];
+    currentData[toIdx] = tmp;
+    var cfg2 = PAGE_MAP[currentPage];
+    fetchFile(cfg2.repo, cfg2.file, function(rawHtml, sha2) {
+      var varName = cfg2.dataVar || 'allData';
+      var newContent = injectData(rawHtml, currentData, varName, cfg2.mode);
+      saveFile(cfg2.repo, cfg2.file, newContent, sha2, '⚙️ Admin: Reorder members', function(err) {
+        if (err) { showToast('❌ Save failed', 'error'); return; }
+        showToast('✅ Order saved!', 'success');
+        loadPage(currentPage);
+      });
+    });
+  }
+
+  mc.querySelectorAll('.mu-btn').forEach(function(btn) {
+    btn.addEventListener('click', function() {
+      var idx = parseInt(btn.dataset.idx);
+      reorderAndSave(idx, idx - 1);
+    });
+  });
+
+  mc.querySelectorAll('.md-btn').forEach(function(btn) {
+    btn.addEventListener('click', function() {
+      var idx = parseInt(btn.dataset.idx);
+      reorderAndSave(idx, idx + 1);
+    });
+  });
+
+  // Move up/down for members
+  mc.querySelectorAll('.move-up').forEach(function(btn) {
+    btn.addEventListener('click', function() {
+      var idx = parseInt(btn.dataset.idx);
+      if (idx === 0) return;
+      var tmp = currentData[idx-1];
+      currentData[idx-1] = currentData[idx];
+      currentData[idx] = tmp;
+      var cfg2 = PAGE_MAP[currentPage];
+      fetchFile(cfg2.repo, cfg2.file, function(html2, sha2) {
+        shaCache[currentPage] = sha2;
+        commitData(cfg2, html2, 'Reorder members');
+      });
+    });
+  });
+
+  mc.querySelectorAll('.move-down').forEach(function(btn) {
+    btn.addEventListener('click', function() {
+      var idx = parseInt(btn.dataset.idx);
+      if (idx >= currentData.length - 1) return;
+      var tmp = currentData[idx+1];
+      currentData[idx+1] = currentData[idx];
+      currentData[idx] = tmp;
+      var cfg2 = PAGE_MAP[currentPage];
+      fetchFile(cfg2.repo, cfg2.file, function(html2, sha2) {
+        shaCache[currentPage] = sha2;
+        commitData(cfg2, html2, 'Reorder members');
+      });
+    });
   });
 
   if (cfg.hasFiles) loadFilesSection(cfg.repo);
