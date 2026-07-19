@@ -1056,7 +1056,7 @@ function loadUsersPage() {
     var users = [];
     if (m) {
       var body = m[1];
-      var re = /'([^']+)'\s*:\s*'([^']+)'/g;
+      var re = /['"]([\w.@]+)['"]\s*:\s*['"](\w+)['"]/g;
       var match;
       while ((match = re.exec(body)) !== null) {
         users.push({ email: match[1], role: match[2] });
