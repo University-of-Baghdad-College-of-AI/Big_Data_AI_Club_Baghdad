@@ -121,7 +121,7 @@
       padding: 0 1px;
     }
   
-    /* ── Auth Top Bar ── */
+    /* ââ Auth Top Bar ââ */
     .auth-topbar {
       background: var(--navy);
       padding: 8px 24px;
@@ -148,7 +148,7 @@
     .tb-signout:hover { background: rgba(255,255,255,0.22); color: #fff; }
     @media(max-width:768px){ .auth-topbar{ padding: 7px 14px; } .auth-topbar .tb-name{ display:none; } }
   
-    /* ── Auth Top Bar ── */
+    /* ââ Auth Top Bar ââ */
     .auth-topbar {
       background: var(--navy, #0F1F3D);
       padding: 8px 24px;
@@ -278,7 +278,7 @@
   </style>
 </head>
 <body>
-  <!-- ── AUTH TOP BAR ── -->
+  <!-- ââ AUTH TOP BAR ââ -->
   <div class="auth-topbar">
     <div class="not-signed" id="tbNotSigned">
       <span>Not signed in</span>
@@ -472,16 +472,6 @@
     "who"   : "Club Members",
     "date"  : "June 2025",
     "link"  : "#"
-  },
-
-  {
-    "type"  : "bigdata",
-    "year"  : "2025",
-    "title" : "Database Systems and NoSQL",
-    "desc"  : "Course on relational and NoSQL databases including SQL, MongoDB, Cassandra, and Redis for big data applications.",
-    "who"   : "Club Members",
-    "date"  : "March 2025",
-    "link"  : "#"
   }
 
 ];
@@ -655,8 +645,8 @@
         '<span class="badge badge-year">'+(d.year||'')+'</span>';
       document.getElementById('modalTitle').textContent = d.title||'';
       document.getElementById('modalDesc').textContent  = d.desc||'No description available.';
-      document.getElementById('modalWho').textContent   = d.who||'—';
-      document.getElementById('modalDate').textContent  = d.date||'—';
+      document.getElementById('modalWho').textContent   = d.who||'â';
+      document.getElementById('modalDate').textContent  = d.date||'â';
       var lnk = document.getElementById('modalLink');
       if(d.link && d.link!=='#'){
         lnk.href=d.link; lnk.style.display='inline-flex'; lnk.onclick=null;
