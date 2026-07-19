@@ -390,7 +390,7 @@ onAuthStateChanged(auth, function(user) {
 
 <script>
 // ── GitHub API Config ──
-var GITHUB_TOKEN = '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';
+var GITHUB_TOKEN = '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';
 var GITHUB_OWNER = 'University-of-Baghdad-College-of-AI';
 
 var PAGE_CONFIG = {
@@ -479,13 +479,30 @@ function githubHeaders() {
 function fetchFileFromGitHub(repo, file, callback) {
   var url = 'https://api.github.com/repos/' + GITHUB_OWNER + '/' + repo + '/contents/' + file;
   fetch(url, { headers: githubHeaders() })
-    .then(function(r) { return r.json(); })
+    .then(function(r) {
+      if (!r.ok) {
+        return r.json().then(function(err) {
+          throw new Error('GitHub API error ' + r.status + ': ' + (err.message || r.statusText));
+        });
+      }
+      return r.json();
+    })
     .then(function(data) {
-      var content = atob(data.content.replace(/\n/g,''));
-      callback(content, data.sha);
+      if (!data || !data.content) {
+        throw new Error('No content returned from GitHub API. Check token permissions.');
+      }
+      var decoded = atob(data.content.replace(/\n/g,''));
+      callback(decoded, data.sha);
     })
     .catch(function(e) {
-      showToast('Failed to load file: ' + e.message, 'error');
+      document.getElementById('mainContent').innerHTML =
+        '<div style="padding:40px;">' +
+        '<h3 style="color:#C62828;margin-bottom:12px;">⚠️ Failed to load</h3>' +
+        '<p style="color:var(--muted);margin-bottom:8px;">' + e.message + '</p>' +
+        '<p style="color:var(--muted);font-size:.85em;">Make sure the fine-grained token has <strong>Contents: Read and write</strong> permission for this repository.</p>' +
+        '<button class="btn btn-secondary" style="margin-top:16px;" onclick="loadPage(currentPage)">↺ Retry</button>' +
+        '</div>';
+      showToast('❌ ' + e.message, 'error');
     });
 }
 
