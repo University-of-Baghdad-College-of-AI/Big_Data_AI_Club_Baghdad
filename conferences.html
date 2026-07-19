@@ -121,7 +121,7 @@
       padding: 0 1px;
     }
   
-    /* ââ Auth Top Bar ââ */
+    /* Ã¢ÂÂÃ¢ÂÂ Auth Top Bar Ã¢ÂÂÃ¢ÂÂ */
     .auth-topbar {
       background: var(--navy);
       padding: 8px 24px;
@@ -148,7 +148,7 @@
     .tb-signout:hover { background: rgba(255,255,255,0.22); color: #fff; }
     @media(max-width:768px){ .auth-topbar{ padding: 7px 14px; } .auth-topbar .tb-name{ display:none; } }
   
-    /* ââ Auth Top Bar ââ */
+    /* Ã¢ÂÂÃ¢ÂÂ Auth Top Bar Ã¢ÂÂÃ¢ÂÂ */
     .auth-topbar {
       background: var(--navy, #0F1F3D);
       padding: 8px 24px;
@@ -278,7 +278,7 @@
   </style>
 </head>
 <body>
-  <!-- ââ AUTH TOP BAR ââ -->
+  <!-- Ã¢ÂÂÃ¢ÂÂ AUTH TOP BAR Ã¢ÂÂÃ¢ÂÂ -->
   <div class="auth-topbar">
     <div class="not-signed" id="tbNotSigned">
       <span>Not signed in</span>
@@ -440,16 +440,6 @@
     "desc"  : "Paper on Big Data clustering techniques presented at the IEEE Big Data conference.",
     "who"   : "Dr. Jalal Hameed",
     "date"  : "May 2026",
-    "link"  : "#"
-  },
-
-  {
-    "type"  : "local",
-    "year"  : "2025",
-    "title" : "University of Baghdad Research Symposium",
-    "desc"  : "Annual symposium showcasing student and college research contributions.",
-    "who"   : "Club Members",
-    "date"  : "April 2025",
     "link"  : "#"
   }
 
@@ -624,8 +614,8 @@
         '<span class="badge badge-year">'+(d.year||'')+'</span>';
       document.getElementById('modalTitle').textContent = d.title||'';
       document.getElementById('modalDesc').textContent  = d.desc||'No description available.';
-      document.getElementById('modalWho').textContent   = d.who||'â';
-      document.getElementById('modalDate').textContent  = d.date||'â';
+      document.getElementById('modalWho').textContent   = d.who||'Ã¢ÂÂ';
+      document.getElementById('modalDate').textContent  = d.date||'Ã¢ÂÂ';
       var lnk = document.getElementById('modalLink');
       if(d.link && d.link!=='#'){
         lnk.href=d.link; lnk.style.display='inline-flex'; lnk.onclick=null;
