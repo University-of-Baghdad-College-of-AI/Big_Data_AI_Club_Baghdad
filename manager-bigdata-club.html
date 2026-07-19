@@ -578,11 +578,128 @@ function renderTable(page, data, originalHtml) {
 function loadFilesSection(repo) {
   var section = document.getElementById('filesSection');
   if (!section) return;
+
+  // Upload panel
+  var role = repo.includes('Students') ? 'Student' : 'Professor';
+  var uploadHtml = '<div class="table-wrap" style="margin-bottom:16px;">' +
+    '<div class="table-toolbar"><strong>⬆️ Upload New File</strong></div>' +
+    '<div style="padding:18px;">' +
+      '<div style="background:var(--surface);border:1.5px dashed var(--border);border-radius:10px;padding:20px;margin-bottom:14px;font-size:.85em;color:var(--muted);line-height:1.8;">' +
+        '<strong style="color:var(--navy);">📋 Naming Convention:</strong><br>' +
+        '<code style="background:#fff;border:1px solid var(--border);padding:2px 8px;border-radius:4px;color:var(--indigo);">FirstName-LastName_Title-Of-Work.pdf</code><br>' +
+        '<span style="font-size:.9em;">Example: <code style="background:#fff;border:1px solid var(--border);padding:2px 6px;border-radius:4px;">Ahmed-Ali_Machine-Learning-Project.pdf</code></span><br>' +
+        '<span style="font-size:.9em;">This gives: Who = <strong>Ahmed Ali</strong>, Title = <strong>Machine Learning Project</strong></span><br><br>' +
+        '<strong style="color:var(--navy);">📋 JSON Metadata (optional, same name):</strong><br>' +
+        '<code style="background:#fff;border:1px solid var(--border);padding:2px 8px;border-radius:4px;color:var(--indigo);">Ahmed-Ali_Machine-Learning-Project.json</code><br>' +
+        '<pre style="background:#fff;border:1px solid var(--border);border-radius:6px;padding:10px;margin-top:6px;font-size:.82em;overflow-x:auto;">' +
+        '{
+  "type"  : "research",
+  "year"  : "2026",
+  "title" : "Machine Learning Project",
+  "desc"  : "Description here...",
+  "who"   : "Ahmed Ali",
+  "date"  : "June 2026",
+  "link"  : "#"
+}' +
+        '</pre>' +
+      '</div>' +
+      '<div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:12px;">' +
+        '<div><label style="font-size:.78em;font-weight:700;color:var(--muted);text-transform:uppercase;display:block;margin-bottom:4px;">Year Folder</label>' +
+        '<select id="uploadYear" style="width:100%;padding:8px 12px;border:1.5px solid var(--border);border-radius:8px;font-family:inherit;">' +
+        '<option>2026</option><option>2027</option><option>2028</option><option>2029</option><option>2030</option><option>2025</option><option>2024</option>' +
+        '</select></div>' +
+        '<div><label style="font-size:.78em;font-weight:700;color:var(--muted);text-transform:uppercase;display:block;margin-bottom:4px;">File (PDF or ZIP)</label>' +
+        '<input type="file" id="uploadFile" accept=".pdf,.zip" style="width:100%;padding:6px;border:1.5px solid var(--border);border-radius:8px;font-family:inherit;font-size:.85em;"></div>' +
+      '</div>' +
+      '<div style="margin-bottom:12px;">' +
+        '<label style="font-size:.78em;font-weight:700;color:var(--muted);text-transform:uppercase;display:block;margin-bottom:4px;">JSON Metadata (optional)</label>' +
+        '<input type="file" id="uploadJson" accept=".json" style="width:100%;padding:6px;border:1.5px solid var(--border);border-radius:8px;font-family:inherit;font-size:.85em;">' +
+      '</div>' +
+      '<button class="btn btn-primary" id="uploadBtn" data-repo="' + repo + '">⬆️ Upload File</button>' +
+      '<div id="uploadStatus" style="margin-top:10px;font-size:.85em;"></div>' +
+    '</div>' +
+  '</div>';
+
+  section.innerHTML = uploadHtml + '<div id="filesList"><p style="color:var(--muted);">Loading files...</p></div>';
+
+  // Upload handler
+  document.getElementById('uploadBtn').addEventListener('click', function() {
+    var file = document.getElementById('uploadFile').files[0];
+    var jsonFile = document.getElementById('uploadJson').files[0];
+    var year = document.getElementById('uploadYear').value;
+    var status = document.getElementById('uploadStatus');
+
+    if (!file) { status.innerHTML = '<span style="color:#C62828;">⚠️ Please select a file.</span>'; return; }
+    if (!file.name.endsWith('.pdf') && !file.name.endsWith('.zip')) {
+      status.innerHTML = '<span style="color:#C62828;">⚠️ Only PDF or ZIP files allowed.</span>'; return;
+    }
+
+    status.innerHTML = '⏳ Uploading...';
+    document.getElementById('uploadBtn').disabled = true;
+
+    var path = 'submissions/' + year + '/' + file.name;
+    var reader = new FileReader();
+    reader.onload = function(e) {
+      var base64 = e.target.result.split(',')[1];
+      uploadToGitHub(repo, path, base64, file.name, function(err) {
+        if (err) {
+          status.innerHTML = '<span style="color:#C62828;">❌ Upload failed: ' + err + '</span>';
+          document.getElementById('uploadBtn').disabled = false;
+          return;
+        }
+        // Upload JSON if provided
+        if (jsonFile) {
+          var jr = new FileReader();
+          jr.onload = function(je) {
+            var jBase64 = btoa(je.target.result);
+            var jPath = 'submissions/' + year + '/' + jsonFile.name;
+            uploadToGitHub(repo, jPath, jBase64, jsonFile.name, function(err2) {
+              if (err2) status.innerHTML = '<span style="color:#C62828;">⚠️ PDF uploaded but JSON failed: ' + err2 + '</span>';
+              else status.innerHTML = '<span style="color:#1B5E20;">✅ File + JSON uploaded successfully!</span>';
+              document.getElementById('uploadBtn').disabled = false;
+              setTimeout(function() { loadFilesList(repo); }, 1000);
+            });
+          };
+          jr.readAsText(jsonFile);
+        } else {
+          status.innerHTML = '<span style="color:#1B5E20;">✅ File uploaded successfully!</span>';
+          document.getElementById('uploadBtn').disabled = false;
+          setTimeout(function() { loadFilesList(repo); }, 1000);
+        }
+      });
+    };
+    reader.readAsDataURL(file);
+  });
+
+  loadFilesList(repo);
+}
+
+function uploadToGitHub(repo, path, base64Content, name, callback) {
+  // Check if file exists first to get SHA
+  var url = 'https://api.github.com/repos/' + GITHUB_OWNER + '/' + repo + '/contents/' + path;
+  fetch(url, { headers: ghHeaders() })
+    .then(function(r) { return r.ok ? r.json() : null; })
+    .then(function(existing) {
+      var body = { message: '⬆️ Upload: ' + name, content: base64Content };
+      if (existing && existing.sha) body.sha = existing.sha;
+      return fetch(url, { method: 'PUT', headers: ghHeaders(), body: JSON.stringify(body) });
+    })
+    .then(function(r) {
+      if (r.ok) callback(null);
+      else r.json().then(function(e) { callback(e.message || 'Upload failed'); });
+    })
+    .catch(function(e) { callback(e.message); });
+}
+
+function loadFilesList(repo) {
+  var list = document.getElementById('filesList');
+  if (!list) return;
+  list.innerHTML = '<p style="color:var(--muted);padding:10px;">Loading files...</p>';
   fetch('https://api.github.com/repos/' + GITHUB_OWNER + '/' + repo + '/contents/submissions', { headers: ghHeaders() })
     .then(function(r) { return r.ok ? r.json() : []; })
     .then(function(folders) {
       if (!Array.isArray(folders) || !folders.length) {
-        section.innerHTML = '<p style="color:var(--muted);">No uploaded files found.</p>';
+        list.innerHTML = '<p style="color:var(--muted);padding:10px;">No uploaded files yet.</p>';
         return;
       }
       var promises = folders.filter(function(f) { return f.type==='dir'; }).map(function(folder) {
@@ -590,28 +707,31 @@ function loadFilesSection(repo) {
           .then(function(r) { return r.ok ? r.json() : []; })
           .then(function(files) { return { year: folder.name, files: files.filter(function(f) { return f.type==='file'; }) }; });
       });
-      return Promise.all(promises);
-    })
-    .then(function(years) {
-      if (!years) return;
-      var html = '';
-      years.forEach(function(yd) {
-        if (!yd.files.length) return;
-        html += '<div class="table-wrap"><div class="table-toolbar"><strong>📅 ' + yd.year + '</strong></div>';
-        html += '<table><thead><tr><th>File</th><th>Size</th><th>Actions</th></tr></thead><tbody>';
-        yd.files.forEach(function(file) {
-          var kb = file.size ? (file.size/1024).toFixed(1)+' KB' : '—';
-          html += '<tr><td><strong>' + file.name + '</strong></td><td style="color:var(--muted);">' + kb + '</td>';
-          html += '<td><div class="btn-group">' +
-            '<a href="' + file.download_url + '" target="_blank" class="btn btn-secondary btn-sm">⬇ Download</a>' +
-            '<button class="btn btn-danger btn-sm" data-repo="' + repo + '" data-path="' + file.path + '" data-sha="' + file.sha + '" data-name="' + file.name + '" onclick="deleteFile(this)">🗑️</button>' +
-          '</div></td></tr>';
+      Promise.all(promises).then(function(years) {
+        var html = '';
+        years.forEach(function(yd) {
+          if (!yd.files.length) return;
+          html += '<div class="table-wrap" style="margin-bottom:14px;">';
+          html += '<div class="table-toolbar"><strong>📅 ' + yd.year + '</strong><span style="color:var(--muted);font-size:.82em;margin-left:8px;">' + yd.files.length + ' files</span></div>';
+          html += '<table><thead><tr><th>File</th><th>Type</th><th>Size</th><th>Actions</th></tr></thead><tbody>';
+          yd.files.forEach(function(file) {
+            var kb = file.size ? (file.size/1024).toFixed(1)+' KB' : '—';
+            var ext = file.name.split('.').pop().toUpperCase();
+            var extColor = ext==='PDF' ? '#C62828' : ext==='JSON' ? '#1565C0' : '#333';
+            html += '<tr><td><strong>' + file.name + '</strong></td>' +
+              '<td><span style="background:#f0f4ff;color:'+extColor+';font-size:.72em;font-weight:700;padding:2px 8px;border-radius:4px;">' + ext + '</span></td>' +
+              '<td style="color:var(--muted);">' + kb + '</td>' +
+              '<td><div class="btn-group">' +
+                '<a href="' + file.download_url + '" target="_blank" class="btn btn-secondary btn-sm">⬇</a>' +
+                '<button class="btn btn-danger btn-sm" data-repo="' + repo + '" data-path="' + file.path + '" data-sha="' + file.sha + '" data-name="' + file.name + '" onclick="deleteFile(this)">🗑️</button>' +
+              '</div></td></tr>';
+          });
+          html += '</tbody></table></div>';
         });
-        html += '</tbody></table></div>';
+        list.innerHTML = html || '<p style="color:var(--muted);padding:10px;">No files found.</p>';
       });
-      section.innerHTML = html || '<p style="color:var(--muted);">No files found.</p>';
     })
-    .catch(function() { section.innerHTML = '<p style="color:var(--muted);">Could not load files.</p>'; });
+    .catch(function() { list.innerHTML = '<p style="color:var(--muted);">Could not load files.</p>'; });
 }
 
 window.deleteFile = function(btn) {
