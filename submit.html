@@ -482,7 +482,7 @@
   </div>
 
   <footer>
-    <p>&copy; 2026 <strong>Big Data Artificial Intelligence Club</strong> | Students Scientific Community</p>
+    <p>&copy; <span id="footerYear">2026</span> <strong>Big Data Artificial Intelligence Club</strong> | Students Scientific Community</p>
     <p>Big Data Department | College of AI | University of Baghdad</p>
   </footer><script>
     // Sub-type panels
@@ -709,5 +709,9 @@
       </div>
     </div>
   </div>
+  <script>
+    var fy = document.getElementById('footerYear');
+    if (fy) fy.textContent = new Date().getFullYear();
+  </script>
 </body>
 </html>

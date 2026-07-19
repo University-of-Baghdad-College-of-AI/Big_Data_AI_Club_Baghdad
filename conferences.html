@@ -121,7 +121,7 @@
       padding: 0 1px;
     }
   
-    /* ÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂ¢ÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂ¢ÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂ Auth Top Bar ÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂ¢ÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂ¢ÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂ */
+    /* ── Auth Top Bar ── */
     .auth-topbar {
       background: var(--navy);
       padding: 8px 24px;
@@ -148,7 +148,7 @@
     .tb-signout:hover { background: rgba(255,255,255,0.22); color: #fff; }
     @media(max-width:768px){ .auth-topbar{ padding: 7px 14px; } .auth-topbar .tb-name{ display:none; } }
   
-    /* ÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂ¢ÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂ¢ÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂ Auth Top Bar ÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂ¢ÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂ¢ÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂ */
+    /* ── Auth Top Bar ── */
     .auth-topbar {
       background: var(--navy, #0F1F3D);
       padding: 8px 24px;
@@ -278,7 +278,7 @@
   </style>
 </head>
 <body>
-  <!-- ÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂ¢ÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂ¢ÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂ AUTH TOP BAR ÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂ¢ÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂ¢ÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂ -->
+  <!-- ── AUTH TOP BAR ── -->
   <div class="auth-topbar">
     <div class="not-signed" id="tbNotSigned">
       <span>Not signed in</span>
@@ -416,7 +416,7 @@
   </div>
 
   <footer>
-    <p>&copy; 2026 <strong>Big Data Artificial Intelligence Club</strong> | Students Scientific Community</p>
+    <p>&copy; <span id="footerYear">2026</span> <strong>Big Data Artificial Intelligence Club</strong> | Students Scientific Community</p>
     <p>Big Data Department | College of AI | University of Baghdad</p>
   </footer>
 
@@ -426,20 +426,40 @@
   {
     "type"  : "national",
     "year"  : "2026",
-    "title" : "National Hackathon 2026",
-    "desc"  : "Club team participated with a DL-based solutions for Society.",
-    "who"   : "First Grade Students 2025-2026",
+    "title" : "National AI Hackathon 2026",
+    "desc"  : "Club team won 2nd place with an innovative ML-based solution for traffic optimization.",
+    "who"   : "Club Team",
     "date"  : "June 2026",
     "link"  : "#"
   },
 
   {
-    "type"  : "academic",
+    "type"  : "international",
     "year"  : "2026",
-    "title" : "Al-Arbaen Conference 2026",
-    "desc"  : "All kinds of conferences papers related to Al-Arbaen.",
-    "who"   : "Researchers",
-    "date"  : "August 7-8, 2026",
+    "title" : "IEEE International Conference on Big Data",
+    "desc"  : "Paper on Big Data clustering techniques presented at the IEEE Big Data conference.",
+    "who"   : "Dr. Jalal Hameed",
+    "date"  : "May 2026",
+    "link"  : "#"
+  },
+
+  {
+    "type"  : "local",
+    "year"  : "2025",
+    "title" : "University of Baghdad Research Symposium",
+    "desc"  : "Annual symposium showcasing student and college research contributions.",
+    "who"   : "Club Members",
+    "date"  : "April 2025",
+    "link"  : "#"
+  },
+
+  {
+    "type"  : "organized",
+    "year"  : "2025",
+    "title" : "College of AI Annual Tech Summit",
+    "desc"  : "Club-organized summit for students, professors, and industry professionals.",
+    "who"   : "Big Data AI Club",
+    "date"  : "February 2025",
     "link"  : "#"
   }
 
@@ -614,8 +634,8 @@
         '<span class="badge badge-year">'+(d.year||'')+'</span>';
       document.getElementById('modalTitle').textContent = d.title||'';
       document.getElementById('modalDesc').textContent  = d.desc||'No description available.';
-      document.getElementById('modalWho').textContent   = d.who||'ÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂ¢ÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂ';
-      document.getElementById('modalDate').textContent  = d.date||'ÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂ¢ÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂ';
+      document.getElementById('modalWho').textContent   = d.who||'—';
+      document.getElementById('modalDate').textContent  = d.date||'—';
       var lnk = document.getElementById('modalLink');
       if(d.link && d.link!=='#'){
         lnk.href=d.link; lnk.style.display='inline-flex'; lnk.onclick=null;
@@ -790,5 +810,9 @@
       </div>
     </div>
   </div>
+  <script>
+    var fy = document.getElementById('footerYear');
+    if (fy) fy.textContent = new Date().getFullYear();
+  </script>
 </body>
 </html>

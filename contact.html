@@ -279,16 +279,10 @@
       <div class="dropdown">
         <button class="dropbtn">Activities &#9662;</button>
         <div class="dropdown-content"><div class="dropdown-content-inner">
-            <a href="conferences.html">Conferences</a>
-            <a href="courses.html">Courses</a>
-            <a href="field-visits.html">Field Visits</a>
-            <a href="internships.html">Internships</a>
-            <a href="lectures.html">Lectures</a>
-            <a href="presentations.html">Presentations</a>
-            <a href="projects.html">Projects</a>
-            <a href="researches.html">Researches</a>
-            <a href="seminars.html">Seminars</a>
-            <a href="workshops.html">Workshops</a>
+          <a href="workshops.html">Workshops</a><a href="researches.html">Researches</a>
+          <a href="projects.html">Projects</a><a href="lectures.html">Lectures</a>
+          <a href="presentations.html">Presentations</a><a href="seminars.html">Seminars</a>
+          <a href="conferences.html">Conferences</a><a href="field-visits.html">Field Visits</a>
         </div></div>
       </div>
       <a href="members.html">Members</a>
@@ -348,7 +342,7 @@
   </div>
 
   <footer>
-    <p>&copy; 2026 <strong>Big Data Artificial Intelligence Club</strong> | Students Scientific Community</p>
+    <p>&copy; <span id="footerYear">2026</span> <strong>Big Data Artificial Intelligence Club</strong> | Students Scientific Community</p>
     <p>Big Data Department | College of AI | University of Baghdad</p>
   </footer><script>
     var toggle=document.querySelector('.nav-toggle'), navLinks=document.querySelector('.nav-links');
@@ -553,5 +547,9 @@
       </div>
     </div>
   </div>
+  <script>
+    var fy = document.getElementById('footerYear');
+    if (fy) fy.textContent = new Date().getFullYear();
+  </script>
 </body>
 </html>

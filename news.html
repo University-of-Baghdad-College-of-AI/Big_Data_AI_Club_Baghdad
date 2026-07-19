@@ -263,7 +263,7 @@
   </section>
 
   <footer>
-    <p>&copy; 2026 <strong>Big Data Artificial Intelligence Club</strong> | Students Scientific Community</p>
+    <p>&copy; <span id="footerYear">2026</span> <strong>Big Data Artificial Intelligence Club</strong> | Students Scientific Community</p>
     <p>Big Data Department | College of AI | University of Baghdad</p>
   </footer>
 
@@ -420,7 +420,7 @@
 
       {
         "date"  : "June 18, 2026",
-        "text"  : "Our Students participated in the National Hackathon."
+        "text"  : "Our team won 2nd place in the National AI Hackathon."
       },
 
       {
@@ -430,17 +430,17 @@
 
       {
         "date"  : "May 30, 2026",
-        "text"  : "Collaboration announced with the Computer Engineering Department for joint projects."
+        "text"  : "Collaboration announced with the Computer Science Department for joint projects."
       },
 
       {
         "date"  : "May 20, 2026",
-        "text"  : "A lecture on AI ethics by Dr. Faisal."
+        "text"  : "Guest lecture on AI ethics by Dr. Rana."
       },
 
       {
         "date"  : "May 10, 2026",
-        "text"  : "Field visit to ASWAR Tech Hub."
+        "text"  : "Field visit to Baghdad Tech Hub."
       }
 
     ];
@@ -456,6 +456,10 @@
       });
       list.appendChild(ul);
     });
+  </script>
+  <script>
+    var fy = document.getElementById('footerYear');
+    if (fy) fy.textContent = new Date().getFullYear();
   </script>
 </body>
 </html>

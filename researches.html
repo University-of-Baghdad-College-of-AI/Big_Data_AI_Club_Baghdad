@@ -416,34 +416,64 @@
   </div>
 
   <footer>
-    <p>&copy; 2026 <strong>Big Data Artificial Intelligence Club</strong> | Students Scientific Community</p>
+    <p>&copy; <span id="footerYear">2026</span> <strong>Big Data Artificial Intelligence Club</strong> | Students Scientific Community</p>
     <p>Big Data Department | College of AI | University of Baghdad</p>
   </footer>
 
         <script>
     var allData = [
 
-      {
-        "type"  : "research",
-        "year"  : "2026",
-        "title" : "AI Platform for Disease Spread During Arbaeen",
-        "desc"  : "GNN models predicting infectious disease spread in large crowd gatherings.",
-        "who"   : "Dr. Jalal S. Hameed and M.Sc. Students",
-        "date"  : "August 2026",
-        "link"  : "#"
-      },
+  {
+    "type"  : "nlp",
+    "year"  : "2026",
+    "title" : "Multilingual Text Classification with Transformers",
+    "desc"  : "Parameter-efficient fine-tuning for multilingual text classification using adapter-based methods.",
+    "who"   : "Dr. Jalal Hameed",
+    "date"  : "June 2026",
+    "link"  : "#"
+  },
 
-      {
-        "type"  : "ai",
-        "year"  : "2025",
-        "title" : "Predictive Analytics for Student Performance",
-        "desc"  : "Using academic data and ML models to predict and improve student outcomes.",
-        "who"   : "Student Team",
-        "date"  : "January 2025",
-        "link"  : "#"
-      }
+  {
+    "type"  : "ai",
+    "year"  : "2026",
+    "title" : "Video Fake Frame Detection using VIA-Net",
+    "desc"  : "Novel deep learning architecture for detecting manipulated frames in video content.",
+    "who"   : "Dr. Jalal Hameed",
+    "date"  : "May 2026",
+    "link"  : "#"
+  },
 
-    ];
+  {
+    "type"  : "bigdata",
+    "year"  : "2026",
+    "title" : "SDG Classification using SciBERT-GraphSAGE",
+    "desc"  : "Hybrid NLP and graph learning framework mapping research to UN Sustainable Development Goals.",
+    "who"   : "Dr. Ahmed Ali",
+    "date"  : "April 2026",
+    "link"  : "#"
+  },
+
+  {
+    "type"  : "bio",
+    "year"  : "2025",
+    "title" : "AI Platform for Disease Spread During Arbaeen",
+    "desc"  : "GNN models predicting infectious disease spread in large crowd gatherings.",
+    "who"   : "Dr. Jalal Hameed",
+    "date"  : "March 2025",
+    "link"  : "#"
+  },
+
+  {
+    "type"  : "ai",
+    "year"  : "2025",
+    "title" : "Predictive Analytics for Student Performance",
+    "desc"  : "Using academic data and ML models to predict and improve student outcomes.",
+    "who"   : "Student Team",
+    "date"  : "January 2025",
+    "link"  : "#"
+  }
+
+];
 
     var activeType = 'all', activeYear = 'all', searchQuery = '';
     var ITEMS_PER_PAGE = 9, currentPage = 1;
@@ -790,5 +820,9 @@
       </div>
     </div>
   </div>
+  <script>
+    var fy = document.getElementById('footerYear');
+    if (fy) fy.textContent = new Date().getFullYear();
+  </script>
 </body>
 </html>

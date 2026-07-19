@@ -416,54 +416,54 @@
   </div>
 
   <footer>
-    <p>&copy; 2026 <strong>Big Data Artificial Intelligence Club</strong> | Students Scientific Community</p>
+    <p>&copy; <span id="footerYear">2026</span> <strong>Big Data Artificial Intelligence Club</strong> | Students Scientific Community</p>
     <p>Big Data Department | College of AI | University of Baghdad</p>
   </footer>
 
         <script>
     var allData = [
 
-      {
-        "type"  : "project",
-        "year"  : "2026",
-        "title" : "Smart Campus IoT Dashboard Demo",
-        "desc"  : "Live demo of the IoT dashboard monitoring College of AI campus facilities.",
-        "who"   : "Student Team",
-        "date"  : "June 2026",
-        "link"  : "#"
-      },
+  {
+    "type"  : "project",
+    "year"  : "2026",
+    "title" : "Smart Campus IoT Dashboard Demo",
+    "desc"  : "Live demo of the IoT dashboard monitoring College of AI campus facilities.",
+    "who"   : "Student Team",
+    "date"  : "June 2026",
+    "link"  : "#"
+  },
 
-      {
-        "type"  : "research",
-        "year"  : "2026",
-        "title" : "Big Data Clustering (Results Presentation)",
-        "desc"  : "Findings from the Big Data clustering research project targeting Q1 publication.",
-        "who"   : "Dr. Jalal S. Hameed",
-        "date"  : "May 2026",
-        "link"  : "#"
-      },
+  {
+    "type"  : "research",
+    "year"  : "2026",
+    "title" : "Big Data Clustering — Results Presentation",
+    "desc"  : "Findings from the Big Data clustering research project targeting Q1 publication.",
+    "who"   : "Dr. Jalal Hameed",
+    "date"  : "May 2026",
+    "link"  : "#"
+  },
 
-      {
-        "type"  : "demo",
-        "year"  : "2025",
-        "title" : "Arabic NLP Text Classifier Live Demo",
-        "desc"  : "Interactive demo of Arabic text classification using transformer fine-tuning.",
-        "who"   : "Student Team",
-        "date"  : "April 2025",
-        "link"  : "#"
-      },
+  {
+    "type"  : "demo",
+    "year"  : "2025",
+    "title" : "Arabic NLP Text Classifier Live Demo",
+    "desc"  : "Interactive demo of Arabic text classification using transformer fine-tuning.",
+    "who"   : "Student Team",
+    "date"  : "April 2025",
+    "link"  : "#"
+  },
 
-      {
-        "type"  : "keynote",
-        "year"  : "2025",
-        "title" : "The Future of AI in Iraq",
-        "desc"  : "Keynote exploring opportunities and challenges of AI adoption in Iraq.",
-        "who"   : "Guest Speaker",
-        "date"  : "February 2025",
-        "link"  : "#"
-      }
+  {
+    "type"  : "keynote",
+    "year"  : "2025",
+    "title" : "The Future of AI in Iraq",
+    "desc"  : "Keynote exploring opportunities and challenges of AI adoption in Iraq.",
+    "who"   : "Guest Speaker",
+    "date"  : "February 2025",
+    "link"  : "#"
+  }
 
-    ];
+];
 
     var activeType = 'all', activeYear = 'all', searchQuery = '';
     var ITEMS_PER_PAGE = 9, currentPage = 1;
@@ -810,5 +810,9 @@
       </div>
     </div>
   </div>
+  <script>
+    var fy = document.getElementById('footerYear');
+    if (fy) fy.textContent = new Date().getFullYear();
+  </script>
 </body>
 </html>

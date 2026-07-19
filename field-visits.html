@@ -416,44 +416,54 @@
   </div>
 
   <footer>
-    <p>&copy; 2026 <strong>Big Data Artificial Intelligence Club</strong> | Students Scientific Community</p>
+    <p>&copy; <span id="footerYear">2026</span> <strong>Big Data Artificial Intelligence Club</strong> | Students Scientific Community</p>
     <p>Big Data Department | College of AI | University of Baghdad</p>
   </footer>
 
         <script>
     var allData = [
 
-      {
-        "type"  : "tech",
-        "year"  : "2026",
-        "title" : "Visit to Baghdad Tech Hub",
-        "desc"  : "Members toured Baghdad's leading tech hub, meeting startup founders and AI engineers.",
-        "who"   : "Students",
-        "date"  : "May 2026",
-        "link"  : "#"
-      },
+  {
+    "type"  : "tech",
+    "year"  : "2026",
+    "title" : "Visit to Baghdad Tech Hub",
+    "desc"  : "Members toured Baghdad's leading tech hub, meeting startup founders and AI engineers.",
+    "who"   : "Club Members",
+    "date"  : "May 2026",
+    "link"  : "#"
+  },
 
-      {
-        "type"  : "gov",
-        "year"  : "2026",
-        "title" : "Ministry of Higher Education and Scientific Research Tour",
-        "desc"  : "Guided tour of government research labs exploring applied AI projects.",
-        "who"   : "Students",
-        "date"  : "April 2026",
-        "link"  : "#"
-      },
+  {
+    "type"  : "lab",
+    "year"  : "2026",
+    "title" : "Ministry of Science Research Labs Tour",
+    "desc"  : "Guided tour of government research labs exploring applied AI projects.",
+    "who"   : "Club Members",
+    "date"  : "April 2026",
+    "link"  : "#"
+  },
 
-      {
-        "type"  : "gov",
-        "year"  : "2026",
-        "title" : "Iraqi Data Centers Visit",
-        "desc"  : "Meeting officials on AI adoption in Iraq's public services.",
-        "who"   : "Students",
-        "date"  : "April 2026",
-        "link"  : "#"
-      }
+  {
+    "type"  : "uni",
+    "year"  : "2025",
+    "title" : "Al-Mustansiriyah University Exchange Visit",
+    "desc"  : "Inter-university visit to share research and establish collaborative projects.",
+    "who"   : "Club Members",
+    "date"  : "March 2025",
+    "link"  : "#"
+  },
 
-    ];
+  {
+    "type"  : "gov",
+    "year"  : "2025",
+    "title" : "Iraqi Digital Transformation Authority Visit",
+    "desc"  : "Meeting officials on AI adoption in Iraq's public services.",
+    "who"   : "Club Members",
+    "date"  : "January 2025",
+    "link"  : "#"
+  }
+
+];
 
     var activeType = 'all', activeYear = 'all', searchQuery = '';
     var ITEMS_PER_PAGE = 9, currentPage = 1;
@@ -800,5 +810,9 @@
       </div>
     </div>
   </div>
+  <script>
+    var fy = document.getElementById('footerYear');
+    if (fy) fy.textContent = new Date().getFullYear();
+  </script>
 </body>
 </html>
