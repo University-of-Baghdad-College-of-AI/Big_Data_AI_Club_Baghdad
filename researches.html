@@ -38,7 +38,7 @@
     .badge-trend,.badge-industry,.badge-keynote,.badge-lab{background:#E3F2FD;color:#0D47A1;}
     .badge-international{background:#EEF2FF;color:#3730a3;}
     .card h3{font-family:'Plus Jakarta Sans',sans-serif;font-size:1em;font-weight:700;color:var(--navy);line-height:1.3;}
-    .card p{font-size:.87em;color:var(--text-muted);line-height:1.55;flex:1;display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden;}
+    .card p{font-size:.87em;color:var(--text-muted);line-height:1.55;flex:1;overflow:hidden;display:-webkit-box;-webkit-line-clamp:4;-webkit-box-orient:vertical;-webkit-mask-image:linear-gradient(180deg,#000 60%,transparent 100%);mask-image:linear-gradient(180deg,#000 60%,transparent 100%);}
     .card-meta{font-size:.78em;color:var(--text-muted);display:flex;gap:12px;flex-wrap:wrap;}
     .card-meta span{display:flex;align-items:center;gap:4px;}
     .view-btn{display:inline-flex;align-items:center;gap:6px;font-size:.83em;font-weight:600;color:var(--indigo);background:var(--indigo-pale);border:none;border-radius:6px;padding:7px 14px;cursor:pointer;font-family:'Plus Jakarta Sans',sans-serif;transition:background .18s,gap .2s;margin-top:4px;text-decoration:none;}
@@ -121,7 +121,7 @@
       padding: 0 1px;
     }
   
-    /* ââ Auth Top Bar ââ */
+    /* ── Auth Top Bar ── */
     .auth-topbar {
       background: var(--navy);
       padding: 8px 24px;
@@ -148,7 +148,7 @@
     .tb-signout:hover { background: rgba(255,255,255,0.22); color: #fff; }
     @media(max-width:768px){ .auth-topbar{ padding: 7px 14px; } .auth-topbar .tb-name{ display:none; } }
   
-    /* ââ Auth Top Bar ââ */
+    /* ── Auth Top Bar ── */
     .auth-topbar {
       background: var(--navy, #0F1F3D);
       padding: 8px 24px;
@@ -278,7 +278,7 @@
   </style>
 </head>
 <body>
-  <!-- ââ AUTH TOP BAR ââ -->
+  <!-- ── AUTH TOP BAR ── -->
   <div class="auth-topbar">
     <div class="not-signed" id="tbNotSigned">
       <span>Not signed in</span>
@@ -428,7 +428,7 @@
     "year"  : "2026",
     "title" : "Multilingual Text Classification with Transformers",
     "desc"  : "Parameter-efficient fine-tuning for multilingual text classification using adapter-based methods.",
-    "who"   : "Dr. Jalal S. Hameed",
+    "who"   : "Dr. Jalal Hameed",
     "date"  : "June 2026",
     "link"  : "#"
   },
@@ -438,7 +438,7 @@
     "year"  : "2026",
     "title" : "Video Fake Frame Detection using VIA-Net",
     "desc"  : "Novel deep learning architecture for detecting manipulated frames in video content.",
-    "who"   : "Dr. Jalal S. Hameed",
+    "who"   : "Dr. Jalal Hameed",
     "date"  : "May 2026",
     "link"  : "#"
   },
@@ -448,7 +448,7 @@
     "year"  : "2026",
     "title" : "SDG Classification using SciBERT-GraphSAGE",
     "desc"  : "Hybrid NLP and graph learning framework mapping research to UN Sustainable Development Goals.",
-    "who"   : "Dr. Ahmed Hashim",
+    "who"   : "Dr. Ahmed Ali",
     "date"  : "April 2026",
     "link"  : "#"
   },
@@ -458,8 +458,18 @@
     "year"  : "2025",
     "title" : "AI Platform for Disease Spread During Arbaeen",
     "desc"  : "GNN models predicting infectious disease spread in large crowd gatherings.",
-    "who"   : "Dr. Jalal S. Hameed",
+    "who"   : "Dr. Jalal Hameed",
     "date"  : "March 2025",
+    "link"  : "#"
+  },
+
+  {
+    "type"  : "ai",
+    "year"  : "2025",
+    "title" : "Predictive Analytics for Student Performance",
+    "desc"  : "Using academic data and ML models to predict and improve student outcomes.",
+    "who"   : "Student Team",
+    "date"  : "January 2025",
     "link"  : "#"
   }
 
@@ -634,8 +644,8 @@
         '<span class="badge badge-year">'+(d.year||'')+'</span>';
       document.getElementById('modalTitle').textContent = d.title||'';
       document.getElementById('modalDesc').textContent  = d.desc||'No description available.';
-      document.getElementById('modalWho').textContent   = d.who||'â';
-      document.getElementById('modalDate').textContent  = d.date||'â';
+      document.getElementById('modalWho').textContent   = d.who||'—';
+      document.getElementById('modalDate').textContent  = d.date||'—';
       var lnk = document.getElementById('modalLink');
       if(d.link && d.link!=='#'){
         lnk.href=d.link; lnk.style.display='inline-flex'; lnk.onclick=null;
