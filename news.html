@@ -259,13 +259,7 @@
 
   <section>
     <h2>&#128240; Club News</h2>
-    <ul>
-      <li><strong>June 18, 2026:</strong> Our Student team won 2nd place in the National AI Hackathon.</li>
-      <li><strong>June 10, 2026:</strong> A research paper published on Big Data clustering techniques.</li>
-      <li><strong>May 30, 2026:</strong> Collaboration announced with the Computer Engineering Department for joint projects.</li>
-      <li><strong>May 20, 2026:</strong> A lecture on AI ethics by Dr. Faisal Gazi</li>
-      <li><strong>May 10, 2026:</strong> Field visit to Ministry of Higher Education Data Center by Dr. Suhad Faisal.</li>
-    </ul>
+    <div id="newsList"></div>
   </section>
 
   <footer>
@@ -421,5 +415,47 @@
       </div>
     </div>
   </div>
+  <script>
+    var allNews = [
+
+      {
+        "date"  : "June 18, 2026",
+        "text"  : "Our team won 2nd place in the National AI Hackathon."
+      },
+
+      {
+        "date"  : "June 10, 2026",
+        "text"  : "New research paper published on Big Data clustering techniques."
+      },
+
+      {
+        "date"  : "May 30, 2026",
+        "text"  : "Collaboration announced with the Computer Science Department for joint projects."
+      },
+
+      {
+        "date"  : "May 20, 2026",
+        "text"  : "Guest lecture on AI ethics by Dr. Rana."
+      },
+
+      {
+        "date"  : "May 10, 2026",
+        "text"  : "Field visit to Baghdad Tech Hub."
+      }
+
+    ];
+
+    document.addEventListener('DOMContentLoaded', function() {
+      var list = document.getElementById('newsList');
+      if (!list) return;
+      var ul = document.createElement('ul');
+      allNews.forEach(function(n) {
+        var li = document.createElement('li');
+        li.innerHTML = '<strong>' + n.date + ':</strong> ' + n.text;
+        ul.appendChild(li);
+      });
+      list.appendChild(ul);
+    });
+  </script>
 </body>
 </html>

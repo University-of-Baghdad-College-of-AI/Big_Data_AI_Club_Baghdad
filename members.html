@@ -260,6 +260,7 @@
   <section>
     <h2>&#128101; Members</h2>
     <p>Our club is open to all students passionate about technology, data, and AI. Join us to collaborate, build projects, attend workshops, and grow together in a supportive learning community.</p>
+    <div id="membersList" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:16px;margin-top:24px;"></div>
   </section>
 
   <footer>
@@ -415,5 +416,60 @@
       </div>
     </div>
   </div>
+  <script>
+    var allMembers = [
+
+      {
+        "name"  : "Dr. Jalal Sadoon Hameed",
+        "role"  : "Club Supervisor",
+        "dept"  : "Big Data Department",
+        "email" : "jalal.hameed@uobaghdad.edu.iq"
+      },
+
+      {
+        "name"  : "Ahmed Ali",
+        "role"  : "President",
+        "dept"  : "Big Data Department",
+        "email" : ""
+      },
+
+      {
+        "name"  : "Sara Mohammed",
+        "role"  : "Vice President",
+        "dept"  : "Big Data Department",
+        "email" : ""
+      },
+
+      {
+        "name"  : "Noor Khalid",
+        "role"  : "Secretary",
+        "dept"  : "Big Data Department",
+        "email" : ""
+      },
+
+      {
+        "name"  : "Ali Hassan",
+        "role"  : "Technical Lead",
+        "dept"  : "Big Data Department",
+        "email" : ""
+      }
+
+    ];
+
+    document.addEventListener('DOMContentLoaded', function() {
+      var list = document.getElementById('membersList');
+      if (!list || !allMembers.length) return;
+      allMembers.forEach(function(m) {
+        var card = document.createElement('div');
+        card.style.cssText = 'background:var(--white);border:1px solid var(--border);border-radius:10px;padding:20px;';
+        card.innerHTML =
+          '<div style="font-family:'Plus Jakarta Sans',sans-serif;font-weight:700;color:var(--navy);font-size:1em;margin-bottom:4px;">' + m.name + '</div>' +
+          '<div style="font-size:0.82em;color:var(--indigo);font-weight:600;margin-bottom:4px;">' + m.role + '</div>' +
+          '<div style="font-size:0.8em;color:var(--text-muted);">' + m.dept + '</div>' +
+          (m.email ? '<div style="font-size:0.78em;color:var(--text-muted);margin-top:4px;">&#9993; ' + m.email + '</div>' : '');
+        list.appendChild(card);
+      });
+    });
+  </script>
 </body>
 </html>

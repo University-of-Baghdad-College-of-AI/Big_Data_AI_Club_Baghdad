@@ -218,6 +218,10 @@
       <div class="sidebar-item" onclick="showPage('researches')" id="nav-researches"><span class="icon">🔬</span> Researches</div>
       <div class="sidebar-item" onclick="showPage('seminars')" id="nav-seminars"><span class="icon">🎯</span> Seminars</div>
       <div class="sidebar-item" onclick="showPage('workshops')" id="nav-workshops"><span class="icon">🛠️</span> Workshops</div>
+      <div class="sidebar-section">Content</div>
+      <div class="sidebar-item" onclick="showPage('announcements')" id="nav-announcements"><span class="icon">📢</span> Announcements</div>
+      <div class="sidebar-item" onclick="showPage('news')" id="nav-news"><span class="icon">📰</span> News</div>
+      <div class="sidebar-item" onclick="showPage('members')" id="nav-members"><span class="icon">👥</span> Members</div>
       <div class="sidebar-section">Submissions</div>
       <div class="sidebar-item" onclick="showPage('students')" id="nav-students"><span class="icon">🎓</span> Students</div>
       <div class="sidebar-item" onclick="showPage('professors')" id="nav-professors"><span class="icon">📚</span> Professors</div>
@@ -238,7 +242,7 @@
     </div>
     <div class="modal-body">
       <div class="form-grid">
-        <div class="form-group">
+        <div class="form-group modal-full-only">
           <label>Type</label>
           <select id="fType">
             <option value="research">Research</option>
@@ -274,7 +278,7 @@
             <option value="other">Other</option>
           </select>
         </div>
-        <div class="form-group">
+        <div class="form-group modal-full-only">
           <label>Year</label>
           <select id="fYear">
             <option value="2026">2026</option>
@@ -283,25 +287,52 @@
             <option value="2023">2023</option>
           </select>
         </div>
-        <div class="form-group full">
+        <!-- Full mode -->
+        <div class="form-group full modal-full-only">
           <label>Title</label>
           <input type="text" id="fTitle" placeholder="Entry title">
         </div>
-        <div class="form-group full">
+        <div class="form-group full modal-full-only">
           <label>Description</label>
           <textarea id="fDesc" placeholder="Description..."></textarea>
         </div>
-        <div class="form-group">
+        <div class="form-group modal-full-only">
           <label>Author / Who</label>
           <input type="text" id="fWho" placeholder="e.g. Dr. Jalal Hameed">
         </div>
-        <div class="form-group">
+        <div class="form-group modal-full-only">
           <label>Date</label>
           <input type="text" id="fDate" placeholder="e.g. June 2026">
         </div>
-        <div class="form-group full">
+        <div class="form-group full modal-full-only">
           <label>Link (optional)</label>
           <input type="text" id="fLink" placeholder="https://...">
+        </div>
+        <!-- Simple mode (announcements/news) -->
+        <div class="form-group modal-simple-only" style="display:none;">
+          <label>Date</label>
+          <input type="text" id="fDateSimple" placeholder="e.g. June 18, 2026" oninput="document.getElementById('fDate').value=this.value">
+        </div>
+        <div class="form-group full modal-simple-only" style="display:none;">
+          <label>Text</label>
+          <textarea id="fDescSimple" placeholder="Announcement or news text..." oninput="document.getElementById('fDesc').value=this.value"></textarea>
+        </div>
+        <!-- Members mode -->
+        <div class="form-group full modal-members-only" style="display:none;">
+          <label>Full Name</label>
+          <input type="text" id="fNameMember" placeholder="e.g. Dr. Jalal Hameed" oninput="document.getElementById('fTitle').value=this.value">
+        </div>
+        <div class="form-group modal-members-only" style="display:none;">
+          <label>Role / Position</label>
+          <input type="text" id="fRoleMember" placeholder="e.g. Club Supervisor" oninput="document.getElementById('fWho').value=this.value">
+        </div>
+        <div class="form-group modal-members-only" style="display:none;">
+          <label>Department</label>
+          <input type="text" id="fDeptMember" placeholder="e.g. Big Data Department" oninput="document.getElementById('fDate').value=this.value">
+        </div>
+        <div class="form-group full modal-members-only" style="display:none;">
+          <label>Email (optional)</label>
+          <input type="text" id="fEmailMember" placeholder="email@uobaghdad.edu.iq" oninput="document.getElementById('fLink').value=this.value">
         </div>
       </div>
       <div class="form-actions">
@@ -439,6 +470,9 @@ var PAGE_CONFIG = {
   researches:    { repo:'Big_Data_AI_Club_Baghdad',   file:'researches.html',    label:'Researches' },
   seminars:      { repo:'Big_Data_AI_Club_Baghdad',   file:'seminars.html',      label:'Seminars' },
   workshops:     { repo:'Big_Data_AI_Club_Baghdad',   file:'workshops.html',     label:'Workshops' },
+  announcements: { repo:'Big_Data_AI_Club_Baghdad',   file:'announcements.html', label:'Announcements',  dataVar:'allAnnouncements', mode:'simple' },
+  news:          { repo:'Big_Data_AI_Club_Baghdad',   file:'news.html',          label:'News',           dataVar:'allNews',          mode:'simple' },
+  members:       { repo:'Big_Data_AI_Club_Baghdad',   file:'members.html',       label:'Members',        dataVar:'allMembers',       mode:'members' },
   students:      { repo:'Big_Data_AI_Club_Students',  file:'index.html',         label:'Student Submissions' },
   professors:    { repo:'Big_Data_AI_Club_Professors',file:'index.html',         label:'Professor Submissions' },
 };
@@ -494,7 +528,8 @@ function loadPage(page) {
   var mc = document.getElementById('mainContent');
   mc.innerHTML = '<p style="padding:40px;color:var(--muted);">Loading ' + cfg.label + '...</p>';
   fetchFileFromGitHub(cfg.repo, cfg.file, function(content, sha) {
-    var data = extractAllData(content);
+    var cfg2 = PAGE_CONFIG[page];
+    var data = extractAllData(content, cfg2 ? cfg2.dataVar : null);
     fileCache[page] = data;
     fileShaCache[page + ':' + cfg.repo + '/' + cfg.file] = sha;
     currentData = data;
@@ -555,16 +590,51 @@ function saveFileToGitHub(repo, file, content, sha, message, callback) {
   .catch(function(e) { callback(e); });
 }
 
-// ── Extract allData from HTML ──
-function extractAllData(html) {
-  var m = html.match(/var allData = (\[[\s\S]*?\]);/);
+// ── Extract data from HTML (supports different variable names) ──
+function extractAllData(html, dataVar) {
+  var varName = dataVar || 'allData';
+  var pattern = new RegExp('var ' + varName + ' = (\\[[\\s\\S]*?\\]);');
+  var m = html.match(pattern);
   if (!m) return [];
   try { return JSON.parse(m[1]); } catch(e) { return []; }
 }
 
-// ── Inject allData into HTML ──
-function injectAllData(html, data) {
-  var formatted = "var allData = [\n\n";
+// ── Inject data into HTML ──
+function injectAllData(html, data, dataVar) {
+  var varName = dataVar || 'allData';
+  var cfg = PAGE_CONFIG[currentPage];
+  var mode = cfg ? cfg.mode : null;
+
+  if (mode === 'simple') {
+    // announcements/news: {date, text}
+    var fmt = 'var ' + varName + ' = [\n\n';
+    data.forEach(function(item, i) {
+      fmt += '      {\n';
+      fmt += '        "date"  : "' + (item.date||'').replace(/"/g,"'") + '",\n';
+      fmt += '        "text"  : "' + (item.text||'').replace(/"/g,"'") + '"\n';
+      fmt += '      }' + (i < data.length-1 ? ',' : '') + '\n\n';
+    });
+    fmt += '    ];';
+    return html.replace(new RegExp('var ' + varName + ' = \\[[\\s\\S]*?\\];'), fmt);
+  }
+
+  if (mode === 'members') {
+    // members: {name, role, dept, email}
+    var fmt = 'var ' + varName + ' = [\n\n';
+    data.forEach(function(item, i) {
+      fmt += '      {\n';
+      fmt += '        "name"  : "' + (item.name||'').replace(/"/g,"'") + '",\n';
+      fmt += '        "role"  : "' + (item.role||'').replace(/"/g,"'") + '",\n';
+      fmt += '        "dept"  : "' + (item.dept||'').replace(/"/g,"'") + '",\n';
+      fmt += '        "email" : "' + (item.email||'') + '"\n';
+      fmt += '      }' + (i < data.length-1 ? ',' : '') + '\n\n';
+    });
+    fmt += '    ];';
+    return html.replace(new RegExp('var ' + varName + ' = \\[[\\s\\S]*?\\];'), fmt);
+  }
+
+  // Default: allData entries
+  var formatted = 'var ' + (varName||'allData') + ' = [\n\n';
   data.forEach(function(item, i) {
     formatted += "  {\n";
     formatted += '    "type"  : "' + (item.type||'').replace(/"/g,"'") + '",\n';
@@ -577,7 +647,7 @@ function injectAllData(html, data) {
     formatted += "  }" + (i < data.length-1 ? "," : "") + "\n\n";
   });
   formatted += "];";
-  return html.replace(/var allData = \[[\s\S]*?\];/, formatted);
+  return html.replace(new RegExp('var ' + (varName||'allData') + ' = \\[[\\s\\S]*?\\];'), formatted);
 }
 
 // ── Render Table ──
@@ -593,22 +663,51 @@ function renderTable(page, data) {
     '<input class="search-input" placeholder="🔍 Search entries..." oninput="filterTable(this.value)">' +
     '<button class="btn btn-secondary btn-sm" onclick="loadPage(\'' + page + '\')">↺ Refresh</button>' +
   '</div>';
-  html += '<table id="entriesTable"><thead><tr>' +
-    '<th>#</th><th>Type</th><th>Year</th><th>Title</th><th>Who</th><th>Date</th><th>Actions</th>' +
-  '</tr></thead><tbody>';
-  data.forEach(function(item, i) {
-    html += '<tr data-idx="' + i + '">' +
-      '<td style="color:var(--muted);">' + (i+1) + '</td>' +
-      '<td><span class="badge badge-year">' + (item.type||'—') + '</span></td>' +
-      '<td><span class="badge badge-year">' + (item.year||'—') + '</span></td>' +
-      '<td style="max-width:220px;"><strong>' + (item.title||'—') + '</strong></td>' +
-      '<td style="color:var(--muted);">' + (item.who||'—') + '</td>' +
-      '<td style="color:var(--muted);">' + (item.date||'—') + '</td>' +
-      '<td style="display:flex;gap:6px;">' +
-        '<button class="btn btn-secondary btn-sm" onclick="openEditModal(' + i + ')">✏️ Edit</button>' +
-        '<button class="btn btn-danger btn-sm" onclick="openDeleteModal(' + i + ')">🗑️</button>' +
-      '</td></tr>';
-  });
+  var mode = PAGE_CONFIG[page] ? PAGE_CONFIG[page].mode : null;
+  if (mode === 'simple') {
+    html += '<table id="entriesTable"><thead><tr><th>#</th><th>Date</th><th>Text</th><th>Actions</th></tr></thead><tbody>';
+    data.forEach(function(item, i) {
+      html += '<tr>' +
+        '<td style="color:var(--muted);">' + (i+1) + '</td>' +
+        '<td><strong>' + (item.date||'—') + '</strong></td>' +
+        '<td style="color:var(--muted);max-width:400px;">' + (item.text||'—') + '</td>' +
+        '<td style="display:flex;gap:6px;">' +
+          '<button class="btn btn-secondary btn-sm" onclick="openEditModal(' + i + ')">✏️ Edit</button>' +
+          '<button class="btn btn-danger btn-sm" onclick="openDeleteModal(' + i + ')">🗑️</button>' +
+        '</td></tr>';
+    });
+  } else if (mode === 'members') {
+    html += '<table id="entriesTable"><thead><tr><th>#</th><th>Name</th><th>Role</th><th>Dept</th><th>Email</th><th>Actions</th></tr></thead><tbody>';
+    data.forEach(function(item, i) {
+      html += '<tr>' +
+        '<td style="color:var(--muted);">' + (i+1) + '</td>' +
+        '<td><strong>' + (item.name||'—') + '</strong></td>' +
+        '<td style="color:var(--indigo);">' + (item.role||'—') + '</td>' +
+        '<td style="color:var(--muted);">' + (item.dept||'—') + '</td>' +
+        '<td style="color:var(--muted);">' + (item.email||'—') + '</td>' +
+        '<td style="display:flex;gap:6px;">' +
+          '<button class="btn btn-secondary btn-sm" onclick="openEditModal(' + i + ')">✏️ Edit</button>' +
+          '<button class="btn btn-danger btn-sm" onclick="openDeleteModal(' + i + ')">🗑️</button>' +
+        '</td></tr>';
+    });
+  } else {
+    html += '<table id="entriesTable"><thead><tr>' +
+      '<th>#</th><th>Type</th><th>Year</th><th>Title</th><th>Who</th><th>Date</th><th>Actions</th>' +
+    '</tr></thead><tbody>';
+    data.forEach(function(item, i) {
+      html += '<tr data-idx="' + i + '">' +
+        '<td style="color:var(--muted);">' + (i+1) + '</td>' +
+        '<td><span class="badge badge-year">' + (item.type||'—') + '</span></td>' +
+        '<td><span class="badge badge-year">' + (item.year||'—') + '</span></td>' +
+        '<td style="max-width:220px;"><strong>' + (item.title||'—') + '</strong></td>' +
+        '<td style="color:var(--muted);">' + (item.who||'—') + '</td>' +
+        '<td style="color:var(--muted);">' + (item.date||'—') + '</td>' +
+        '<td style="display:flex;gap:6px;">' +
+          '<button class="btn btn-secondary btn-sm" onclick="openEditModal(' + i + ')">✏️ Edit</button>' +
+          '<button class="btn btn-danger btn-sm" onclick="openDeleteModal(' + i + ')">🗑️</button>' +
+        '</td></tr>';
+    });
+  }
   html += '</tbody></table></div>';
   document.getElementById('mainContent').innerHTML = html;
 }
@@ -624,6 +723,7 @@ function filterTable(query) {
 // ── Add/Edit Modal ──
 function openAddModal() {
   editIndex = -1;
+  var mode = PAGE_CONFIG[currentPage] ? PAGE_CONFIG[currentPage].mode : null;
   document.getElementById('modalTitle').textContent = 'Add New Entry';
   document.getElementById('fType').value = 'research';
   document.getElementById('fYear').value = '2026';
@@ -632,21 +732,55 @@ function openAddModal() {
   document.getElementById('fWho').value = '';
   document.getElementById('fDate').value = '';
   document.getElementById('fLink').value = '#';
+  if (mode === 'simple') { showSimpleModal(); }
+  else if (mode === 'members') { showMembersModal(); }
+  else { showFullModal(); }
   document.getElementById('entryModal').classList.add('open');
 }
 
 function openEditModal(idx) {
   editIndex = idx;
   var item = currentData[idx];
+  var mode = PAGE_CONFIG[currentPage] ? PAGE_CONFIG[currentPage].mode : null;
   document.getElementById('modalTitle').textContent = 'Edit Entry';
-  document.getElementById('fType').value = item.type || 'research';
-  document.getElementById('fYear').value = item.year || '2026';
-  document.getElementById('fTitle').value = item.title || '';
-  document.getElementById('fDesc').value = item.desc || '';
-  document.getElementById('fWho').value = item.who || '';
-  document.getElementById('fDate').value = item.date || '';
-  document.getElementById('fLink').value = item.link || '#';
+  if (mode === 'simple') {
+    document.getElementById('fDate').value = item.date || '';
+    document.getElementById('fDesc').value = item.text || '';
+    showSimpleModal();
+  } else if (mode === 'members') {
+    document.getElementById('fTitle').value = item.name || '';
+    document.getElementById('fWho').value = item.role || '';
+    document.getElementById('fDate').value = item.dept || '';
+    document.getElementById('fLink').value = item.email || '';
+    showMembersModal();
+  } else {
+    document.getElementById('fType').value = item.type || 'research';
+    document.getElementById('fYear').value = item.year || '2026';
+    document.getElementById('fTitle').value = item.title || '';
+    document.getElementById('fDesc').value = item.desc || '';
+    document.getElementById('fWho').value = item.who || '';
+    document.getElementById('fDate').value = item.date || '';
+    document.getElementById('fLink').value = item.link || '#';
+    showFullModal();
+  }
   document.getElementById('entryModal').classList.add('open');
+}
+
+function showFullModal() {
+  document.getElementById('fType').parentElement.parentElement.style.display = 'grid';
+  document.querySelectorAll('.modal-full-only').forEach(function(el){ el.style.display=''; });
+  document.querySelectorAll('.modal-simple-only').forEach(function(el){ el.style.display='none'; });
+  document.querySelectorAll('.modal-members-only').forEach(function(el){ el.style.display='none'; });
+}
+function showSimpleModal() {
+  document.querySelectorAll('.modal-full-only').forEach(function(el){ el.style.display='none'; });
+  document.querySelectorAll('.modal-simple-only').forEach(function(el){ el.style.display=''; });
+  document.querySelectorAll('.modal-members-only').forEach(function(el){ el.style.display='none'; });
+}
+function showMembersModal() {
+  document.querySelectorAll('.modal-full-only').forEach(function(el){ el.style.display='none'; });
+  document.querySelectorAll('.modal-simple-only').forEach(function(el){ el.style.display='none'; });
+  document.querySelectorAll('.modal-members-only').forEach(function(el){ el.style.display=''; });
 }
 
 function closeModal() {
@@ -654,16 +788,36 @@ function closeModal() {
 }
 
 function saveEntry() {
-  var entry = {
-    type:  document.getElementById('fType').value,
-    year:  document.getElementById('fYear').value,
-    title: document.getElementById('fTitle').value.trim(),
-    desc:  document.getElementById('fDesc').value.trim(),
-    who:   document.getElementById('fWho').value.trim(),
-    date:  document.getElementById('fDate').value.trim(),
-    link:  document.getElementById('fLink').value.trim() || '#'
-  };
-  if (!entry.title) { alert('Title is required.'); return; }
+  var mode = PAGE_CONFIG[currentPage] ? PAGE_CONFIG[currentPage].mode : null;
+  var entry;
+  if (mode === 'simple') {
+    entry = {
+      date: document.getElementById('fDate').value.trim(),
+      text: document.getElementById('fDesc').value.trim()
+    };
+    if (!entry.text) { alert('Text is required.'); return; }
+  } else if (mode === 'members') {
+    entry = {
+      name:  document.getElementById('fTitle').value.trim(),
+      role:  document.getElementById('fWho').value.trim(),
+      dept:  document.getElementById('fDate').value.trim(),
+      email: document.getElementById('fLink').value.trim()
+    };
+    if (!entry.name) { alert('Name is required.'); return; }
+  } else {
+    entry = {
+      type:  document.getElementById('fType').value,
+      year:  document.getElementById('fYear').value,
+      title: document.getElementById('fTitle').value.trim(),
+      desc:  document.getElementById('fDesc').value.trim(),
+      who:   document.getElementById('fWho').value.trim(),
+      date:  document.getElementById('fDate').value.trim(),
+      link:  document.getElementById('fLink').value.trim() || '#'
+    };
+    if (!entry.title) { alert('Title is required.'); return; }
+  }
+  var dummy = entry;
+  if (!dummy) { alert('Title is required.'); return; }
   if (editIndex === -1) {
     currentData.unshift(entry);
   } else {
@@ -699,7 +853,8 @@ function commitCurrentData(message) {
   showSaving('Saving to GitHub...');
 
   fetchFileFromGitHub(cfg.repo, cfg.file, function(originalContent, currentSha) {
-    var newContent = injectAllData(originalContent, currentData);
+    var cfg3 = PAGE_CONFIG[currentPage];
+    var newContent = injectAllData(originalContent, currentData, cfg3 ? cfg3.dataVar : null);
     fileShaCache[shaKey] = currentSha;
 
     saveFileToGitHub(cfg.repo, cfg.file, newContent, currentSha,
