@@ -1187,35 +1187,28 @@ function saveUsersFile(users, message) {
   var employees = users.filter(function(u){ return u.role==='employee'; });
   var tests = users.filter(function(u){ return u.role==='test'; });
 
-  var newContent = '/* ============================================================
-' +
-    '   APPROVED USERS — Edit this file to manage access
-
-' +
-    "   ROLES: 'admin' | 'professor' | 'student' | 'employee' | 'test'
-
-" +
-    '   To APPROVE: add their email and role below, then commit
-' +
-    '   To REVOKE:  delete their line and commit
-' +
-    '   ============================================================ */
-
-' +
-    'var APPROVED_USERS = {
-
-';
+  var lines = [
+    '/* ============================================================',
+    '   APPROVED USERS — Edit this file to manage access',
+    '',
+    "   ROLES: 'admin' | 'professor' | 'student' | 'employee' | 'test'",
+    '',
+    '   To APPROVE: add their email and role below, then commit',
+    '   To REVOKE:  delete their line and commit',
+    '   ============================================================ */',
+    '',
+    'var APPROVED_USERS = {',
+    ''
+  ];
+  var newContent = lines.join('\n') + '\n';
 
   function addGroup(label, group) {
     if (!group.length) return;
-    newContent += '  /* ── ' + label + ' ── */
-';
+    newContent += '  /* -- ' + label + ' -- */\n';
     group.forEach(function(u) {
-      newContent += "  '" + u.email + "': '" + u.role + "',
-";
+      newContent += '  ' + JSON.stringify(u.email) + ': ' + JSON.stringify(u.role) + ',\n';
     });
-    newContent += '
-';
+    newContent += '\n';
   }
 
   addGroup('Admin', admins);
@@ -1224,8 +1217,7 @@ function saveUsersFile(users, message) {
   addGroup('Employees', employees);
   addGroup('Test accounts', tests);
 
-  newContent += '};
-';
+  newContent += '};\n';
 
   var sha = window._approvedSha;
   var repo = 'Big_Data_AI_Club_Baghdad';
