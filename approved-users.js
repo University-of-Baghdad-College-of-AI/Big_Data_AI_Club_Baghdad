@@ -9,6 +9,9 @@
 
 var APPROVED_USERS = {
 
+  /* -- Admin -- */
+  "jalal.hameed@uobaghdad.edu.iq": "admin",
+
   /* -- Test accounts -- */
   "jalal.hameed15@gmail.com": "test",
 
