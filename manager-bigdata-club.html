@@ -2,84 +2,49 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Admin Panel - Big Data AI Club</title>
+  <title>Admin - Big Data AI Club</title>
   <link rel="icon" type="image/png" href="favicon.png">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
   <style>
     *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
-    :root{
-      --navy:#0F1F3D;--indigo:#4361EE;--gold:#F8C200;
-      --white:#fff;--surface:#F4F6FA;--border:#E2E7F0;
-      --text:#1A2340;--muted:#5E6E8A;--radius:10px;
-      --shadow:0 4px 16px rgba(15,31,61,.1);
-    }
+    :root{--navy:#0F1F3D;--indigo:#4361EE;--gold:#F8C200;--white:#fff;--surface:#F4F6FA;--border:#E2E7F0;--text:#1A2340;--muted:#5E6E8A;--radius:10px;--shadow:0 4px 16px rgba(15,31,61,.1);}
     html{font-family:'Inter',sans-serif;font-size:15px;color:var(--text);background:var(--surface);}
-
-    /* ── Login ── */
     #loginScreen{display:flex;align-items:center;justify-content:center;min-height:100vh;padding:20px;}
-    .login-box{background:var(--white);border-radius:14px;padding:48px 40px;max-width:420px;width:100%;
-      box-shadow:var(--shadow);border-top:4px solid var(--indigo);text-align:center;}
-    .login-box h1{font-family:sans-serif;font-size:1.5em;font-weight:800;color:var(--navy);margin-bottom:8px;}
+    .login-box{background:var(--white);border-radius:14px;padding:48px 40px;max-width:420px;width:100%;box-shadow:var(--shadow);border-top:4px solid var(--indigo);text-align:center;}
+    .login-box h1{font-family:'Plus Jakarta Sans',sans-serif;font-size:1.5em;font-weight:800;color:var(--navy);margin-bottom:8px;}
     .login-box p{color:var(--muted);font-size:.9em;margin-bottom:28px;}
-    .google-btn{display:inline-flex;align-items:center;gap:12px;background:var(--white);
-      border:1.5px solid var(--border);border-radius:8px;padding:12px 24px;
-      font-family:sans-serif;font-size:.95em;font-weight:600;color:var(--navy);
-      cursor:pointer;width:100%;justify-content:center;transition:box-shadow .2s,border-color .2s;}
-    .google-btn:hover{box-shadow:0 4px 14px rgba(0,0,0,.1);border-color:#aaa;}
+    .google-btn{display:inline-flex;align-items:center;gap:12px;background:var(--white);border:1.5px solid var(--border);border-radius:8px;padding:12px 24px;font-family:'Plus Jakarta Sans',sans-serif;font-size:.95em;font-weight:600;color:var(--navy);cursor:pointer;width:100%;justify-content:center;transition:box-shadow .2s;}
+    .google-btn:hover{box-shadow:0 4px 14px rgba(0,0,0,.1);}
     .google-btn img{width:20px;}
-    .login-spinner{display:none;width:32px;height:32px;border:3px solid var(--border);
-      border-top-color:var(--indigo);border-radius:50%;animation:spin .8s linear infinite;margin:16px auto 0;}
+    .login-spinner{display:none;width:32px;height:32px;border:3px solid var(--border);border-top-color:var(--indigo);border-radius:50%;animation:spin .8s linear infinite;margin:16px auto 0;}
     @keyframes spin{to{transform:rotate(360deg);}}
-
-    /* ── App Shell ── */
+    #loginError{display:none;margin-top:14px;background:#FFF3F3;border:1px solid #FFCDD2;border-radius:8px;padding:12px;font-size:.85em;color:#C62828;}
     #appShell{display:none;min-height:100vh;}
-    .topbar{background:var(--navy);padding:0 24px;height:56px;display:flex;align-items:center;
-      justify-content:space-between;position:sticky;top:0;z-index:100;}
-    .topbar-title{font-family:sans-serif;font-weight:800;color:var(--white);font-size:1.05em;}
+    .topbar{background:var(--navy);padding:0 24px;height:56px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:100;}
+    .topbar-title{font-family:'Plus Jakarta Sans',sans-serif;font-weight:800;color:var(--white);font-size:1.05em;}
     .topbar-title span{color:var(--gold);}
     .topbar-user{display:flex;align-items:center;gap:10px;}
     .topbar-user img{width:28px;height:28px;border-radius:50%;border:2px solid rgba(255,255,255,.3);}
     .topbar-user span{color:rgba(255,255,255,.85);font-size:.85em;}
-    .signout-btn{background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.2);
-      border-radius:6px;color:rgba(255,255,255,.8);padding:4px 12px;cursor:pointer;font-size:.8em;
-      font-family:inherit;transition:background .18s;}
-    .signout-btn:hover{background:rgba(255,255,255,.2);}
-
+    .signout-btn{background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.2);border-radius:6px;color:rgba(255,255,255,.8);padding:4px 12px;cursor:pointer;font-size:.8em;font-family:inherit;}
     .layout{display:flex;min-height:calc(100vh - 56px);}
-
-    /* ── Sidebar ── */
-    .sidebar{width:220px;background:var(--white);border-right:1px solid var(--border);
-      padding:20px 0;flex-shrink:0;}
-    .sidebar-section{padding:8px 16px 4px;font-size:.72em;font-weight:700;
-      color:var(--muted);text-transform:uppercase;letter-spacing:.08em;}
-    .sidebar-item{display:flex;align-items:center;gap:10px;padding:9px 16px;
-      font-size:.88em;font-weight:500;color:var(--muted);cursor:pointer;
-      transition:background .15s,color .15s;border-left:3px solid transparent;}
+    .sidebar{width:220px;background:var(--white);border-right:1px solid var(--border);padding:20px 0;flex-shrink:0;overflow-y:auto;}
+    .sidebar-section{padding:8px 16px 4px;font-size:.72em;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.08em;}
+    .sidebar-item{display:flex;align-items:center;gap:10px;padding:9px 16px;font-size:.88em;font-weight:500;color:var(--muted);cursor:pointer;transition:background .15s,color .15s;border-left:3px solid transparent;}
     .sidebar-item:hover{background:var(--surface);color:var(--navy);}
-    .sidebar-item.active{background:var(--surface);color:var(--indigo);
-      border-left-color:var(--indigo);font-weight:600;}
+    .sidebar-item.active{background:var(--surface);color:var(--indigo);border-left-color:var(--indigo);font-weight:600;}
     .sidebar-item .icon{font-size:1.1em;width:20px;text-align:center;}
-
-    /* ── Main ── */
     .main{flex:1;padding:28px;overflow-y:auto;}
-    .page-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:24px;}
-    .page-title{font-family:sans-serif;font-size:1.3em;font-weight:800;color:var(--navy);}
+    .page-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:24px;flex-wrap:wrap;gap:12px;}
+    .page-title{font-family:'Plus Jakarta Sans',sans-serif;font-size:1.3em;font-weight:800;color:var(--navy);}
     .page-subtitle{font-size:.85em;color:var(--muted);margin-top:2px;}
-
-    /* ── Cards ── */
-    .stat-row{display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:14px;margin-bottom:24px;}
-    .stat-card{background:var(--white);border:1px solid var(--border);border-radius:var(--radius);
-      padding:18px;text-align:center;}
-    .stat-card .num{font-family:sans-serif;font-size:2em;font-weight:800;color:var(--indigo);}
-    .stat-card .lbl{font-size:.78em;color:var(--muted);margin-top:4px;}
-
-    /* ── Buttons ── */
-    .btn{font-family:sans-serif;font-size:.88em;font-weight:700;
-      padding:9px 20px;border-radius:8px;border:none;cursor:pointer;transition:all .18s;
-      display:inline-flex;align-items:center;gap:6px;}
+    .stat-row{display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:12px;margin-bottom:24px;}
+    .stat-card{background:var(--white);border:1px solid var(--border);border-radius:var(--radius);padding:16px;text-align:center;cursor:pointer;transition:box-shadow .2s;}
+    .stat-card:hover{box-shadow:var(--shadow);}
+    .stat-card .num{font-family:'Plus Jakarta Sans',sans-serif;font-size:1.8em;font-weight:800;color:var(--indigo);}
+    .stat-card .lbl{font-size:.75em;color:var(--muted);margin-top:4px;}
+    .btn{font-family:'Plus Jakarta Sans',sans-serif;font-size:.88em;font-weight:700;padding:9px 20px;border-radius:8px;border:none;cursor:pointer;transition:all .18s;display:inline-flex;align-items:center;gap:6px;}
     .btn-primary{background:var(--indigo);color:#fff;}
     .btn-primary:hover{background:#3350D0;}
     .btn-danger{background:#C62828;color:#fff;}
@@ -87,110 +52,59 @@
     .btn-secondary{background:var(--surface);color:var(--navy);border:1.5px solid var(--border);}
     .btn-secondary:hover{border-color:var(--indigo);color:var(--indigo);}
     .btn-sm{padding:5px 12px;font-size:.8em;}
-    .btn-gold{background:var(--gold);color:var(--navy);}
-    .btn-gold:hover{background:#e6b200;}
-
-    /* ── Table ── */
-    .table-wrap{background:var(--white);border:1px solid var(--border);border-radius:var(--radius);overflow:hidden;}
-    .table-toolbar{padding:14px 18px;display:flex;align-items:center;gap:12px;border-bottom:1px solid var(--border);}
-    .search-input{flex:1;padding:8px 14px;border:1.5px solid var(--border);border-radius:8px;
-      font-family:inherit;font-size:.88em;color:var(--text);outline:none;transition:border-color .2s;}
+    .table-wrap{background:var(--white);border:1px solid var(--border);border-radius:var(--radius);overflow:hidden;margin-bottom:20px;}
+    .table-toolbar{padding:12px 16px;display:flex;align-items:center;gap:12px;border-bottom:1px solid var(--border);flex-wrap:wrap;}
+    .search-input{flex:1;min-width:200px;padding:8px 14px;border:1.5px solid var(--border);border-radius:8px;font-family:inherit;font-size:.88em;outline:none;}
     .search-input:focus{border-color:var(--indigo);}
     table{width:100%;border-collapse:collapse;}
-    th{padding:10px 16px;text-align:left;font-size:.78em;font-weight:700;
-      text-transform:uppercase;letter-spacing:.06em;color:var(--muted);
-      background:var(--surface);border-bottom:1px solid var(--border);}
-    td{padding:11px 16px;font-size:.88em;color:var(--text);border-bottom:1px solid var(--border);}
+    th{padding:10px 16px;text-align:left;font-size:.78em;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);background:var(--surface);border-bottom:1px solid var(--border);}
+    td{padding:11px 16px;font-size:.88em;border-bottom:1px solid var(--border);}
     tr:last-child td{border-bottom:none;}
     tr:hover td{background:#fafbfc;}
-    .badge{display:inline-block;font-size:.72em;font-weight:700;padding:2px 8px;
-      border-radius:20px;text-transform:uppercase;letter-spacing:.04em;}
-    .badge-year{background:var(--surface);color:var(--navy);border:1px solid var(--border);}
-
-    /* ── Modal ── */
-    .modal-overlay{display:none;position:fixed;inset:0;background:rgba(10,16,32,.7);
-      z-index:9999;align-items:center;justify-content:center;padding:20px;}
+    .badge{display:inline-block;font-size:.72em;font-weight:700;padding:2px 8px;border-radius:20px;background:var(--surface);color:var(--navy);border:1px solid var(--border);}
+    .modal-overlay{display:none;position:fixed;inset:0;background:rgba(10,16,32,.7);z-index:9999;align-items:center;justify-content:center;padding:20px;}
     .modal-overlay.open{display:flex;}
-    .modal{background:var(--white);border-radius:14px;max-width:620px;width:100%;
-      max-height:90vh;overflow-y:auto;box-shadow:0 20px 60px rgba(0,0,0,.3);}
+    .modal{background:var(--white);border-radius:14px;max-width:620px;width:100%;max-height:90vh;overflow-y:auto;box-shadow:0 20px 60px rgba(0,0,0,.3);}
     .modal-header{padding:24px 28px 0;display:flex;justify-content:space-between;align-items:center;}
-    .modal-header h3{font-family:sans-serif;font-weight:800;color:var(--navy);font-size:1.1em;}
+    .modal-header h3{font-family:'Plus Jakarta Sans',sans-serif;font-weight:800;color:var(--navy);font-size:1.1em;}
     .modal-close{background:none;border:none;font-size:1.5em;cursor:pointer;color:var(--muted);}
     .modal-body{padding:20px 28px 28px;}
-
-    /* ── Form ── */
     .form-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px;}
     .form-group{display:flex;flex-direction:column;gap:5px;}
     .form-group.full{grid-column:1/-1;}
-    .form-group label{font-size:.8em;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.06em;}
-    .form-group input,.form-group select,.form-group textarea{
-      padding:9px 12px;border:1.5px solid var(--border);border-radius:8px;
-      font-family:inherit;font-size:.9em;color:var(--text);outline:none;
-      transition:border-color .2s;background:var(--white);}
-    .form-group input:focus,.form-group select:focus,.form-group textarea:focus{border-color:var(--indigo);}
-    .form-group textarea{min-height:90px;resize:vertical;}
+    label{font-size:.8em;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.06em;}
+    input,select,textarea{padding:9px 12px;border:1.5px solid var(--border);border-radius:8px;font-family:inherit;font-size:.9em;color:var(--text);outline:none;transition:border-color .2s;}
+    input:focus,select:focus,textarea:focus{border-color:var(--indigo);}
+    textarea{min-height:90px;resize:vertical;}
     .form-actions{display:flex;gap:10px;justify-content:flex-end;margin-top:20px;padding-top:16px;border-top:1px solid var(--border);}
-
-    /* ── Toast ── */
-    #toast{position:fixed;bottom:24px;right:24px;background:var(--navy);color:#fff;
-      padding:12px 20px;border-radius:10px;font-size:.88em;font-weight:600;
-      box-shadow:var(--shadow);z-index:99999;display:none;align-items:center;gap:8px;}
+    #toast{position:fixed;bottom:24px;right:24px;background:var(--navy);color:#fff;padding:12px 20px;border-radius:10px;font-size:.88em;font-weight:600;box-shadow:var(--shadow);display:none;align-items:center;gap:8px;z-index:99999;}
     #toast.show{display:flex;}
     #toast.success{background:#1B5E20;}
     #toast.error{background:#B71C1C;}
-
-    /* ── Status ── */
-    .saving-overlay{display:none;position:fixed;inset:0;background:rgba(10,16,32,.5);
-      z-index:99998;align-items:center;justify-content:center;}
+    .saving-overlay{display:none;position:fixed;inset:0;background:rgba(10,16,32,.5);z-index:99998;align-items:center;justify-content:center;}
     .saving-overlay.open{display:flex;}
     .saving-box{background:var(--white);border-radius:12px;padding:28px 36px;text-align:center;}
-    .saving-box .spinner{width:36px;height:36px;border:3px solid var(--border);
-      border-top-color:var(--indigo);border-radius:50%;animation:spin .8s linear infinite;margin:0 auto 12px;}
-    .saving-box p{font-weight:600;color:var(--navy);}
-
-    .access-denied{text-align:center;padding:60px 20px;}
-    .access-denied h2{color:#C62828;font-family:sans-serif;}
-
-    @media(max-width:768px){
-      .sidebar{display:none;}
-      .form-grid{grid-template-columns:1fr;}
-    }
+    .saving-box .spinner{width:36px;height:36px;border:3px solid var(--border);border-top-color:var(--indigo);border-radius:50%;animation:spin .8s linear infinite;margin:0 auto 12px;}
+    .btn-group{display:flex;gap:6px;}
+    .info-banner{background:#EEF2FF;border:1px solid #c7d2fe;border-radius:10px;padding:12px 18px;margin-bottom:20px;display:flex;align-items:center;gap:10px;}
   </style>
 </head>
 <body>
 
-<!-- ── LOGIN ── -->
 <div id="loginScreen">
   <div class="login-box">
     <div style="font-size:2.5em;margin-bottom:14px;">⚙️</div>
     <h1>Admin Panel</h1>
-    <p>Big Data AI Club — University of Baghdad<br>Sign in with your admin Google account.</p>
+    <p id="loginMsg">Big Data AI Club — University of Baghdad<br>Sign in with your admin Google account.</p>
     <div class="login-spinner" id="loginSpinner"></div>
     <button class="google-btn" id="loginBtn" onclick="doSignIn()">
-      <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" alt="Google">
+      <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" alt="">
       Sign in with Google
     </button>
-    <div id="tokenSection" style="display:none;margin-top:20px;text-align:left;">
-      <label style="font-size:.82em;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.06em;">
-        GitHub Token
-      </label>
-      <div style="display:flex;gap:8px;margin-top:6px;">
-        <input type="password" id="tokenInput" placeholder="ghp_..." 
-          style="flex:1;padding:9px 12px;border:1.5px solid var(--border);border-radius:8px;
-          font-family:inherit;font-size:.9em;outline:none;"
-          onkeydown="if(event.key==='Enter')saveToken()">
-        <button onclick="saveToken()" class="btn btn-primary" style="white-space:nowrap;">Save</button>
-      </div>
-      <p style="font-size:.78em;color:var(--muted);margin-top:6px;">
-        Stored in your browser session only. Never saved to GitHub.
-      </p>
-    </div>
-    <div id="loginError" style="display:none;margin-top:14px;background:#FFF3F3;border:1px solid #FFCDD2;
-      border-radius:8px;padding:12px;font-size:.85em;color:#C62828;"></div>
+    <div id="loginError"></div>
   </div>
 </div>
 
-<!-- ── APP ── -->
 <div id="appShell">
   <div class="topbar">
     <div class="topbar-title">🏛️ Big Data AI Club &nbsp;<span>Admin</span></div>
@@ -201,167 +115,29 @@
     </div>
   </div>
   <div class="layout">
-    <!-- Sidebar -->
-    <div class="sidebar">
-      <div class="sidebar-section">Dashboard</div>
-      <div class="sidebar-item active" onclick="showPage('dashboard')" id="nav-dashboard">
-        <span class="icon">📊</span> Overview
-      </div>
-      <div class="sidebar-section">Activities</div>
-      <div class="sidebar-item" onclick="showPage('conferences')" id="nav-conferences"><span class="icon">🏛️</span> Conferences</div>
-      <div class="sidebar-item" onclick="showPage('courses')" id="nav-courses"><span class="icon">📖</span> Courses</div>
-      <div class="sidebar-item" onclick="showPage('field-visits')" id="nav-field-visits"><span class="icon">🌍</span> Field Visits</div>
-      <div class="sidebar-item" onclick="showPage('internships')" id="nav-internships"><span class="icon">💼</span> Internships</div>
-      <div class="sidebar-item" onclick="showPage('lectures')" id="nav-lectures"><span class="icon">🎓</span> Lectures</div>
-      <div class="sidebar-item" onclick="showPage('presentations')" id="nav-presentations"><span class="icon">📈</span> Presentations</div>
-      <div class="sidebar-item" onclick="showPage('projects')" id="nav-projects"><span class="icon">🔧</span> Projects</div>
-      <div class="sidebar-item" onclick="showPage('researches')" id="nav-researches"><span class="icon">🔬</span> Researches</div>
-      <div class="sidebar-item" onclick="showPage('seminars')" id="nav-seminars"><span class="icon">🎯</span> Seminars</div>
-      <div class="sidebar-item" onclick="showPage('workshops')" id="nav-workshops"><span class="icon">🛠️</span> Workshops</div>
-      <div class="sidebar-section">Content</div>
-      <div class="sidebar-item" onclick="showPage('announcements')" id="nav-announcements"><span class="icon">📢</span> Announcements</div>
-      <div class="sidebar-item" onclick="showPage('news')" id="nav-news"><span class="icon">📰</span> News</div>
-      <div class="sidebar-item" onclick="showPage('members')" id="nav-members"><span class="icon">👥</span> Members</div>
-      <div class="sidebar-section">Submissions</div>
-      <div class="sidebar-item" onclick="showPage('students')" id="nav-students"><span class="icon">🎓</span> Students</div>
-
-      <div class="sidebar-item" onclick="showPage('professors')" id="nav-professors"><span class="icon">📚</span> Professors</div>
-
-    </div>
-    <!-- Main -->
-    <div class="main" id="mainContent">
-      <!-- content injected here -->
-    </div>
+    <div class="sidebar" id="sidebar"></div>
+    <div class="main" id="mainContent"></div>
   </div>
 </div>
 
-<!-- ── ENTRY MODAL ── -->
 <div class="modal-overlay" id="entryModal" onclick="if(event.target===this)closeModal()">
   <div class="modal">
     <div class="modal-header">
       <h3 id="modalTitle">Add Entry</h3>
       <button class="modal-close" onclick="closeModal()">✕</button>
     </div>
-    <div class="modal-body">
-      <div class="form-grid">
-        <div class="form-group modal-full-only">
-          <label>Type</label>
-          <select id="fType">
-            <option value="research">Research</option>
-            <option value="project">Project</option>
-            <option value="software">Software</option>
-            <option value="ai">AI</option>
-            <option value="ml">Machine Learning</option>
-            <option value="nlp">NLP</option>
-            <option value="bigdata">Big Data</option>
-            <option value="data">Data Science</option>
-            <option value="publication">Publication</option>
-            <option value="lecture">Lecture</option>
-            <option value="workshop">Workshop</option>
-            <option value="seminar">Seminar</option>
-            <option value="conference">Conference</option>
-            <option value="presentation">Presentation</option>
-            <option value="tech">Tech Company</option>
-            <option value="industry">Industry</option>
-            <option value="academic">Academic</option>
-            <option value="gov">Government</option>
-            <option value="lab">Research Lab</option>
-            <option value="uni">University</option>
-            <option value="programming">Programming</option>
-            <option value="tools">Tools</option>
-            <option value="ethics">Ethics</option>
-            <option value="career">Career</option>
-            <option value="national">National</option>
-            <option value="international">International</option>
-            <option value="local">Local</option>
-            <option value="organized">Organized</option>
-            <option value="resource">Resource</option>
-            <option value="file">File</option>
-            <option value="other">Other</option>
-          </select>
-        </div>
-        <div class="form-group modal-full-only">
-          <label>Year</label>
-          <select id="fYear">
-            <option value="2030">2030</option>
-            <option value="2029">2029</option>
-            <option value="2028">2028</option>
-            <option value="2027">2027</option>
-            <option value="2030">2030</option>
-            <option value="2029">2029</option>
-            <option value="2028">2028</option>
-            <option value="2027">2027</option>
-            <option value="2026">2026</option>
-            <option value="2025">2025</option>
-            <option value="2024">2024</option>
-            <option value="2023">2023</option>
-          </select>
-        </div>
-        <!-- Full mode -->
-        <div class="form-group full modal-full-only">
-          <label>Title</label>
-          <input type="text" id="fTitle" placeholder="Entry title">
-        </div>
-        <div class="form-group full modal-full-only">
-          <label>Description</label>
-          <textarea id="fDesc" placeholder="Description..."></textarea>
-        </div>
-        <div class="form-group modal-full-only">
-          <label>Author / Who</label>
-          <input type="text" id="fWho" placeholder="e.g. Dr. Jalal Hameed">
-        </div>
-        <div class="form-group modal-full-only">
-          <label>Date</label>
-          <input type="text" id="fDate" placeholder="e.g. June 2026">
-        </div>
-        <div class="form-group full modal-full-only">
-          <label>Link (optional)</label>
-          <input type="text" id="fLink" placeholder="https://...">
-        </div>
-        <!-- Simple mode (announcements/news) -->
-        <div class="form-group modal-simple-only" style="display:none;">
-          <label>Date</label>
-          <input type="text" id="fDateSimple" placeholder="e.g. June 18, 2026" oninput="document.getElementById('fDate').value=this.value">
-        </div>
-        <div class="form-group full modal-simple-only" style="display:none;">
-          <label>Text</label>
-          <textarea id="fDescSimple" placeholder="Announcement or news text..." oninput="document.getElementById('fDesc').value=this.value"></textarea>
-        </div>
-        <!-- Members mode -->
-        <div class="form-group full modal-members-only" style="display:none;">
-          <label>Full Name</label>
-          <input type="text" id="fNameMember" placeholder="e.g. Dr. Jalal Hameed" oninput="document.getElementById('fTitle').value=this.value">
-        </div>
-        <div class="form-group modal-members-only" style="display:none;">
-          <label>Role / Position</label>
-          <input type="text" id="fRoleMember" placeholder="e.g. Club Supervisor" oninput="document.getElementById('fWho').value=this.value">
-        </div>
-        <div class="form-group modal-members-only" style="display:none;">
-          <label>Department</label>
-          <input type="text" id="fDeptMember" placeholder="e.g. Big Data Department" oninput="document.getElementById('fDate').value=this.value">
-        </div>
-        <div class="form-group full modal-members-only" style="display:none;">
-          <label>Email (optional)</label>
-          <input type="text" id="fEmailMember" placeholder="email@uobaghdad.edu.iq" oninput="document.getElementById('fLink').value=this.value">
-        </div>
-      </div>
-      <div class="form-actions">
-        <button class="btn btn-secondary" onclick="closeModal()">Cancel</button>
-        <button class="btn btn-primary" onclick="saveEntry()">💾 Save Entry</button>
-      </div>
-    </div>
+    <div class="modal-body" id="modalBody"></div>
   </div>
 </div>
 
-<!-- ── CONFIRM DELETE MODAL ── -->
-<div class="modal-overlay" id="confirmModal" onclick="if(event.target===this)closeConfirm()">
+<div class="modal-overlay" id="confirmModal">
   <div class="modal" style="max-width:400px;">
     <div class="modal-header">
-      <h3>Delete Entry</h3>
+      <h3>Confirm Delete</h3>
       <button class="modal-close" onclick="closeConfirm()">✕</button>
     </div>
     <div class="modal-body">
-      <p style="color:var(--muted);margin-bottom:20px;">Are you sure you want to delete <strong id="deleteTitle"></strong>? This cannot be undone.</p>
+      <p style="color:var(--muted);margin-bottom:20px;">Delete <strong id="deleteTitle"></strong>? This cannot be undone.</p>
       <div class="form-actions">
         <button class="btn btn-secondary" onclick="closeConfirm()">Cancel</button>
         <button class="btn btn-danger" onclick="confirmDelete()">🗑️ Delete</button>
@@ -370,622 +146,14 @@
   </div>
 </div>
 
-<!-- ── SAVING OVERLAY ── -->
 <div class="saving-overlay" id="savingOverlay">
   <div class="saving-box">
     <div class="spinner"></div>
-    <p id="savingMsg">Saving to GitHub...</p>
+    <p id="savingMsg">Saving...</p>
   </div>
 </div>
 
-<!-- ── TOAST ── -->
 <div id="toast"></div>
-
-<!-- Firebase -->
-
-
-<script>
-// ── GitHub API Config ──
-var GITHUB_TOKEN = localStorage.getItem('gh_admin_token') || atob('Z2hwX3hPN2NJTlBvMWJhUDR3Rkx2RkZ2cmFPbU1Md1psYjFsb2U3ag==');
-var GITHUB_OWNER = 'University-of-Baghdad-College-of-AI';
-
-var PAGE_CONFIG = {
-  conferences:   { repo:'Big_Data_AI_Club_Baghdad',   file:'conferences.html',   label:'Conferences' },
-  courses:       { repo:'Big_Data_AI_Club_Baghdad',   file:'courses.html',       label:'Courses' },
-  'field-visits':{ repo:'Big_Data_AI_Club_Baghdad',   file:'field-visits.html',  label:'Field Visits' },
-  internships:   { repo:'Big_Data_AI_Club_Baghdad',   file:'internships.html',   label:'Internships' },
-  lectures:      { repo:'Big_Data_AI_Club_Baghdad',   file:'lectures.html',      label:'Lectures' },
-  presentations: { repo:'Big_Data_AI_Club_Baghdad',   file:'presentations.html', label:'Presentations' },
-  projects:      { repo:'Big_Data_AI_Club_Baghdad',   file:'projects.html',      label:'Projects' },
-  researches:    { repo:'Big_Data_AI_Club_Baghdad',   file:'researches.html',    label:'Researches' },
-  seminars:      { repo:'Big_Data_AI_Club_Baghdad',   file:'seminars.html',      label:'Seminars' },
-  workshops:     { repo:'Big_Data_AI_Club_Baghdad',   file:'workshops.html',     label:'Workshops' },
-  announcements: { repo:'Big_Data_AI_Club_Baghdad',   file:'announcements.html', label:'Announcements',  dataVar:'allAnnouncements', mode:'simple' },
-  news:          { repo:'Big_Data_AI_Club_Baghdad',   file:'news.html',          label:'News',           dataVar:'allNews',          mode:'simple' },
-  members:       { repo:'Big_Data_AI_Club_Baghdad',   file:'members.html',       label:'Members',        dataVar:'allMembers',       mode:'members' },
-  students:      { repo:'Big_Data_AI_Club_Students',  file:'index.html',         label:'Student Submissions', submissionsRepo:'Big_Data_AI_Club_Students' },
-  professors:    { repo:'Big_Data_AI_Club_Professors',file:'index.html',         label:'Professor Submissions', submissionsRepo:'Big_Data_AI_Club_Professors' },
-
-};
-
-var currentPage = 'dashboard';
-var currentData = [];
-var editIndex = -1;
-var deleteIndex = -1;
-var fileCache = {};
-var fileShaCache = {};
-
-// ── Navigation ──
-function showPage(page) {
-  currentPage = page;
-  document.querySelectorAll('.sidebar-item').forEach(function(el) { el.classList.remove('active'); });
-  var navEl = document.getElementById('nav-' + page);
-  if (navEl) navEl.classList.add('active');
-  if (page === 'dashboard') { renderDashboard(); return; }
-  loadPage(page);
-}
-
-// ── Dashboard ──
-function renderDashboard() {
-  var pages = Object.keys(PAGE_CONFIG);
-  var now = new Date();
-  var lastAccess = localStorage.getItem('admin_last_access');
-  localStorage.setItem('admin_last_access', now.toISOString());
-
-  var html = '<div class="page-header">' +
-    '<div><div class="page-title">📊 Dashboard</div>' +
-    '<div class="page-subtitle">Overview of all club content</div></div>' +
-    '<button class="btn btn-secondary" onclick="refreshDashboard()">↺ Refresh</button>' +
-  '</div>';
-
-  // Last access banner
-  if (lastAccess) {
-    var last = new Date(lastAccess);
-    var diff = Math.floor((now - last) / 60000);
-    var timeStr = last.toLocaleString('en-GB', {day:'2-digit',month:'short',year:'numeric',hour:'2-digit',minute:'2-digit'});
-    var agoStr = diff < 1 ? 'just now' : diff < 60 ? diff + ' min ago' : diff < 1440 ? Math.floor(diff/60) + ' hr ago' : Math.floor(diff/1440) + ' day(s) ago';
-    html += '<div style="background:#EEF2FF;border:1px solid #c7d2fe;border-radius:10px;padding:12px 18px;margin-bottom:20px;display:flex;align-items:center;gap:10px;">' +
-      '<span style="font-size:1.2em;">🕐</span>' +
-      '<div>' +
-        '<div style="font-size:.82em;color:var(--muted);">Last admin access</div>' +
-        '<div style="font-weight:700;color:var(--navy);font-size:.92em;">' + timeStr + ' &nbsp;<span style="font-weight:400;color:var(--muted);">(' + agoStr + ')</span></div>' +
-      '</div>' +
-    '</div>';
-  } else {
-    html += '<div style="background:#FFF8EC;border:1px solid #f0d080;border-radius:10px;padding:12px 18px;margin-bottom:20px;">' +
-      '<span style="font-size:.88em;color:#9a6f00;">🕐 First time accessing this session</span>' +
-    '</div>';
-  }
-
-  // Stat cards
-  html += '<div class="stat-row">';
-  pages.forEach(function(p) {
-    var cached = fileCache[p];
-    var count = cached ? cached.length : '—';
-    html += '<div class="stat-card" onclick="showPage(\'' + p + '\')" style="cursor:pointer;">' +
-      '<div class="num">' + count + '</div>' +
-      '<div class="lbl">' + PAGE_CONFIG[p].label + '</div>' +
-    '</div>';
-  });
-  html += '</div>';
-
-  // Quick access table
-  html += '<div class="table-wrap"><div class="table-toolbar">' +
-    '<span style="font-weight:600;color:var(--navy);">Quick Access</span>' +
-    '<span style="font-size:.8em;color:var(--muted);">Last refreshed: ' + now.toLocaleTimeString('en-GB') + '</span>' +
-  '</div>';
-  html += '<table><thead><tr><th>Section</th><th>Entries</th><th>Repo</th><th>Action</th></tr></thead><tbody>';
-  pages.forEach(function(p) {
-    var cfg = PAGE_CONFIG[p];
-    var count = fileCache[p] ? fileCache[p].length : '—';
-    html += '<tr><td><strong>' + cfg.label + '</strong></td>' +
-      '<td><span class="badge badge-year">' + count + '</span></td>' +
-      '<td style="color:var(--muted);font-size:.82em;">' + cfg.repo + '</td>' +
-      '<td><button class="btn btn-secondary btn-sm" onclick="showPage(\'' + p + '\'')">Manage →</button></td></tr>';
-  });
-  html += '</tbody></table></div>';
-  document.getElementById('mainContent').innerHTML = html;
-}
-
-function refreshDashboard() {
-  fileCache = {};
-  renderDashboard();
-  showToast('🔄 Dashboard refreshed', 'success');
-}
-
-
-function loadUploadedFilesSection(repo) {
-  var section = document.getElementById('uploadedFilesSection');
-  if (!section) return;
-
-  fetch('https://api.github.com/repos/' + GITHUB_OWNER + '/' + repo + '/contents/submissions',
-    { headers: githubHeaders() })
-    .then(function(r) { return r.ok ? r.json() : []; })
-    .then(function(folders) {
-      if (!Array.isArray(folders) || !folders.length) {
-        section.innerHTML = '<p style="color:var(--muted);font-size:.88em;">No uploaded files found.</p>';
-        return;
-      }
-      var yearFolders = folders.filter(function(f) { return f.type === 'dir'; });
-      var promises = yearFolders.map(function(folder) {
-        return fetch(folder.url, { headers: githubHeaders() })
-          .then(function(r) { return r.ok ? r.json() : []; })
-          .then(function(files) {
-            return { year: folder.name, files: files.filter(function(f) { return f.type === 'file'; }) };
-          });
-      });
-      return Promise.all(promises);
-    })
-    .then(function(yearData) {
-      if (!yearData) return;
-      var html = '';
-      yearData.forEach(function(yd) {
-        if (!yd.files.length) return;
-        html += '<div class="table-wrap" style="margin-bottom:14px;">';
-        html += '<div class="table-toolbar"><span style="font-weight:700;color:var(--navy);">📅 ' + yd.year + '</span><span style="color:var(--muted);font-size:.82em;margin-left:8px;">' + yd.files.length + ' files</span></div>';
-        html += '<table><thead><tr><th>Filename</th><th>Size</th><th>Actions</th></tr></thead><tbody>';
-        yd.files.forEach(function(file) {
-          var sizeKB = file.size ? (file.size/1024).toFixed(1) + ' KB' : '—';
-          var safePath = file.path.replace(/'/g,"\'");
-          var safeSha  = file.sha.replace(/'/g,"\'");
-          var safeName = file.name.replace(/'/g,"\'");
-          html += '<tr>' +
-            '<td><strong>' + file.name + '</strong></td>' +
-            '<td style="color:var(--muted);">' + sizeKB + '</td>' +
-            '<td style="display:flex;gap:6px;">' +
-              '<a href="' + file.download_url + '" target="_blank" class="btn btn-secondary btn-sm">⬇ Download</a>' +
-              '<button class="btn btn-danger btn-sm" onclick="deleteFile('' + repo + '','' + safePath + '','' + safeSha + '','' + safeName + '')">🗑️ Delete</button>' +
-            '</td></tr>';
-        });
-        html += '</tbody></table></div>';
-      });
-      section.innerHTML = html || '<p style="color:var(--muted);font-size:.88em;">No uploaded files found.</p>';
-    })
-    .catch(function() {
-      section.innerHTML = '<p style="color:var(--muted);font-size:.88em;">Could not load uploaded files.</p>';
-    });
-}
-
-// ── Load Page Data ──
-function loadPage(page) {
-  var cfg = PAGE_CONFIG[page];
-  var mc = document.getElementById('mainContent');
-  mc.innerHTML = '<p style="padding:40px;color:var(--muted);">Loading ' + cfg.label + '...</p>';
-  fetchFileFromGitHub(cfg.repo, cfg.file, function(content, sha) {
-    var cfg2 = PAGE_CONFIG[page];
-    var data = extractAllData(content, cfg2 ? cfg2.dataVar : null);
-    fileCache[page] = data;
-    fileShaCache[page + ':' + cfg.repo + '/' + cfg.file] = sha;
-    currentData = data;
-    renderTable(page, data);
-  });
-}
-
-// ── GitHub API ──
-function githubHeaders() {
-  var tok = localStorage.getItem('gh_admin_token') || GITHUB_TOKEN;
-  return {
-    'Authorization': 'token ' + tok,
-    'Accept': 'application/vnd.github.v3+json',
-    'Content-Type': 'application/json'
-  };
-}
-
-function fetchFileFromGitHub(repo, file, callback) {
-  var url = 'https://api.github.com/repos/' + GITHUB_OWNER + '/' + repo + '/contents/' + file;
-  fetch(url, { headers: githubHeaders() })
-    .then(function(r) {
-      if (!r.ok) {
-        return r.json().then(function(err) {
-          throw new Error('GitHub API error ' + r.status + ': ' + (err.message || r.statusText));
-        });
-      }
-      return r.json();
-    })
-    .then(function(data) {
-      if (!data || !data.content) {
-        throw new Error('No content returned from GitHub API. Check token permissions.');
-      }
-      var decoded = atob(data.content.replace(/\n/g,''));
-      callback(decoded, data.sha);
-    })
-    .catch(function(e) {
-      document.getElementById('mainContent').innerHTML =
-        '<div style="padding:40px;">' +
-        '<h3 style="color:#C62828;margin-bottom:12px;">⚠️ Failed to load</h3>' +
-        '<p style="color:var(--muted);margin-bottom:8px;">' + e.message + '</p>' +
-        '<p style="color:var(--muted);font-size:.85em;">Make sure the fine-grained token has <strong>Contents: Read and write</strong> permission for this repository.</p>' +
-        '<button class="btn btn-secondary" style="margin-top:16px;" onclick="loadPage(currentPage)">↺ Retry</button>' +
-        '</div>';
-      showToast('❌ ' + e.message, 'error');
-    });
-}
-
-function saveFileToGitHub(repo, file, content, sha, message, callback) {
-  var url = 'https://api.github.com/repos/' + GITHUB_OWNER + '/' + repo + '/contents/' + file;
-  var encoded = btoa(unescape(encodeURIComponent(content)));
-  fetch(url, {
-    method: 'PUT',
-    headers: githubHeaders(),
-    body: JSON.stringify({ message: message, content: encoded, sha: sha })
-  })
-  .then(function(r) { return r.json(); })
-  .then(function(data) { callback(null, data); })
-  .catch(function(e) { callback(e); });
-}
-
-// ── Extract data from HTML (supports different variable names) ──
-function extractAllData(html, dataVar) {
-  var varName = dataVar || 'allData';
-  var pattern = new RegExp('var ' + varName + ' = (\\[[\\s\\S]*?\\]);');
-  var m = html.match(pattern);
-  if (!m) return [];
-  try { return JSON.parse(m[1]); } catch(e) { return []; }
-}
-
-// ── Inject data into HTML ──
-function injectAllData(html, data, dataVar) {
-  var varName = dataVar || 'allData';
-  var cfg = PAGE_CONFIG[currentPage];
-  var mode = cfg ? cfg.mode : null;
-
-  if (mode === 'simple') {
-    // announcements/news: {date, text}
-    var fmt = 'var ' + varName + ' = [\n\n';
-    data.forEach(function(item, i) {
-      fmt += '      {\n';
-      fmt += '        "date"  : "' + (item.date||'').replace(/"/g,"'") + '",\n';
-      fmt += '        "text"  : "' + (item.text||'').replace(/"/g,"'") + '"\n';
-      fmt += '      }' + (i < data.length-1 ? ',' : '') + '\n\n';
-    });
-    fmt += '    ];';
-    return html.replace(new RegExp('var ' + varName + ' = \\[[\\s\\S]*?\\];'), fmt);
-  }
-
-  if (mode === 'members') {
-    // members: {name, role, dept, email}
-    var fmt = 'var ' + varName + ' = [\n\n';
-    data.forEach(function(item, i) {
-      fmt += '      {\n';
-      fmt += '        "name"  : "' + (item.name||'').replace(/"/g,"'") + '",\n';
-      fmt += '        "role"  : "' + (item.role||'').replace(/"/g,"'") + '",\n';
-      fmt += '        "dept"  : "' + (item.dept||'').replace(/"/g,"'") + '",\n';
-      fmt += '        "email" : "' + (item.email||'') + '"\n';
-      fmt += '      }' + (i < data.length-1 ? ',' : '') + '\n\n';
-    });
-    fmt += '    ];';
-    return html.replace(new RegExp('var ' + varName + ' = \\[[\\s\\S]*?\\];'), fmt);
-  }
-
-  // Default: allData entries
-  var formatted = 'var ' + (varName||'allData') + ' = [\n\n';
-  data.forEach(function(item, i) {
-    formatted += "  {\n";
-    formatted += '    "type"  : "' + (item.type||'').replace(/"/g,"'") + '",\n';
-    formatted += '    "year"  : "' + (item.year||'') + '",\n';
-    formatted += '    "title" : "' + (item.title||'').replace(/"/g,"'") + '",\n';
-    formatted += '    "desc"  : "' + (item.desc||'').replace(/"/g,"'") + '",\n';
-    formatted += '    "who"   : "' + (item.who||'').replace(/"/g,"'") + '",\n';
-    formatted += '    "date"  : "' + (item.date||'') + '",\n';
-    formatted += '    "link"  : "' + (item.link||'#') + '"\n';
-    formatted += "  }" + (i < data.length-1 ? "," : "") + "\n\n";
-  });
-  formatted += "];";
-  return html.replace(new RegExp('var ' + (varName||'allData') + ' = \\[[\\s\\S]*?\\];'), formatted);
-}
-
-// ── Render Table ──
-function renderTable(page, data) {
-  var cfg = PAGE_CONFIG[page];
-  var html = '<div class="page-header">' +
-    '<div><div class="page-title">' + cfg.label + '</div>' +
-    '<div class="page-subtitle">' + data.length + ' entries in ' + cfg.repo + '/' + cfg.file + '</div></div>' +
-    '<div style="display:flex;gap:8px;">' +
-      '<button class="btn btn-secondary" onclick="loadPage(currentPage)">↺ Refresh</button>' +
-      '<button class="btn btn-primary" onclick="openAddModal()">+ Add Entry</button>' +
-    '</div>' +
-  '</div>';
-  html += '<div class="table-wrap">';
-  html += '<div class="table-toolbar">' +
-    '<input class="search-input" placeholder="🔍 Search entries..." oninput="filterTable(this.value)">' +
-    '<button class="btn btn-secondary btn-sm" onclick="loadPage(\'' + page + '\')">↺ Refresh</button>' +
-  '</div>';
-  var mode = PAGE_CONFIG[page] ? PAGE_CONFIG[page].mode : null;
-  if (mode === 'simple') {
-    html += '<table id="entriesTable"><thead><tr><th>#</th><th>Date</th><th>Text</th><th>Actions</th></tr></thead><tbody>';
-    data.forEach(function(item, i) {
-      html += '<tr>' +
-        '<td style="color:var(--muted);">' + (i+1) + '</td>' +
-        '<td><strong>' + (item.date||'—') + '</strong></td>' +
-        '<td style="color:var(--muted);max-width:400px;">' + (item.text||'—') + '</td>' +
-        '<td style="display:flex;gap:6px;">' +
-          '<button class="btn btn-secondary btn-sm" onclick="openEditModal(' + i + ')">✏️ Edit</button>' +
-          '<button class="btn btn-danger btn-sm" onclick="openDeleteModal(' + i + ')">🗑️</button>' +
-        '</td></tr>';
-    });
-  } else if (mode === 'members') {
-    html += '<table id="entriesTable"><thead><tr><th>#</th><th>Name</th><th>Role</th><th>Dept</th><th>Email</th><th>Actions</th></tr></thead><tbody>';
-    data.forEach(function(item, i) {
-      html += '<tr>' +
-        '<td style="color:var(--muted);">' + (i+1) + '</td>' +
-        '<td><strong>' + (item.name||'—') + '</strong></td>' +
-        '<td style="color:var(--indigo);">' + (item.role||'—') + '</td>' +
-        '<td style="color:var(--muted);">' + (item.dept||'—') + '</td>' +
-        '<td style="color:var(--muted);">' + (item.email||'—') + '</td>' +
-        '<td style="display:flex;gap:6px;">' +
-          '<button class="btn btn-secondary btn-sm" onclick="openEditModal(' + i + ')">✏️ Edit</button>' +
-          '<button class="btn btn-danger btn-sm" onclick="openDeleteModal(' + i + ')">🗑️</button>' +
-        '</td></tr>';
-    });
-  } else {
-    html += '<table id="entriesTable"><thead><tr>' +
-      '<th>#</th><th>Type</th><th>Year</th><th>Title</th><th>Who</th><th>Date</th><th>Actions</th>' +
-    '</tr></thead><tbody>';
-    data.forEach(function(item, i) {
-      html += '<tr data-idx="' + i + '">' +
-        '<td style="color:var(--muted);">' + (i+1) + '</td>' +
-        '<td><span class="badge badge-year">' + (item.type||'—') + '</span></td>' +
-        '<td><span class="badge badge-year">' + (item.year||'—') + '</span></td>' +
-        '<td style="max-width:220px;"><strong>' + (item.title||'—') + '</strong></td>' +
-        '<td style="color:var(--muted);">' + (item.who||'—') + '</td>' +
-        '<td style="color:var(--muted);">' + (item.date||'—') + '</td>' +
-        '<td style="display:flex;gap:6px;">' +
-          '<button class="btn btn-secondary btn-sm" onclick="openEditModal(' + i + ')">✏️ Edit</button>' +
-          '<button class="btn btn-danger btn-sm" onclick="openDeleteModal(' + i + ')">🗑️</button>' +
-        '</td></tr>';
-    });
-  }
-  html += '</tbody></table></div>';
-
-  // For students/professors: also show uploaded files section
-  var cfg4 = PAGE_CONFIG[page];
-  if (cfg4 && cfg4.submissionsRepo && (page === 'students' || page === 'professors')) {
-    html += '<div style="margin-top:24px;">' +
-      '<div style="font-family:sans-serif;font-weight:700;font-size:1em;color:var(--navy);margin-bottom:12px;">📁 Uploaded Files (submissions folder)</div>' +
-      '<div id="uploadedFilesSection"><p style="color:var(--muted);font-size:.88em;">Loading uploaded files...</p></div>' +
-    '</div>';
-  }
-
-  document.getElementById('mainContent').innerHTML = html;
-
-  // Load uploaded files after rendering
-  if (cfg4 && cfg4.submissionsRepo && (page === 'students' || page === 'professors')) {
-    loadUploadedFilesSection(cfg4.submissionsRepo);
-  }
-}
-
-function loadUploadedFilesSection(repo) {
-  var section = document.getElementById('uploadedFilesSection');
-  if (!section) return;
-
-  fetch('https://api.github.com/repos/' + GITHUB_OWNER + '/' + repo + '/contents/submissions',
-    { headers: githubHeaders() })
-    .then(function(r) { return r.ok ? r.json() : []; })
-    .then(function(folders) {
-      if (!Array.isArray(folders) || !folders.length) {
-        section.innerHTML = '<p style="color:var(--muted);font-size:.88em;">No uploaded files found.</p>';
-        return;
-      }
-      var yearFolders = folders.filter(function(f) { return f.type === 'dir'; });
-      var promises = yearFolders.map(function(folder) {
-        return fetch(folder.url, { headers: githubHeaders() })
-          .then(function(r) { return r.ok ? r.json() : []; })
-          .then(function(files) {
-            return { year: folder.name, files: files.filter(function(f) { return f.type === 'file'; }) };
-          });
-      });
-      return Promise.all(promises);
-    })
-    .then(function(yearData) {
-      if (!yearData) return;
-      var html = '';
-      yearData.forEach(function(yd) {
-        if (!yd.files.length) return;
-        html += '<div class="table-wrap" style="margin-bottom:14px;">';
-        html += '<div class="table-toolbar"><span style="font-weight:700;color:var(--navy);">📅 ' + yd.year + '</span><span style="color:var(--muted);font-size:.82em;margin-left:8px;">' + yd.files.length + ' files</span></div>';
-        html += '<table><thead><tr><th>Filename</th><th>Size</th><th>Actions</th></tr></thead><tbody>';
-        yd.files.forEach(function(file) {
-          var sizeKB = file.size ? (file.size/1024).toFixed(1) + ' KB' : '—';
-          var safePath = file.path.replace(/'/g,"\'");
-          var safeSha  = file.sha.replace(/'/g,"\'");
-          var safeName = file.name.replace(/'/g,"\'");
-          html += '<tr>' +
-            '<td><strong>' + file.name + '</strong></td>' +
-            '<td style="color:var(--muted);">' + sizeKB + '</td>' +
-            '<td style="display:flex;gap:6px;">' +
-              '<a href="' + file.download_url + '" target="_blank" class="btn btn-secondary btn-sm">⬇ Download</a>' +
-              '<button class="btn btn-danger btn-sm" onclick="deleteFile('' + repo + '','' + safePath + '','' + safeSha + '','' + safeName + '')">🗑️ Delete</button>' +
-            '</td></tr>';
-        });
-        html += '</tbody></table></div>';
-      });
-      section.innerHTML = html || '<p style="color:var(--muted);font-size:.88em;">No uploaded files found.</p>';
-    })
-    .catch(function() {
-      section.innerHTML = '<p style="color:var(--muted);font-size:.88em;">Could not load uploaded files.</p>';
-    });
-}
-
-function filterTable(query) {
-  var q = query.toLowerCase();
-  document.querySelectorAll('#entriesTable tbody tr').forEach(function(row) {
-    var text = row.textContent.toLowerCase();
-    row.style.display = text.includes(q) ? '' : 'none';
-  });
-}
-
-// ── Add/Edit Modal ──
-function openAddModal() {
-  editIndex = -1;
-  var mode = PAGE_CONFIG[currentPage] ? PAGE_CONFIG[currentPage].mode : null;
-  document.getElementById('modalTitle').textContent = 'Add New Entry';
-  document.getElementById('fType').value = 'research';
-  document.getElementById('fYear').value = '2026';
-  document.getElementById('fTitle').value = '';
-  document.getElementById('fDesc').value = '';
-  document.getElementById('fWho').value = '';
-  document.getElementById('fDate').value = '';
-  document.getElementById('fLink').value = '#';
-  if (mode === 'simple') { showSimpleModal(); }
-  else if (mode === 'members') { showMembersModal(); }
-  else { showFullModal(); }
-  document.getElementById('entryModal').classList.add('open');
-}
-
-function openEditModal(idx) {
-  editIndex = idx;
-  var item = currentData[idx];
-  var mode = PAGE_CONFIG[currentPage] ? PAGE_CONFIG[currentPage].mode : null;
-  document.getElementById('modalTitle').textContent = 'Edit Entry';
-  if (mode === 'simple') {
-    document.getElementById('fDate').value = item.date || '';
-    document.getElementById('fDesc').value = item.text || '';
-    showSimpleModal();
-  } else if (mode === 'members') {
-    document.getElementById('fTitle').value = item.name || '';
-    document.getElementById('fWho').value = item.role || '';
-    document.getElementById('fDate').value = item.dept || '';
-    document.getElementById('fLink').value = item.email || '';
-    showMembersModal();
-  } else {
-    document.getElementById('fType').value = item.type || 'research';
-    document.getElementById('fYear').value = item.year || '2026';
-    document.getElementById('fTitle').value = item.title || '';
-    document.getElementById('fDesc').value = item.desc || '';
-    document.getElementById('fWho').value = item.who || '';
-    document.getElementById('fDate').value = item.date || '';
-    document.getElementById('fLink').value = item.link || '#';
-    showFullModal();
-  }
-  document.getElementById('entryModal').classList.add('open');
-}
-
-function showFullModal() {
-  document.getElementById('fType').parentElement.parentElement.style.display = 'grid';
-  document.querySelectorAll('.modal-full-only').forEach(function(el){ el.style.display=''; });
-  document.querySelectorAll('.modal-simple-only').forEach(function(el){ el.style.display='none'; });
-  document.querySelectorAll('.modal-members-only').forEach(function(el){ el.style.display='none'; });
-}
-function showSimpleModal() {
-  document.querySelectorAll('.modal-full-only').forEach(function(el){ el.style.display='none'; });
-  document.querySelectorAll('.modal-simple-only').forEach(function(el){ el.style.display=''; });
-  document.querySelectorAll('.modal-members-only').forEach(function(el){ el.style.display='none'; });
-}
-function showMembersModal() {
-  document.querySelectorAll('.modal-full-only').forEach(function(el){ el.style.display='none'; });
-  document.querySelectorAll('.modal-simple-only').forEach(function(el){ el.style.display='none'; });
-  document.querySelectorAll('.modal-members-only').forEach(function(el){ el.style.display=''; });
-}
-
-function closeModal() {
-  document.getElementById('entryModal').classList.remove('open');
-}
-
-function saveEntry() {
-  var mode = PAGE_CONFIG[currentPage] ? PAGE_CONFIG[currentPage].mode : null;
-  var entry;
-  if (mode === 'simple') {
-    entry = {
-      date: document.getElementById('fDate').value.trim(),
-      text: document.getElementById('fDesc').value.trim()
-    };
-    if (!entry.text) { alert('Text is required.'); return; }
-  } else if (mode === 'members') {
-    entry = {
-      name:  document.getElementById('fTitle').value.trim(),
-      role:  document.getElementById('fWho').value.trim(),
-      dept:  document.getElementById('fDate').value.trim(),
-      email: document.getElementById('fLink').value.trim()
-    };
-    if (!entry.name) { alert('Name is required.'); return; }
-  } else {
-    entry = {
-      type:  document.getElementById('fType').value,
-      year:  document.getElementById('fYear').value,
-      title: document.getElementById('fTitle').value.trim(),
-      desc:  document.getElementById('fDesc').value.trim(),
-      who:   document.getElementById('fWho').value.trim(),
-      date:  document.getElementById('fDate').value.trim(),
-      link:  document.getElementById('fLink').value.trim() || '#'
-    };
-    if (!entry.title) { alert('Title is required.'); return; }
-  }
-  var dummy = entry;
-  if (!dummy) { alert('Title is required.'); return; }
-  if (editIndex === -1) {
-    currentData.unshift(entry);
-  } else {
-    currentData[editIndex] = entry;
-  }
-  closeModal();
-  commitCurrentData(editIndex === -1 ? 'Add: ' + entry.title : 'Edit: ' + entry.title);
-}
-
-// ── Delete ──
-function openDeleteModal(idx) {
-  deleteIndex = idx;
-  document.getElementById('deleteTitle').textContent = '"' + currentData[idx].title + '"';
-  document.getElementById('confirmModal').classList.add('open');
-}
-function closeConfirm() {
-  document.getElementById('confirmModal').classList.remove('open');
-}
-function confirmDelete() {
-  var title = currentData[deleteIndex].title;
-  currentData.splice(deleteIndex, 1);
-  closeConfirm();
-  commitCurrentData('Delete: ' + title);
-}
-
-// ── Commit to GitHub ──
-function commitCurrentData(message) {
-  var cfg = PAGE_CONFIG[currentPage];
-  var shaKey = currentPage + ':' + cfg.repo + '/' + cfg.file;
-  var sha = fileShaCache[shaKey];
-  if (!sha) { showToast('No SHA found. Refresh and try again.', 'error'); return; }
-
-  showSaving('Saving to GitHub...');
-
-  fetchFileFromGitHub(cfg.repo, cfg.file, function(originalContent, currentSha) {
-    var cfg3 = PAGE_CONFIG[currentPage];
-    var newContent = injectAllData(originalContent, currentData, cfg3 ? cfg3.dataVar : null);
-    fileShaCache[shaKey] = currentSha;
-
-    saveFileToGitHub(cfg.repo, cfg.file, newContent, currentSha,
-      '⚙️ Admin: ' + message, function(err, result) {
-        hideSaving();
-        if (err) {
-          showToast('❌ Save failed: ' + err.message, 'error');
-        } else {
-          fileShaCache[shaKey] = result.content.sha;
-          fileCache[currentPage] = currentData;
-          showToast('✅ Saved successfully!', 'success');
-          renderTable(currentPage, currentData);
-        }
-      }
-    );
-  });
-}
-
-// ── UI Helpers ──
-function showSaving(msg) {
-  document.getElementById('savingMsg').textContent = msg || 'Saving...';
-  document.getElementById('savingOverlay').classList.add('open');
-}
-function hideSaving() {
-  document.getElementById('savingOverlay').classList.remove('open');
-}
-function showToast(msg, type) {
-  var t = document.getElementById('toast');
-  t.textContent = msg;
-  t.className = 'show ' + (type||'');
-  setTimeout(function() { t.className = ''; }, 3500);
-}
-
-document.addEventListener('keydown', function(e) {
-  if (e.key === 'Escape') { closeModal(); closeConfirm(); }
-});
-</script>
 
 <script src="approved-users.js"></script>
 <script type="module">
@@ -1017,18 +185,8 @@ window.doSignIn = function() {
 };
 
 window.doSignOut = function() {
-  if (!confirm('Sign out of admin panel?')) return;
+  if (!confirm('Sign out?')) return;
   fbSignOut(auth);
-};
-
-window.saveToken = function() {
-  var t = document.getElementById('tokenInput').value.trim();
-  if (!t) { alert('Please enter a token.'); return; }
-  localStorage.setItem('gh_admin_token', t);
-  GITHUB_TOKEN = t;
-  document.getElementById('loginScreen').style.display = 'none';
-  document.getElementById('appShell').style.display = 'block';
-  showPage('dashboard');
 };
 
 onAuthStateChanged(auth, function(user) {
@@ -1041,14 +199,10 @@ onAuthStateChanged(auth, function(user) {
   }
   var role = window.APPROVED_USERS ? window.APPROVED_USERS[user.email] : null;
   if (role !== 'admin') {
-    // Not admin — show simple access denied, sign out silently
-    document.getElementById('loginScreen').style.display = 'flex';
-    document.getElementById('appShell').style.display = 'none';
     document.getElementById('loginBtn').style.display = 'none';
-    document.getElementById('tokenSection').style.display = 'none';
-    document.getElementById('loginError').style.display = 'block';
-    document.getElementById('loginError').innerHTML =
-      '⛔ <strong>Access Denied</strong><br>You do not have permission to access this page.';
+    var err = document.getElementById('loginError');
+    err.style.display = 'block';
+    err.innerHTML = '⛔ <strong>Access Denied</strong><br>You do not have permission to access this page.';
     fbSignOut(auth);
     return;
   }
@@ -1057,8 +211,528 @@ onAuthStateChanged(auth, function(user) {
   document.getElementById('adminName').textContent = user.displayName;
   document.getElementById('adminAvatar').src = user.photoURL || '';
   window.currentUser = user;
-  // Token is embedded as fallback — go straight to dashboard
+  window.initAdmin();
+});
+</script>
+
+<script>
+// ── Config ──
+var GITHUB_TOKEN = atob('Z2hwX3hPN2NJTlBvMWJhUDR3Rkx2RkZ2cmFPbU1Md1psYjFsb2U3ag==');
+var GITHUB_OWNER = 'University-of-Baghdad-College-of-AI';
+
+var PAGES = [
+  { id:'conferences',   repo:'Big_Data_AI_Club_Baghdad',   file:'conferences.html',   label:'Conferences',   icon:'🏛️' },
+  { id:'courses',       repo:'Big_Data_AI_Club_Baghdad',   file:'courses.html',       label:'Courses',       icon:'📖' },
+  { id:'field-visits',  repo:'Big_Data_AI_Club_Baghdad',   file:'field-visits.html',  label:'Field Visits',  icon:'🌍' },
+  { id:'internships',   repo:'Big_Data_AI_Club_Baghdad',   file:'internships.html',   label:'Internships',   icon:'💼' },
+  { id:'lectures',      repo:'Big_Data_AI_Club_Baghdad',   file:'lectures.html',      label:'Lectures',      icon:'🎓' },
+  { id:'presentations', repo:'Big_Data_AI_Club_Baghdad',   file:'presentations.html', label:'Presentations', icon:'📈' },
+  { id:'projects',      repo:'Big_Data_AI_Club_Baghdad',   file:'projects.html',      label:'Projects',      icon:'🔧' },
+  { id:'researches',    repo:'Big_Data_AI_Club_Baghdad',   file:'researches.html',    label:'Researches',    icon:'🔬' },
+  { id:'seminars',      repo:'Big_Data_AI_Club_Baghdad',   file:'seminars.html',      label:'Seminars',      icon:'🎯' },
+  { id:'workshops',     repo:'Big_Data_AI_Club_Baghdad',   file:'workshops.html',     label:'Workshops',     icon:'🛠️' },
+  { id:'announcements', repo:'Big_Data_AI_Club_Baghdad',   file:'announcements.html', label:'Announcements', icon:'📢', mode:'simple', dataVar:'allAnnouncements' },
+  { id:'news',          repo:'Big_Data_AI_Club_Baghdad',   file:'news.html',          label:'News',          icon:'📰', mode:'simple', dataVar:'allNews' },
+  { id:'members',       repo:'Big_Data_AI_Club_Baghdad',   file:'members.html',       label:'Members',       icon:'👥', mode:'members', dataVar:'allMembers' },
+  { id:'students',      repo:'Big_Data_AI_Club_Students',  file:'index.html',         label:'Students',      icon:'🎓', hasFiles:true },
+  { id:'professors',    repo:'Big_Data_AI_Club_Professors',file:'index.html',         label:'Professors',    icon:'📚', hasFiles:true },
+];
+
+var PAGE_MAP = {};
+PAGES.forEach(function(p) { PAGE_MAP[p.id] = p; });
+
+var currentPage = 'dashboard';
+var currentData = [];
+var editIndex = -1;
+var deleteIndex = -1;
+var fileCache = {};
+var shaCache = {};
+
+// ── Init ──
+window.initAdmin = function() {
+  buildSidebar();
   showPage('dashboard');
+};
+
+// ── Sidebar ──
+function buildSidebar() {
+  var sb = document.getElementById('sidebar');
+  var html = '';
+  html += '<div class="sidebar-section">Dashboard</div>';
+  html += sidebarItem('dashboard', '📊', 'Overview');
+  html += '<div class="sidebar-section">Activities</div>';
+  var actIds = ['conferences','courses','field-visits','internships','lectures','presentations','projects','researches','seminars','workshops'];
+  actIds.forEach(function(id) {
+    var p = PAGE_MAP[id];
+    html += sidebarItem(id, p.icon, p.label);
+  });
+  html += '<div class="sidebar-section">Content</div>';
+  ['announcements','news','members'].forEach(function(id) {
+    var p = PAGE_MAP[id];
+    html += sidebarItem(id, p.icon, p.label);
+  });
+  html += '<div class="sidebar-section">Submissions</div>';
+  ['students','professors'].forEach(function(id) {
+    var p = PAGE_MAP[id];
+    html += sidebarItem(id, p.icon, p.label);
+  });
+  sb.innerHTML = html;
+  sb.querySelectorAll('.sidebar-item').forEach(function(el) {
+    el.addEventListener('click', function() {
+      showPage(el.dataset.page);
+    });
+  });
+}
+
+function sidebarItem(id, icon, label) {
+  return '<div class="sidebar-item" data-page="' + id + '" id="nav-' + id + '">' +
+    '<span class="icon">' + icon + '</span> ' + label + '</div>';
+}
+
+// ── Navigation ──
+function showPage(page) {
+  currentPage = page;
+  document.querySelectorAll('.sidebar-item').forEach(function(el) { el.classList.remove('active'); });
+  var navEl = document.getElementById('nav-' + page);
+  if (navEl) navEl.classList.add('active');
+  if (page === 'dashboard') { renderDashboard(); return; }
+  loadPage(page);
+}
+
+// ── Dashboard ──
+function renderDashboard() {
+  var now = new Date();
+  var lastAccess = localStorage.getItem('admin_last_access');
+  localStorage.setItem('admin_last_access', now.toISOString());
+
+  var mc = document.getElementById('mainContent');
+  var html = '<div class="page-header">' +
+    '<div><div class="page-title">📊 Dashboard</div>' +
+    '<div class="page-subtitle">Overview of all club content</div></div>' +
+    '<button class="btn btn-secondary" id="refreshDashBtn">↺ Refresh</button>' +
+  '</div>';
+
+  if (lastAccess) {
+    var last = new Date(lastAccess);
+    var diff = Math.floor((now - last) / 60000);
+    var ago = diff < 1 ? 'just now' : diff < 60 ? diff + ' min ago' : diff < 1440 ? Math.floor(diff/60) + ' hr ago' : Math.floor(diff/1440) + ' day(s) ago';
+    html += '<div class="info-banner">🕐 <div><div style="font-size:.82em;color:var(--muted);">Last admin access</div>' +
+      '<div style="font-weight:700;color:var(--navy);">' + last.toLocaleString('en-GB') + ' (' + ago + ')</div></div></div>';
+  }
+
+  html += '<div class="stat-row">';
+  PAGES.forEach(function(p) {
+    var count = fileCache[p.id] ? fileCache[p.id].length : '—';
+    html += '<div class="stat-card" data-page="' + p.id + '"><div class="num">' + count + '</div><div class="lbl">' + p.label + '</div></div>';
+  });
+  html += '</div>';
+
+  html += '<div class="table-wrap"><div class="table-toolbar" style="font-weight:600;color:var(--navy);">Quick Access' +
+    '<span style="font-size:.8em;color:var(--muted);margin-left:auto;">Refreshed: ' + now.toLocaleTimeString('en-GB') + '</span></div>';
+  html += '<table><thead><tr><th>Section</th><th>Entries</th><th>Repo</th><th>Action</th></tr></thead><tbody>';
+  PAGES.forEach(function(p) {
+    var count = fileCache[p.id] ? fileCache[p.id].length : '—';
+    html += '<tr><td><strong>' + p.icon + ' ' + p.label + '</strong></td>' +
+      '<td><span class="badge">' + count + '</span></td>' +
+      '<td style="color:var(--muted);font-size:.82em;">' + p.repo + '</td>' +
+      '<td><button class="btn btn-secondary btn-sm" data-page="' + p.id + '">Manage →</button></td></tr>';
+  });
+  html += '</tbody></table></div>';
+  mc.innerHTML = html;
+
+  mc.querySelectorAll('[data-page]').forEach(function(el) {
+    el.addEventListener('click', function() { showPage(el.dataset.page); });
+  });
+
+  document.getElementById('refreshDashBtn').addEventListener('click', function() {
+    fileCache = {};
+    renderDashboard();
+    showToast('🔄 Refreshed', 'success');
+  });
+}
+
+// ── Load Page ──
+function loadPage(page) {
+  var cfg = PAGE_MAP[page];
+  document.getElementById('mainContent').innerHTML = '<p style="padding:40px;color:var(--muted);">Loading ' + cfg.label + '...</p>';
+  fetchFile(cfg.repo, cfg.file, function(content, sha) {
+    var varName = cfg.dataVar || 'allData';
+    var data = extractData(content, varName);
+    fileCache[page] = data;
+    shaCache[page] = sha;
+    currentData = data;
+    renderTable(page, data, content);
+  });
+}
+
+// ── GitHub API ──
+function ghHeaders() {
+  return {
+    'Authorization': 'token ' + GITHUB_TOKEN,
+    'Accept': 'application/vnd.github.v3+json',
+    'Content-Type': 'application/json'
+  };
+}
+
+function fetchFile(repo, file, callback) {
+  var url = 'https://api.github.com/repos/' + GITHUB_OWNER + '/' + repo + '/contents/' + file;
+  fetch(url, { headers: ghHeaders() })
+    .then(function(r) {
+      if (!r.ok) throw new Error('GitHub API error ' + r.status);
+      return r.json();
+    })
+    .then(function(data) {
+      var content = decodeURIComponent(escape(atob(data.content.replace(/\n/g,''))));
+      callback(content, data.sha);
+    })
+    .catch(function(e) {
+      document.getElementById('mainContent').innerHTML =
+        '<div style="padding:40px;"><h3 style="color:#C62828;margin-bottom:8px;">⚠️ Failed to load</h3>' +
+        '<p style="color:var(--muted);">' + e.message + '</p>' +
+        '<button class="btn btn-secondary" style="margin-top:16px;" id="retryBtn">↺ Retry</button></div>';
+      document.getElementById('retryBtn').addEventListener('click', function() { loadPage(currentPage); });
+    });
+}
+
+function saveFile(repo, file, content, sha, message, callback) {
+  var url = 'https://api.github.com/repos/' + GITHUB_OWNER + '/' + repo + '/contents/' + file;
+  var encoded = btoa(unescape(encodeURIComponent(content)));
+  fetch(url, {
+    method: 'PUT', headers: ghHeaders(),
+    body: JSON.stringify({ message: message, content: encoded, sha: sha })
+  })
+  .then(function(r) { return r.json(); })
+  .then(function(data) { callback(null, data); })
+  .catch(function(e) { callback(e); });
+}
+
+// ── Data Extract/Inject ──
+function extractData(html, varName) {
+  var re = new RegExp('var ' + varName + ' = (\\[[\\s\\S]*?\\]);');
+  var m = html.match(re);
+  if (!m) return [];
+  try { return JSON.parse(m[1]); } catch(e) { return []; }
+}
+
+function injectData(html, data, varName, mode) {
+  var fmt = 'var ' + varName + ' = [\n\n';
+  data.forEach(function(item, i) {
+    fmt += '      {\n';
+    if (mode === 'simple') {
+      fmt += '        "date"  : ' + JSON.stringify(item.date||'') + ',\n';
+      fmt += '        "text"  : ' + JSON.stringify(item.text||'') + '\n';
+    } else if (mode === 'members') {
+      fmt += '        "name"  : ' + JSON.stringify(item.name||'') + ',\n';
+      fmt += '        "role"  : ' + JSON.stringify(item.role||'') + ',\n';
+      fmt += '        "dept"  : ' + JSON.stringify(item.dept||'') + ',\n';
+      fmt += '        "email" : ' + JSON.stringify(item.email||'') + '\n';
+    } else {
+      fmt += '        "type"  : ' + JSON.stringify(item.type||'') + ',\n';
+      fmt += '        "year"  : ' + JSON.stringify(item.year||'') + ',\n';
+      fmt += '        "title" : ' + JSON.stringify(item.title||'') + ',\n';
+      fmt += '        "desc"  : ' + JSON.stringify(item.desc||'') + ',\n';
+      fmt += '        "who"   : ' + JSON.stringify(item.who||'') + ',\n';
+      fmt += '        "date"  : ' + JSON.stringify(item.date||'') + ',\n';
+      fmt += '        "link"  : ' + JSON.stringify(item.link||'#') + '\n';
+    }
+    fmt += '      }' + (i < data.length-1 ? ',' : '') + '\n\n';
+  });
+  fmt += '    ];';
+  var re = new RegExp('var ' + varName + ' = \\[[\\s\\S]*?\\];');
+  return html.replace(re, fmt);
+}
+
+// ── Render Table ──
+function renderTable(page, data, originalHtml) {
+  var cfg = PAGE_MAP[page];
+  var mode = cfg.mode || 'full';
+  var mc = document.getElementById('mainContent');
+
+  var html = '<div class="page-header">' +
+    '<div><div class="page-title">' + cfg.icon + ' ' + cfg.label + '</div>' +
+    '<div class="page-subtitle">' + data.length + ' entries &nbsp;|&nbsp; ' + cfg.repo + '</div></div>' +
+    '<div class="btn-group">' +
+      '<button class="btn btn-secondary" id="refreshBtn">↺ Refresh</button>' +
+      '<button class="btn btn-primary" id="addBtn">+ Add Entry</button>' +
+    '</div>' +
+  '</div>';
+
+  html += '<div class="table-wrap">';
+  html += '<div class="table-toolbar"><input class="search-input" id="searchInput" placeholder="🔍 Search..."></div>';
+  html += '<table id="entriesTable"><thead><tr>';
+
+  if (mode === 'simple') {
+    html += '<th>#</th><th>Date</th><th>Text</th><th>Actions</th>';
+  } else if (mode === 'members') {
+    html += '<th>#</th><th>Name</th><th>Role</th><th>Dept</th><th>Email</th><th>Actions</th>';
+  } else {
+    html += '<th>#</th><th>Type</th><th>Year</th><th>Title</th><th>Who</th><th>Date</th><th>Actions</th>';
+  }
+
+  html += '</tr></thead><tbody>';
+
+  data.forEach(function(item, i) {
+    html += '<tr>';
+    html += '<td style="color:var(--muted);">' + (i+1) + '</td>';
+    if (mode === 'simple') {
+      html += '<td><strong>' + (item.date||'—') + '</strong></td>';
+      html += '<td style="color:var(--muted);max-width:400px;">' + (item.text||'—') + '</td>';
+    } else if (mode === 'members') {
+      html += '<td><strong>' + (item.name||'—') + '</strong></td>';
+      html += '<td style="color:var(--indigo);">' + (item.role||'—') + '</td>';
+      html += '<td style="color:var(--muted);">' + (item.dept||'—') + '</td>';
+      html += '<td style="color:var(--muted);">' + (item.email||'—') + '</td>';
+    } else {
+      html += '<td><span class="badge">' + (item.type||'—') + '</span></td>';
+      html += '<td><span class="badge">' + (item.year||'—') + '</span></td>';
+      html += '<td style="max-width:200px;"><strong>' + (item.title||'—') + '</strong></td>';
+      html += '<td style="color:var(--muted);">' + (item.who||'—') + '</td>';
+      html += '<td style="color:var(--muted);">' + (item.date||'—') + '</td>';
+    }
+    html += '<td><div class="btn-group">' +
+      '<button class="btn btn-secondary btn-sm edit-btn" data-idx="' + i + '">✏️ Edit</button>' +
+      '<button class="btn btn-danger btn-sm del-btn" data-idx="' + i + '">🗑️</button>' +
+      '</div></td>';
+    html += '</tr>';
+  });
+  html += '</tbody></table></div>';
+
+  // Uploaded files section for students/professors
+  if (cfg.hasFiles) {
+    html += '<div style="margin-top:24px;"><div style="font-weight:700;color:var(--navy);margin-bottom:12px;">📁 Uploaded Files</div>' +
+      '<div id="filesSection"><p style="color:var(--muted);">Loading files...</p></div></div>';
+  }
+
+  mc.innerHTML = html;
+
+  // Attach events
+  document.getElementById('refreshBtn').addEventListener('click', function() { loadPage(page); });
+  document.getElementById('addBtn').addEventListener('click', function() { openAddModal(cfg, originalHtml); });
+  document.getElementById('searchInput').addEventListener('input', function() {
+    var q = this.value.toLowerCase();
+    document.querySelectorAll('#entriesTable tbody tr').forEach(function(row) {
+      row.style.display = row.textContent.toLowerCase().includes(q) ? '' : 'none';
+    });
+  });
+  mc.querySelectorAll('.edit-btn').forEach(function(btn) {
+    btn.addEventListener('click', function() { openEditModal(parseInt(btn.dataset.idx), cfg, originalHtml); });
+  });
+  mc.querySelectorAll('.del-btn').forEach(function(btn) {
+    btn.addEventListener('click', function() { openDeleteModal(parseInt(btn.dataset.idx)); });
+  });
+
+  if (cfg.hasFiles) loadFilesSection(cfg.repo);
+}
+
+// ── Files Section ──
+function loadFilesSection(repo) {
+  var section = document.getElementById('filesSection');
+  if (!section) return;
+  fetch('https://api.github.com/repos/' + GITHUB_OWNER + '/' + repo + '/contents/submissions', { headers: ghHeaders() })
+    .then(function(r) { return r.ok ? r.json() : []; })
+    .then(function(folders) {
+      if (!Array.isArray(folders) || !folders.length) {
+        section.innerHTML = '<p style="color:var(--muted);">No uploaded files found.</p>';
+        return;
+      }
+      var promises = folders.filter(function(f) { return f.type==='dir'; }).map(function(folder) {
+        return fetch(folder.url, { headers: ghHeaders() })
+          .then(function(r) { return r.ok ? r.json() : []; })
+          .then(function(files) { return { year: folder.name, files: files.filter(function(f) { return f.type==='file'; }) }; });
+      });
+      return Promise.all(promises);
+    })
+    .then(function(years) {
+      if (!years) return;
+      var html = '';
+      years.forEach(function(yd) {
+        if (!yd.files.length) return;
+        html += '<div class="table-wrap"><div class="table-toolbar"><strong>📅 ' + yd.year + '</strong></div>';
+        html += '<table><thead><tr><th>File</th><th>Size</th><th>Actions</th></tr></thead><tbody>';
+        yd.files.forEach(function(file) {
+          var kb = file.size ? (file.size/1024).toFixed(1)+' KB' : '—';
+          html += '<tr><td><strong>' + file.name + '</strong></td><td style="color:var(--muted);">' + kb + '</td>';
+          html += '<td><div class="btn-group">' +
+            '<a href="' + file.download_url + '" target="_blank" class="btn btn-secondary btn-sm">⬇ Download</a>' +
+            '<button class="btn btn-danger btn-sm" data-repo="' + repo + '" data-path="' + file.path + '" data-sha="' + file.sha + '" data-name="' + file.name + '" onclick="deleteFile(this)">🗑️</button>' +
+          '</div></td></tr>';
+        });
+        html += '</tbody></table></div>';
+      });
+      section.innerHTML = html || '<p style="color:var(--muted);">No files found.</p>';
+    })
+    .catch(function() { section.innerHTML = '<p style="color:var(--muted);">Could not load files.</p>'; });
+}
+
+window.deleteFile = function(btn) {
+  var repo = btn.dataset.repo, path = btn.dataset.path, sha = btn.dataset.sha, name = btn.dataset.name;
+  if (!confirm('Delete "' + name + '"?')) return;
+  showSaving('Deleting...');
+  fetch('https://api.github.com/repos/' + GITHUB_OWNER + '/' + repo + '/contents/' + path, {
+    method: 'DELETE', headers: ghHeaders(),
+    body: JSON.stringify({ message: '🗑️ Delete ' + name, sha: sha })
+  })
+  .then(function() { hideSaving(); showToast('✅ File deleted!', 'success'); loadPage(currentPage); })
+  .catch(function(e) { hideSaving(); showToast('❌ ' + e.message, 'error'); });
+};
+
+// ── Modals ──
+function getFormFields(cfg) {
+  var mode = cfg.mode || 'full';
+  if (mode === 'simple') {
+    return '<div class="form-group full"><label>Date</label><input type="text" id="fDate" placeholder="e.g. June 18, 2026"></div>' +
+      '<div class="form-group full"><label>Text</label><textarea id="fText" placeholder="Announcement or news text..."></textarea></div>';
+  }
+  if (mode === 'members') {
+    return '<div class="form-group full"><label>Full Name</label><input type="text" id="fName" placeholder="e.g. Dr. Jalal Hameed"></div>' +
+      '<div class="form-group"><label>Role / Position</label><input type="text" id="fRole" placeholder="e.g. Club Supervisor"></div>' +
+      '<div class="form-group"><label>Department</label><input type="text" id="fDept" placeholder="e.g. Big Data Department"></div>' +
+      '<div class="form-group full"><label>Email (optional)</label><input type="text" id="fEmail" placeholder="email@uobaghdad.edu.iq"></div>';
+  }
+  // Full mode
+  var typeOptions = ['research','project','software','ai','ml','nlp','bigdata','data','publication','lecture','workshop','seminar','conference','presentation','tech','industry','academic','gov','lab','uni','programming','tools','ethics','career','national','international','local','organized','resource','file','other'];
+  var yearOptions = ['2030','2029','2028','2027','2026','2025','2024','2023'];
+  return '<div class="form-group"><label>Type</label><select id="fType">' + typeOptions.map(function(t){return '<option value="'+t+'">'+t+'</option>';}).join('') + '</select></div>' +
+    '<div class="form-group"><label>Year</label><select id="fYear">' + yearOptions.map(function(y){return '<option value="'+y+'">'+y+'</option>';}).join('') + '</select></div>' +
+    '<div class="form-group full"><label>Title</label><input type="text" id="fTitle" placeholder="Entry title"></div>' +
+    '<div class="form-group full"><label>Description</label><textarea id="fDesc" placeholder="Description..."></textarea></div>' +
+    '<div class="form-group"><label>Author / Who</label><input type="text" id="fWho" placeholder="e.g. Dr. Jalal Hameed"></div>' +
+    '<div class="form-group"><label>Date</label><input type="text" id="fDate" placeholder="e.g. June 2026"></div>' +
+    '<div class="form-group full"><label>Link (optional)</label><input type="text" id="fLink" placeholder="https://..."></div>';
+}
+
+function openAddModal(cfg, originalHtml) {
+  editIndex = -1;
+  document.getElementById('modalTitle').textContent = 'Add New Entry';
+  document.getElementById('modalBody').innerHTML =
+    '<div class="form-grid">' + getFormFields(cfg) + '</div>' +
+    '<div class="form-actions">' +
+      '<button class="btn btn-secondary" onclick="closeModal()">Cancel</button>' +
+      '<button class="btn btn-primary" id="saveEntryBtn">💾 Save Entry</button>' +
+    '</div>';
+  document.getElementById('entryModal').classList.add('open');
+  document.getElementById('saveEntryBtn').addEventListener('click', function() { saveEntry(cfg, originalHtml); });
+}
+
+function openEditModal(idx, cfg, originalHtml) {
+  editIndex = idx;
+  var item = currentData[idx];
+  var mode = cfg.mode || 'full';
+  document.getElementById('modalTitle').textContent = 'Edit Entry';
+  document.getElementById('modalBody').innerHTML =
+    '<div class="form-grid">' + getFormFields(cfg) + '</div>' +
+    '<div class="form-actions">' +
+      '<button class="btn btn-secondary" onclick="closeModal()">Cancel</button>' +
+      '<button class="btn btn-primary" id="saveEntryBtn">💾 Save Entry</button>' +
+    '</div>';
+
+  // Fill values
+  if (mode === 'simple') {
+    document.getElementById('fDate').value = item.date || '';
+    document.getElementById('fText').value = item.text || '';
+  } else if (mode === 'members') {
+    document.getElementById('fName').value = item.name || '';
+    document.getElementById('fRole').value = item.role || '';
+    document.getElementById('fDept').value = item.dept || '';
+    document.getElementById('fEmail').value = item.email || '';
+  } else {
+    document.getElementById('fType').value = item.type || 'research';
+    document.getElementById('fYear').value = item.year || '2026';
+    document.getElementById('fTitle').value = item.title || '';
+    document.getElementById('fDesc').value = item.desc || '';
+    document.getElementById('fWho').value = item.who || '';
+    document.getElementById('fDate').value = item.date || '';
+    document.getElementById('fLink').value = item.link || '#';
+  }
+
+  document.getElementById('entryModal').classList.add('open');
+  document.getElementById('saveEntryBtn').addEventListener('click', function() { saveEntry(cfg, originalHtml); });
+}
+
+function closeModal() { document.getElementById('entryModal').classList.remove('open'); }
+
+function saveEntry(cfg, originalHtml) {
+  var mode = cfg.mode || 'full';
+  var entry;
+  if (mode === 'simple') {
+    entry = { date: document.getElementById('fDate').value.trim(), text: document.getElementById('fText').value.trim() };
+    if (!entry.text) { alert('Text is required.'); return; }
+  } else if (mode === 'members') {
+    entry = { name: document.getElementById('fName').value.trim(), role: document.getElementById('fRole').value.trim(), dept: document.getElementById('fDept').value.trim(), email: document.getElementById('fEmail').value.trim() };
+    if (!entry.name) { alert('Name is required.'); return; }
+  } else {
+    entry = { type: document.getElementById('fType').value, year: document.getElementById('fYear').value, title: document.getElementById('fTitle').value.trim(), desc: document.getElementById('fDesc').value.trim(), who: document.getElementById('fWho').value.trim(), date: document.getElementById('fDate').value.trim(), link: document.getElementById('fLink').value.trim() || '#' };
+    if (!entry.title) { alert('Title is required.'); return; }
+  }
+
+  if (editIndex === -1) { currentData.unshift(entry); }
+  else { currentData[editIndex] = entry; }
+
+  closeModal();
+  commitData(cfg, originalHtml, editIndex === -1 ? 'Add: ' + (entry.title||entry.text||entry.name) : 'Edit: ' + (entry.title||entry.text||entry.name));
+}
+
+function openDeleteModal(idx) {
+  deleteIndex = idx;
+  var item = currentData[idx];
+  document.getElementById('deleteTitle').textContent = '"' + (item.title||item.text||item.name||'this entry') + '"';
+  document.getElementById('confirmModal').classList.add('open');
+}
+function closeConfirm() { document.getElementById('confirmModal').classList.remove('open'); }
+function confirmDelete() {
+  var name = currentData[deleteIndex].title || currentData[deleteIndex].text || currentData[deleteIndex].name;
+  currentData.splice(deleteIndex, 1);
+  closeConfirm();
+  var cfg = PAGE_MAP[currentPage];
+  fetchFile(cfg.repo, cfg.file, function(html, sha) {
+    shaCache[currentPage] = sha;
+    commitData(cfg, html, 'Delete: ' + name);
+  });
+}
+
+// ── Commit ──
+function commitData(cfg, originalHtml, message) {
+  showSaving('Saving to GitHub...');
+  var sha = shaCache[currentPage];
+  if (!sha) {
+    fetchFile(cfg.repo, cfg.file, function(html, newSha) {
+      shaCache[currentPage] = newSha;
+      doCommit(cfg, html, message, newSha);
+    });
+    return;
+  }
+  doCommit(cfg, originalHtml, message, sha);
+}
+
+function doCommit(cfg, originalHtml, message, sha) {
+  // Re-fetch to get fresh content and SHA
+  fetchFile(cfg.repo, cfg.file, function(freshHtml, freshSha) {
+    var varName = cfg.dataVar || 'allData';
+    var newContent = injectData(freshHtml, currentData, varName, cfg.mode);
+    saveFile(cfg.repo, cfg.file, newContent, freshSha, '⚙️ Admin: ' + message, function(err, result) {
+      hideSaving();
+      if (err) {
+        showToast('❌ Save failed: ' + err.message, 'error');
+      } else {
+        fileCache[currentPage] = currentData;
+        showToast('✅ Saved!', 'success');
+        loadPage(currentPage);
+      }
+    });
+  });
+}
+
+// ── UI Helpers ──
+function showSaving(msg) { document.getElementById('savingMsg').textContent = msg; document.getElementById('savingOverlay').classList.add('open'); }
+function hideSaving() { document.getElementById('savingOverlay').classList.remove('open'); }
+function showToast(msg, type) {
+  var t = document.getElementById('toast');
+  t.textContent = msg; t.className = 'show ' + (type||'');
+  setTimeout(function() { t.className = ''; }, 3500);
+}
+
+document.addEventListener('keydown', function(e) {
+  if (e.key === 'Escape') { closeModal(); closeConfirm(); }
 });
 </script>
 </body>
