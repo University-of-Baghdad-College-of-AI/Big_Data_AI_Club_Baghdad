@@ -178,8 +178,8 @@ var PAGES = [
   { id:'announcements', repo:'Big_Data_AI_Club_Baghdad',   file:'announcements.html', label:'Announcements', icon:'📢', mode:'simple', dataVar:'allAnnouncements' },
   { id:'news',          repo:'Big_Data_AI_Club_Baghdad',   file:'news.html',          label:'News',          icon:'📰', mode:'simple', dataVar:'allNews' },
   { id:'members',       repo:'Big_Data_AI_Club_Baghdad',   file:'members.html',       label:'Members',       icon:'👥', mode:'members', dataVar:'allMembers' },
-  { id:'students',      repo:'Big_Data_AI_Club_Students',  file:'index.html',         label:'Students',      icon:'🎓', hasFiles:true },
-  { id:'professors',    repo:'Big_Data_AI_Club_Professors',file:'index.html',         label:'Professors',    icon:'📚', hasFiles:true },
+  { id:'students',      repo:'Big_Data_AI_Club_Students',  file:'index.html',         label:'Students Submissions', icon:'🎓', hasFiles:true },
+  { id:'professors',    repo:'Big_Data_AI_Club_Professors',file:'index.html',         label:'Professors Submissions', icon:'📚', hasFiles:true },
 ];
 
 var PAGE_MAP = {};
@@ -542,7 +542,7 @@ function loadFilesSection(repo) {
       '<div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:12px;">' +
         '<div><label style="font-size:.78em;font-weight:700;color:var(--muted);text-transform:uppercase;display:block;margin-bottom:4px;">Year Folder</label>' +
         '<select id="uploadYear" style="width:100%;padding:8px 12px;border:1.5px solid var(--border);border-radius:8px;font-family:inherit;">' +
-        '<option>2026</option><option>2027</option><option>2028</option><option>2029</option><option>2030</option><option>2025</option><option>2024</option>' +
+        '<option>2026</option><option>2027</option><option>2028</option><option>2029</option><option>2030</option><option>2025</option><option>2024</option><option>2023</option>' +
         '</select></div>' +
         '<div><label style="font-size:.78em;font-weight:700;color:var(--muted);text-transform:uppercase;display:block;margin-bottom:4px;">File (PDF or ZIP)</label>' +
         '<input type="file" id="uploadFile" accept=".pdf,.zip" style="width:100%;padding:6px;border:1.5px solid var(--border);border-radius:8px;font-family:inherit;font-size:.85em;"></div>' +
@@ -641,28 +641,69 @@ function loadFilesList(repo) {
       var promises = folders.filter(function(f) { return f.type==='dir'; }).map(function(folder) {
         return fetch(folder.url, { headers: ghHeaders() })
           .then(function(r) { return r.ok ? r.json() : []; })
-          .then(function(files) { return { year: folder.name, files: files.filter(function(f) { return f.type==='file'; }) }; });
+          .then(function(files) { return { year: folder.name, path: folder.path, files: files.filter(function(f) { return f.type==='file'; }) }; });
       });
       Promise.all(promises).then(function(years) {
         var html = '';
+        years.sort(function(a,b){ return b.year.localeCompare(a.year); });
         years.forEach(function(yd) {
           if (!yd.files.length) return;
-          html += '<div class="table-wrap" style="margin-bottom:14px;">';
-          html += '<div class="table-toolbar"><strong>📅 ' + yd.year + '</strong><span style="color:var(--muted);font-size:.82em;margin-left:8px;">' + yd.files.length + ' files</span></div>';
-          html += '<table><thead><tr><th>File</th><th>Type</th><th>Size</th><th>Actions</th></tr></thead><tbody>';
+
+          // Group PDF and JSON pairs by base name
+          var pairs = {};
           yd.files.forEach(function(file) {
-            var kb = file.size ? (file.size/1024).toFixed(1)+' KB' : '—';
-            var ext = file.name.split('.').pop().toUpperCase();
-            var extColor = ext==='PDF' ? '#C62828' : ext==='JSON' ? '#1565C0' : '#333';
-            html += '<tr><td><strong>' + file.name + '</strong></td>' +
-              '<td><span style="background:#f0f4ff;color:'+extColor+';font-size:.72em;font-weight:700;padding:2px 8px;border-radius:4px;">' + ext + '</span></td>' +
-              '<td style="color:var(--muted);">' + kb + '</td>' +
-              '<td><div class="btn-group">' +
-                '<a href="' + file.download_url + '" target="_blank" class="btn btn-secondary btn-sm">⬇</a>' +
-                '<button class="btn btn-danger btn-sm" data-repo="' + repo + '" data-path="' + file.path + '" data-sha="' + file.sha + '" data-name="' + file.name + '" onclick="deleteFile(this)">🗑️</button>' +
-              '</div></td></tr>';
+            var ext = file.name.split('.').pop().toLowerCase();
+            var base = file.name.replace(/\.(pdf|zip|json)$/i, '');
+            if (!pairs[base]) pairs[base] = { base: base, year: yd.year };
+            if (ext === 'json') pairs[base].json = file;
+            else pairs[base].pdf = file;
           });
-          html += '</tbody></table></div>';
+
+          var pairList = Object.values(pairs);
+          html += '<div class="table-wrap" style="margin-bottom:16px;">';
+          html += '<div class="table-toolbar"><strong>📅 ' + yd.year + '</strong>' +
+            '<span style="color:var(--muted);font-size:.82em;margin-left:8px;">' + pairList.length + ' submission(s)</span></div>';
+
+          pairList.forEach(function(pair) {
+            // Parse name: FirstName-LastName_Title-Of-Work
+            var parts = pair.base.split('_');
+            var who = parts.length > 1 ? parts[0].replace(/-/g,' ') : pair.base.replace(/-/g,' ');
+            var title = parts.length > 1 ? parts.slice(1).join(' ').replace(/-/g,' ') : pair.base.replace(/-/g,' ');
+
+            var meta = null;
+            if (pair.json) {
+              // Try to parse JSON metadata
+              try {
+                // We'll fetch it inline for display
+              } catch(e) {}
+            }
+
+            html += '<div style="background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:16px;margin:8px 16px;">';
+            html += '<div style="display:flex;justify-content:space-between;align-items:flex-start;flex-wrap:wrap;gap:10px;">';
+
+            // Left: info
+            html += '<div style="flex:1;min-width:200px;">';
+            html += '<div style="font-family:sans-serif;font-weight:700;color:var(--navy);font-size:.95em;margin-bottom:4px;">' + title + '</div>';
+            html += '<div style="font-size:.82em;color:var(--muted);display:flex;gap:14px;flex-wrap:wrap;">';
+            html += '<span>👤 ' + who + '</span>';
+            html += '<span>📅 ' + pair.year + '</span>';
+            if (pair.pdf) html += '<span style="color:#C62828;font-weight:600;">📄 PDF</span>';
+            if (pair.json) html += '<span style="color:#1565C0;font-weight:600;">{ } JSON</span>';
+            html += '</div></div>';
+
+            // Right: actions
+            html += '<div class="btn-group" style="flex-shrink:0;">';
+            if (pair.pdf) {
+              html += '<a href="' + pair.pdf.download_url + '" target="_blank" class="btn btn-secondary btn-sm">⬇ PDF</a>';
+              html += '<button class="btn btn-danger btn-sm" data-repo="' + repo + '" data-path="' + pair.pdf.path + '" data-sha="' + pair.pdf.sha + '" data-name="' + pair.pdf.name + '" onclick="deleteFile(this)">🗑️ PDF</button>';
+            }
+            if (pair.json) {
+              html += '<a href="' + pair.json.download_url + '" target="_blank" class="btn btn-secondary btn-sm">⬇ JSON</a>';
+              html += '<button class="btn btn-danger btn-sm" data-repo="' + repo + '" data-path="' + pair.json.path + '" data-sha="' + pair.json.sha + '" data-name="' + pair.json.name + '" onclick="deleteFile(this)">🗑️ JSON</button>';
+            }
+            html += '</div></div></div>';
+          });
+          html += '</div>';
         });
         list.innerHTML = html || '<p style="color:var(--muted);padding:10px;">No files found.</p>';
       });
