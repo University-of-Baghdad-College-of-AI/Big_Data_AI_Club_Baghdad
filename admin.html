@@ -170,6 +170,21 @@
       <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" alt="Google">
       Sign in with Google
     </button>
+    <div id="tokenSection" style="display:none;margin-top:20px;text-align:left;">
+      <label style="font-size:.82em;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.06em;">
+        GitHub Token
+      </label>
+      <div style="display:flex;gap:8px;margin-top:6px;">
+        <input type="password" id="tokenInput" placeholder="ghp_..." 
+          style="flex:1;padding:9px 12px;border:1.5px solid var(--border);border-radius:8px;
+          font-family:inherit;font-size:.9em;outline:none;"
+          onkeydown="if(event.key==='Enter')saveToken()">
+        <button onclick="saveToken()" class="btn btn-primary" style="white-space:nowrap;">Save</button>
+      </div>
+      <p style="font-size:.78em;color:var(--muted);margin-top:6px;">
+        Stored in your browser session only. Never saved to GitHub.
+      </p>
+    </div>
     <div id="loginError" style="display:none;margin-top:14px;background:#FFF3F3;border:1px solid #FFCDD2;
       border-radius:8px;padding:12px;font-size:.85em;color:#C62828;"></div>
   </div>
@@ -360,6 +375,16 @@ window.doSignOut = function() {
   fbSignOut(auth);
 };
 
+window.saveToken = function() {
+  var t = document.getElementById('tokenInput').value.trim();
+  if (!t) { alert('Please enter a token.'); return; }
+  sessionStorage.setItem('gh_admin_token', t);
+  GITHUB_TOKEN = t;
+  document.getElementById('loginScreen').style.display = 'none';
+  document.getElementById('appShell').style.display = 'block';
+  showPage('dashboard');
+};
+
 onAuthStateChanged(auth, function(user) {
   document.getElementById('loginSpinner').style.display = 'none';
   document.getElementById('loginBtn').style.display = 'flex';
@@ -384,13 +409,23 @@ onAuthStateChanged(auth, function(user) {
   document.getElementById('adminName').textContent = user.displayName;
   document.getElementById('adminAvatar').src = user.photoURL || '';
   window.currentUser = user;
+  // Check if token is stored
+  if (!sessionStorage.getItem('gh_admin_token')) {
+    document.getElementById('loginScreen').style.display = 'flex';
+    document.getElementById('appShell').style.display = 'none';
+    document.getElementById('tokenSection').style.display = 'block';
+    document.getElementById('loginBtn').style.display = 'none';
+    document.getElementById('loginScreen').querySelector('p').textContent =
+      'Welcome ' + user.displayName + '! Please enter your GitHub token to continue.';
+    return;
+  }
   showPage('dashboard');
 });
 </script>
 
 <script>
 // ── GitHub API Config ──
-var GITHUB_TOKEN = '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';
+var GITHUB_TOKEN = sessionStorage.getItem('gh_admin_token') || '';
 var GITHUB_OWNER = 'University-of-Baghdad-College-of-AI';
 
 var PAGE_CONFIG = {
@@ -469,8 +504,9 @@ function loadPage(page) {
 
 // ── GitHub API ──
 function githubHeaders() {
+  var tok = sessionStorage.getItem('gh_admin_token') || GITHUB_TOKEN;
   return {
-    'Authorization': 'token ' + GITHUB_TOKEN,
+    'Authorization': 'token ' + tok,
     'Accept': 'application/vnd.github.v3+json',
     'Content-Type': 'application/json'
   };
