@@ -38,7 +38,7 @@
     .badge-trend,.badge-industry,.badge-keynote,.badge-lab{background:#E3F2FD;color:#0D47A1;}
     .badge-international{background:#EEF2FF;color:#3730a3;}
     .card h3{font-family:'Plus Jakarta Sans',sans-serif;font-size:1em;font-weight:700;color:var(--navy);line-height:1.3;}
-    .card p{font-size:.87em;color:var(--text-muted);line-height:1.55;flex:1;overflow:hidden;display:-webkit-box;-webkit-line-clamp:4;-webkit-box-orient:vertical;-webkit-mask-image:linear-gradient(180deg,#000 60%,transparent 100%);mask-image:linear-gradient(180deg,#000 60%,transparent 100%);}
+    .card p{font-size:.87em;color:var(--text-muted);line-height:1.55;flex:1;display:-webkit-box;-webkit-line-clamp:4;-webkit-box-orient:vertical;overflow:hidden;}
     .card-meta{font-size:.78em;color:var(--text-muted);display:flex;gap:12px;flex-wrap:wrap;}
     .card-meta span{display:flex;align-items:center;gap:4px;}
     .view-btn{display:inline-flex;align-items:center;gap:6px;font-size:.83em;font-weight:600;color:var(--indigo);background:var(--indigo-pale);border:none;border-radius:6px;padding:7px 14px;cursor:pointer;font-family:'Plus Jakarta Sans',sans-serif;transition:background .18s,gap .2s;margin-top:4px;text-decoration:none;}
@@ -121,7 +121,7 @@
       padding: 0 1px;
     }
   
-    /* ÃÂÃÂÃÂÃÂ¢ÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂ¢ÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂ Auth Top Bar ÃÂÃÂÃÂÃÂ¢ÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂ¢ÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂ */
+    /* ── Auth Top Bar ── */
     .auth-topbar {
       background: var(--navy);
       padding: 8px 24px;
@@ -148,7 +148,7 @@
     .tb-signout:hover { background: rgba(255,255,255,0.22); color: #fff; }
     @media(max-width:768px){ .auth-topbar{ padding: 7px 14px; } .auth-topbar .tb-name{ display:none; } }
   
-    /* ÃÂÃÂÃÂÃÂ¢ÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂ¢ÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂ Auth Top Bar ÃÂÃÂÃÂÃÂ¢ÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂ¢ÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂ */
+    /* ── Auth Top Bar ── */
     .auth-topbar {
       background: var(--navy, #0F1F3D);
       padding: 8px 24px;
@@ -278,7 +278,7 @@
   </style>
 </head>
 <body>
-  <!-- ÃÂÃÂÃÂÃÂ¢ÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂ¢ÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂ AUTH TOP BAR ÃÂÃÂÃÂÃÂ¢ÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂ¢ÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂ -->
+  <!-- ── AUTH TOP BAR ── -->
   <div class="auth-topbar">
     <div class="not-signed" id="tbNotSigned">
       <span>Not signed in</span>
@@ -426,20 +426,40 @@
   {
     "type"  : "national",
     "year"  : "2026",
-    "title" : "National Hackathon 2026",
-    "desc"  : "Club team participated in an innovative ML-based solutions for society.",
-    "who"   : "First Grade Students 2025-2026",
+    "title" : "National AI Hackathon 2026",
+    "desc"  : "Club team won 2nd place with an innovative ML-based solution for traffic optimization.",
+    "who"   : "Club Team",
     "date"  : "June 2026",
     "link"  : "#"
   },
 
   {
-    "type"  : "national",
+    "type"  : "international",
     "year"  : "2026",
-    "title" : "Al-Arbaen Conference 2026",
-    "desc"  : "",
-    "who"   : "Researchers and Students",
-    "date"  : "August 2026",
+    "title" : "IEEE International Conference on Big Data",
+    "desc"  : "Paper on Big Data clustering techniques presented at the IEEE Big Data conference.",
+    "who"   : "Dr. Jalal Hameed",
+    "date"  : "May 2026",
+    "link"  : "#"
+  },
+
+  {
+    "type"  : "local",
+    "year"  : "2025",
+    "title" : "University of Baghdad Research Symposium",
+    "desc"  : "Annual symposium showcasing student and college research contributions.",
+    "who"   : "Club Members",
+    "date"  : "April 2025",
+    "link"  : "#"
+  },
+
+  {
+    "type"  : "organized",
+    "year"  : "2025",
+    "title" : "College of AI Annual Tech Summit",
+    "desc"  : "Club-organized summit for students, professors, and industry professionals.",
+    "who"   : "Big Data AI Club",
+    "date"  : "February 2025",
     "link"  : "#"
   }
 
@@ -614,8 +634,8 @@
         '<span class="badge badge-year">'+(d.year||'')+'</span>';
       document.getElementById('modalTitle').textContent = d.title||'';
       document.getElementById('modalDesc').textContent  = d.desc||'No description available.';
-      document.getElementById('modalWho').textContent   = d.who||'ÃÂÃÂÃÂÃÂ¢ÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂ';
-      document.getElementById('modalDate').textContent  = d.date||'ÃÂÃÂÃÂÃÂ¢ÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂ';
+      document.getElementById('modalWho').textContent   = d.who||'—';
+      document.getElementById('modalDate').textContent  = d.date||'—';
       var lnk = document.getElementById('modalLink');
       if(d.link && d.link!=='#'){
         lnk.href=d.link; lnk.style.display='inline-flex'; lnk.onclick=null;
