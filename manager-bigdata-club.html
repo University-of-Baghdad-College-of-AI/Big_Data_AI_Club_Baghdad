@@ -661,11 +661,16 @@ function loadFilesList(repo) {
           });
 
           var pairList = Object.values(pairs);
-          html += '<div class="table-wrap" style="margin-bottom:16px;">';
+          var PAGE_SIZE = 20;
+          var yearId = 'year_' + repo.replace(/[^a-z]/gi,'_') + '_' + yd.year;
+          html += '<div class="table-wrap" style="margin-bottom:16px;" id="wrap_' + yearId + '">';
           html += '<div class="table-toolbar"><strong>📅 ' + yd.year + '</strong>' +
-            '<span style="color:var(--muted);font-size:.82em;margin-left:8px;">' + pairList.length + ' submission(s)</span></div>';
+            '<span style="color:var(--muted);font-size:.82em;margin-left:8px;">' + pairList.length + ' submission(s)</span>' +
+            (pairList.length > PAGE_SIZE ? '<span style="font-size:.78em;color:var(--indigo);margin-left:auto;">Showing 1-' + PAGE_SIZE + ' of ' + pairList.length + '</span>' : '') +
+          '</div>';
+          html += '<div id="list_' + yearId + '">';
 
-          pairList.forEach(function(pair) {
+          pairList.slice(0, PAGE_SIZE).forEach(function(pair, pairIdx) {
             // Parse name: FirstName-LastName_Title-Of-Work
             var parts = pair.base.split('_');
             var who = parts.length > 1 ? parts[0].replace(/-/g,' ') : pair.base.replace(/-/g,' ');
@@ -679,12 +684,16 @@ function loadFilesList(repo) {
               } catch(e) {}
             }
 
+            var globalIdx = pairIdx + 1;
             html += '<div style="background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:16px;margin:8px 16px;">';
             html += '<div style="display:flex;justify-content:space-between;align-items:flex-start;flex-wrap:wrap;gap:10px;">';
 
             // Left: info
             html += '<div style="flex:1;min-width:200px;">';
-            html += '<div style="font-family:sans-serif;font-weight:700;color:var(--navy);font-size:.95em;margin-bottom:4px;">' + title + '</div>';
+            html += '<div style="display:flex;align-items:center;gap:8px;margin-bottom:4px;">' +
+              '<span style="background:var(--navy);color:#fff;font-size:.72em;font-weight:700;padding:2px 8px;border-radius:20px;min-width:26px;text-align:center;">' + globalIdx + '</span>' +
+              '<span style="font-family:sans-serif;font-weight:700;color:var(--navy);font-size:.95em;">' + title + '</span>' +
+            '</div>';
             html += '<div style="font-size:.82em;color:var(--muted);display:flex;gap:14px;flex-wrap:wrap;">';
             html += '<span>👤 ' + who + '</span>';
             html += '<span>📅 ' + pair.year + '</span>';
@@ -705,8 +714,78 @@ function loadFilesList(repo) {
             html += '</div></div></div>';
           });
           html += '</div>';
+
+          // Pagination if more than PAGE_SIZE
+          if (pairList.length > PAGE_SIZE) {
+            html += '<div style="display:flex;gap:6px;flex-wrap:wrap;padding:12px 16px;border-top:1px solid var(--border);" id="pg_' + yearId + '">';
+            var totalPages = Math.ceil(pairList.length / PAGE_SIZE);
+            for (var pg = 0; pg < totalPages; pg++) {
+              html += '<button class="btn btn-secondary btn-sm pg-btn" style="' + (pg===0?'background:var(--indigo);color:#fff;border-color:var(--indigo);':'') + '" ' +
+                'data-yearid="' + yearId + '" data-page="' + pg + '" ' +
+                'data-pairslen="' + pairList.length + '" ' +
+                'data-repo="' + repo + '">' + (pg+1) + '</button>';
+            }
+            html += '</div>';
+            // Store pairs data for pagination
+            html += '<script>window["pairs_' + yearId + '"] = ' + JSON.stringify(pairList) + ';<\/script>';
+          }
+          html += '</div>';
         });
         list.innerHTML = html || '<p style="color:var(--muted);padding:10px;">No files found.</p>';
+
+        // Attach pagination handlers
+        list.querySelectorAll('.pg-btn').forEach(function(btn) {
+          btn.addEventListener('click', function() {
+            var yearId = btn.dataset.yearid;
+            var page = parseInt(btn.dataset.page);
+            var repo2 = btn.dataset.repo;
+            var PAGE_SIZE2 = 20;
+            var pairData = window['pairs_' + yearId] || [];
+            var slice = pairData.slice(page * PAGE_SIZE2, (page+1) * PAGE_SIZE2);
+            var startNum = page * PAGE_SIZE2;
+
+            var listEl = document.getElementById('list_' + yearId);
+            if (!listEl) return;
+
+            var h = '';
+            slice.forEach(function(pair, i) {
+              var parts2 = pair.base.split('_');
+              var who2 = parts2.length > 1 ? parts2[0].replace(/-/g,' ') : pair.base.replace(/-/g,' ');
+              var title2 = parts2.length > 1 ? parts2.slice(1).join(' ').replace(/-/g,' ') : pair.base.replace(/-/g,' ');
+              var num = startNum + i + 1;
+              h += '<div style="background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:16px;margin:8px 16px;">';
+              h += '<div style="display:flex;justify-content:space-between;align-items:flex-start;flex-wrap:wrap;gap:10px;">';
+              h += '<div style="flex:1;min-width:200px;">';
+              h += '<div style="display:flex;align-items:center;gap:8px;margin-bottom:4px;">' +
+                '<span style="background:var(--navy);color:#fff;font-size:.72em;font-weight:700;padding:2px 8px;border-radius:20px;min-width:26px;text-align:center;">' + num + '</span>' +
+                '<span style="font-family:sans-serif;font-weight:700;color:var(--navy);font-size:.95em;">' + title2 + '</span></div>';
+              h += '<div style="font-size:.82em;color:var(--muted);display:flex;gap:14px;flex-wrap:wrap;">';
+              h += '<span>👤 ' + who2 + '</span><span>📅 ' + pair.year + '</span>';
+              if (pair.pdf) h += '<span style="color:#C62828;font-weight:600;">📄 PDF</span>';
+              if (pair.json) h += '<span style="color:#1565C0;font-weight:600;">{ } JSON</span>';
+              h += '</div></div>';
+              h += '<div class="btn-group" style="flex-shrink:0;">';
+              if (pair.pdf) {
+                h += '<a href="' + pair.pdf.download_url + '" target="_blank" class="btn btn-secondary btn-sm">⬇ PDF</a>';
+                h += '<button class="btn btn-danger btn-sm" data-repo="' + repo2 + '" data-path="' + pair.pdf.path + '" data-sha="' + pair.pdf.sha + '" data-name="' + pair.pdf.name + '" onclick="deleteFile(this)">🗑️ PDF</button>';
+              }
+              if (pair.json) {
+                h += '<a href="' + pair.json.download_url + '" target="_blank" class="btn btn-secondary btn-sm">⬇ JSON</a>';
+                h += '<button class="btn btn-danger btn-sm" data-repo="' + repo2 + '" data-path="' + pair.json.path + '" data-sha="' + pair.json.sha + '" data-name="' + pair.json.name + '" onclick="deleteFile(this)">🗑️ JSON</button>';
+              }
+              h += '</div></div></div>';
+            });
+            listEl.innerHTML = h;
+
+            // Update active button
+            var pgEl = document.getElementById('pg_' + yearId);
+            if (pgEl) pgEl.querySelectorAll('.pg-btn').forEach(function(b) {
+              b.style.background = b.dataset.page == page ? 'var(--indigo)' : '';
+              b.style.color = b.dataset.page == page ? '#fff' : '';
+              b.style.borderColor = b.dataset.page == page ? 'var(--indigo)' : '';
+            });
+          });
+        });
       });
     })
     .catch(function() { list.innerHTML = '<p style="color:var(--muted);">Could not load files.</p>'; });
