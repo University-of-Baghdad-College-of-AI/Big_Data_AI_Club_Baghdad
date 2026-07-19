@@ -9,19 +9,19 @@
 
 var APPROVED_USERS = {
 
-  /* ── Admin ── */
-  'jalal.hameed@uobaghdad.edu.iq': 'admin',
+  /* -- Admin -- */
+  "jalal.hameed@uobaghdad.edu.iq": "admin",
 
-  /* ── Professors ── */
-  // 'professor@uobaghdad.edu.iq': 'professor',
+  /* -- Professors -- */
+  "professor@uobaghdad.edu.iq": "professor",
 
-  /* ── Students ── */
-  // 'student@gmail.com': 'student',
+  /* -- Students -- */
+  "student@gmail.com": "student",
 
-  /* ── Employees ── */
-  // 'employee@uobaghdad.edu.iq': 'employee',
+  /* -- Employees -- */
+  "employee@uobaghdad.edu.iq": "employee",
 
-  /* ── Test accounts ── */
-  'jalal.hameed15@gmail.com': 'test',
+  /* -- Test accounts -- */
+  "jalal.hameed15@gmail.com": "test",
 
 };
