@@ -510,18 +510,52 @@ function showPage(page) {
 // ── Dashboard ──
 function renderDashboard() {
   var pages = Object.keys(PAGE_CONFIG);
-  var html = '<div class="page-header"><div><div class="page-title">📊 Dashboard</div>' +
-    '<div class="page-subtitle">Overview of all club content</div></div></div>';
+  var now = new Date();
+  var lastAccess = localStorage.getItem('admin_last_access');
+  localStorage.setItem('admin_last_access', now.toISOString());
+
+  var html = '<div class="page-header">' +
+    '<div><div class="page-title">📊 Dashboard</div>' +
+    '<div class="page-subtitle">Overview of all club content</div></div>' +
+    '<button class="btn btn-secondary" onclick="refreshDashboard()">↺ Refresh</button>' +
+  '</div>';
+
+  // Last access banner
+  if (lastAccess) {
+    var last = new Date(lastAccess);
+    var diff = Math.floor((now - last) / 60000);
+    var timeStr = last.toLocaleString('en-GB', {day:'2-digit',month:'short',year:'numeric',hour:'2-digit',minute:'2-digit'});
+    var agoStr = diff < 1 ? 'just now' : diff < 60 ? diff + ' min ago' : diff < 1440 ? Math.floor(diff/60) + ' hr ago' : Math.floor(diff/1440) + ' day(s) ago';
+    html += '<div style="background:#EEF2FF;border:1px solid #c7d2fe;border-radius:10px;padding:12px 18px;margin-bottom:20px;display:flex;align-items:center;gap:10px;">' +
+      '<span style="font-size:1.2em;">🕐</span>' +
+      '<div>' +
+        '<div style="font-size:.82em;color:var(--muted);">Last admin access</div>' +
+        '<div style="font-weight:700;color:var(--navy);font-size:.92em;">' + timeStr + ' &nbsp;<span style="font-weight:400;color:var(--muted);">(' + agoStr + ')</span></div>' +
+      '</div>' +
+    '</div>';
+  } else {
+    html += '<div style="background:#FFF8EC;border:1px solid #f0d080;border-radius:10px;padding:12px 18px;margin-bottom:20px;">' +
+      '<span style="font-size:.88em;color:#9a6f00;">🕐 First time accessing this session</span>' +
+    '</div>';
+  }
+
+  // Stat cards
   html += '<div class="stat-row">';
   pages.forEach(function(p) {
     var cached = fileCache[p];
     var count = cached ? cached.length : '—';
-    html += '<div class="stat-card"><div class="num">' + count + '</div>' +
-      '<div class="lbl">' + PAGE_CONFIG[p].label + '</div></div>';
+    html += '<div class="stat-card" onclick="showPage('' + p + '')" style="cursor:pointer;">' +
+      '<div class="num">' + count + '</div>' +
+      '<div class="lbl">' + PAGE_CONFIG[p].label + '</div>' +
+    '</div>';
   });
   html += '</div>';
+
+  // Quick access table
   html += '<div class="table-wrap"><div class="table-toolbar">' +
-    '<span style="font-weight:600;color:var(--navy);">Quick Access</span></div>';
+    '<span style="font-weight:600;color:var(--navy);">Quick Access</span>' +
+    '<span style="font-size:.8em;color:var(--muted);">Last refreshed: ' + now.toLocaleTimeString('en-GB') + '</span>' +
+  '</div>';
   html += '<table><thead><tr><th>Section</th><th>Entries</th><th>Repo</th><th>Action</th></tr></thead><tbody>';
   pages.forEach(function(p) {
     var cfg = PAGE_CONFIG[p];
@@ -529,26 +563,18 @@ function renderDashboard() {
     html += '<tr><td><strong>' + cfg.label + '</strong></td>' +
       '<td><span class="badge badge-year">' + count + '</span></td>' +
       '<td style="color:var(--muted);font-size:.82em;">' + cfg.repo + '</td>' +
-      '<td><button class="btn btn-secondary btn-sm" onclick="showPage(\'' + p + '\')">Manage →</button></td></tr>';
+      '<td><button class="btn btn-secondary btn-sm" onclick="showPage('' + p + '')">Manage →</button></td></tr>';
   });
   html += '</tbody></table></div>';
-
-  // For students/professors: also show uploaded files section
-  var cfg4 = PAGE_CONFIG[page];
-  if (cfg4 && cfg4.submissionsRepo && (page === 'students' || page === 'professors')) {
-    html += '<div style="margin-top:24px;">' +
-      '<div style="font-family:'Plus Jakarta Sans',sans-serif;font-weight:700;font-size:1em;color:var(--navy);margin-bottom:12px;">📁 Uploaded Files (submissions folder)</div>' +
-      '<div id="uploadedFilesSection"><p style="color:var(--muted);font-size:.88em;">Loading uploaded files...</p></div>' +
-    '</div>';
-  }
-
   document.getElementById('mainContent').innerHTML = html;
-
-  // Load uploaded files after rendering
-  if (cfg4 && cfg4.submissionsRepo && (page === 'students' || page === 'professors')) {
-    loadUploadedFilesSection(cfg4.submissionsRepo);
-  }
 }
+
+function refreshDashboard() {
+  fileCache = {};
+  renderDashboard();
+  showToast('🔄 Dashboard refreshed', 'success');
+}
+
 
 function loadUploadedFilesSection(repo) {
   var section = document.getElementById('uploadedFilesSection');
@@ -736,7 +762,10 @@ function renderTable(page, data) {
   var html = '<div class="page-header">' +
     '<div><div class="page-title">' + cfg.label + '</div>' +
     '<div class="page-subtitle">' + data.length + ' entries in ' + cfg.repo + '/' + cfg.file + '</div></div>' +
-    '<button class="btn btn-primary" onclick="openAddModal()">+ Add Entry</button>' +
+    '<div style="display:flex;gap:8px;">' +
+      '<button class="btn btn-secondary" onclick="loadPage(currentPage)">↺ Refresh</button>' +
+      '<button class="btn btn-primary" onclick="openAddModal()">+ Add Entry</button>' +
+    '</div>' +
   '</div>';
   html += '<div class="table-wrap">';
   html += '<div class="table-toolbar">' +
