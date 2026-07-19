@@ -10,7 +10,7 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
   <style>
-    /* ÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂ Auth Top Bar ÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂ */
+    /* ÃÂÃÂ¢ÃÂÃÂÃÂÃÂÃÂÃÂ¢ÃÂÃÂÃÂÃÂ Auth Top Bar ÃÂÃÂ¢ÃÂÃÂÃÂÃÂÃÂÃÂ¢ÃÂÃÂÃÂÃÂ */
     .auth-topbar {
       background: var(--navy);
       padding: 8px 24px;
@@ -37,7 +37,7 @@
     .tb-signout:hover { background: rgba(255,255,255,0.22); color: #fff; }
     @media(max-width:768px){ .auth-topbar{ padding: 7px 14px; } .auth-topbar .tb-name{ display:none; } }
   
-    /* ÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂ Auth Top Bar ÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂ */
+    /* ÃÂÃÂ¢ÃÂÃÂÃÂÃÂÃÂÃÂ¢ÃÂÃÂÃÂÃÂ Auth Top Bar ÃÂÃÂ¢ÃÂÃÂÃÂÃÂÃÂÃÂ¢ÃÂÃÂÃÂÃÂ */
     .auth-topbar {
       background: var(--navy, #0F1F3D);
       padding: 8px 24px;
@@ -167,7 +167,7 @@
   </style>
 </head>
 <body>
-  <!-- ÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂ AUTH TOP BAR ÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂ -->
+  <!-- ÃÂÃÂ¢ÃÂÃÂÃÂÃÂÃÂÃÂ¢ÃÂÃÂÃÂÃÂ AUTH TOP BAR ÃÂÃÂ¢ÃÂÃÂÃÂÃÂÃÂÃÂ¢ÃÂÃÂÃÂÃÂ -->
   <div class="auth-topbar">
     <div class="not-signed" id="tbNotSigned">
       <span>Not signed in</span>
@@ -431,18 +431,11 @@
         "role"  : "Head of Department",
         "dept"  : "Big Data Department",
         "email" : ""
-      },
-
-      {
-        "name"  : "Sara Mohammed",
-        "role"  : "Vice President",
-        "dept"  : "Big Data Department",
-        "email" : ""
       }
 
     ];
 
-    // Render members ÃÂ¢ÃÂÃÂ use window.onload to ensure DOM is ready
+    // Render members ÃÂÃÂ¢ÃÂÃÂÃÂÃÂ use window.onload to ensure DOM is ready
     function renderMembers() {
       var list = document.getElementById('membersList');
       if (!list || !allMembers.length) return;
