@@ -164,7 +164,12 @@
       .tb-popup-overlay{ padding-right: 10px; }
       .tb-popup{ width: calc(100vw - 20px); }
     }
-  </style>
+  
+  @media(max-width:600px){
+    img[src="logo3.png"], img[src*="logo3.png"]{height:50px!important;width:50px!important;}
+    img[src="coai-english-logo.png"], img[src*="coai-english-logo.png"]{height:50px!important;width:auto!important;}
+  }
+</style>
 </head>
 <body>
   <!-- ── AUTH TOP BAR ── -->
