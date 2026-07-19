@@ -1235,9 +1235,12 @@ function saveUsersFile(users, message) {
     if (err) {
       showToast('❌ Save failed: ' + err.message, 'error');
     } else {
+      // Update SHA and users cache — don't reload full page to avoid auth re-check
       window._approvedSha = result.content ? result.content.sha : sha;
-      showToast('✅ Users updated!', 'success');
-      loadUsersPage();
+      window._approvedUsers = users;
+      showToast('✅ Users updated! Changes live in ~30 seconds.', 'success');
+      // Just re-render the users table without full page reload
+      setTimeout(function() { loadUsersPage(); }, 500);
     }
   });
 }
