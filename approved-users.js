@@ -9,18 +9,6 @@
 
 var APPROVED_USERS = {
 
-  /* -- Admin -- */
-  "jalal.hameed@uobaghdad.edu.iq": "admin",
-
-  /* -- Professors -- */
-  "professor@uobaghdad.edu.iq": "professor",
-
-  /* -- Students -- */
-  "student@gmail.com": "student",
-
-  /* -- Employees -- */
-  "employee@uobaghdad.edu.iq": "employee",
-
   /* -- Test accounts -- */
   "jalal.hameed15@gmail.com": "test",
 
