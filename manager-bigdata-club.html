@@ -224,7 +224,9 @@
       <div class="sidebar-item" onclick="showPage('members')" id="nav-members"><span class="icon">👥</span> Members</div>
       <div class="sidebar-section">Submissions</div>
       <div class="sidebar-item" onclick="showPage('students')" id="nav-students"><span class="icon">🎓</span> Students</div>
+      <div class="sidebar-item" onclick="showPage('students-files')" id="nav-students-files"><span class="icon">📁</span> Student Files</div>
       <div class="sidebar-item" onclick="showPage('professors')" id="nav-professors"><span class="icon">📚</span> Professors</div>
+      <div class="sidebar-item" onclick="showPage('professors-files')" id="nav-professors-files"><span class="icon">📁</span> Professor Files</div>
     </div>
     <!-- Main -->
     <div class="main" id="mainContent">
@@ -487,6 +489,8 @@ var PAGE_CONFIG = {
   members:       { repo:'Big_Data_AI_Club_Baghdad',   file:'members.html',       label:'Members',        dataVar:'allMembers',       mode:'members' },
   students:      { repo:'Big_Data_AI_Club_Students',  file:'index.html',         label:'Student Submissions' },
   professors:    { repo:'Big_Data_AI_Club_Professors',file:'index.html',         label:'Professor Submissions' },
+  'students-files':   { repo:'Big_Data_AI_Club_Students',  file:'index.html', label:'Student Files',    mode:'files', submissionsRepo:'Big_Data_AI_Club_Students' },
+  'professors-files': { repo:'Big_Data_AI_Club_Professors',file:'index.html', label:'Professor Files',  mode:'files', submissionsRepo:'Big_Data_AI_Club_Professors' },
 };
 
 var currentPage = 'dashboard';
