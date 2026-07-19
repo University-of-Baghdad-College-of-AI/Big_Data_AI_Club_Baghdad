@@ -1020,7 +1020,7 @@
 
   <script>
   // ── Global Search ──
-  var SEARCH_INDEX = [];
+  var SEARCH_INDEX = []; // populated after DOM ready
   var PAGE_LABELS = {
     workshops:'Workshops', researches:'Researches', projects:'Projects',
     lectures:'Lectures', presentations:'Presentations', seminars:'Seminars',
@@ -1034,21 +1034,31 @@
     internships:'internships.html', courses:'courses.html'
   };
 
-  // Build search index from STATS_DATA
-  if (typeof STATS_DATA !== 'undefined') {
-    Object.keys(STATS_DATA).forEach(function(page) {
-      STATS_DATA[page].forEach(function(item) {
-        SEARCH_INDEX.push({
-          page: page,
-          title: item.title || '',
-          desc: item.desc || '',
-          who: item.who || '',
-          year: item.year || '',
-          type: item.type || '',
-          date: item.date || ''
+  // Build search index from STATS_DATA after DOM ready
+  function buildSearchIndex() {
+    SEARCH_INDEX = [];
+    if (typeof STATS_DATA !== 'undefined') {
+      Object.keys(STATS_DATA).forEach(function(page) {
+        (STATS_DATA[page]||[]).forEach(function(item) {
+          SEARCH_INDEX.push({
+            page: page,
+            title: item.title || '',
+            desc: item.desc || '',
+            who: item.who || '',
+            year: item.year || '',
+            type: item.type || '',
+            date: item.date || ''
+          });
         });
       });
-    });
+    }
+  }
+
+  // Build on load
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', buildSearchIndex);
+  } else {
+    buildSearchIndex();
   }
 
   var searchTimeout;
