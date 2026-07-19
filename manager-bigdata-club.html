@@ -419,7 +419,7 @@ window.doSignOut = function() {
 window.saveToken = function() {
   var t = document.getElementById('tokenInput').value.trim();
   if (!t) { alert('Please enter a token.'); return; }
-  sessionStorage.setItem('gh_admin_token', t);
+  localStorage.setItem('gh_admin_token', t);
   GITHUB_TOKEN = t;
   document.getElementById('loginScreen').style.display = 'none';
   document.getElementById('appShell').style.display = 'block';
@@ -453,7 +453,7 @@ onAuthStateChanged(auth, function(user) {
   document.getElementById('adminAvatar').src = user.photoURL || '';
   window.currentUser = user;
   // Check if token is stored
-  if (!sessionStorage.getItem('gh_admin_token')) {
+  if (!localStorage.getItem('gh_admin_token')) {
     document.getElementById('loginScreen').style.display = 'flex';
     document.getElementById('appShell').style.display = 'none';
     document.getElementById('tokenSection').style.display = 'block';
@@ -468,7 +468,7 @@ onAuthStateChanged(auth, function(user) {
 
 <script>
 // ── GitHub API Config ──
-var GITHUB_TOKEN = sessionStorage.getItem('gh_admin_token') || '';
+var GITHUB_TOKEN = localStorage.getItem('gh_admin_token') || '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';
 var GITHUB_OWNER = 'University-of-Baghdad-College-of-AI';
 
 var PAGE_CONFIG = {
@@ -645,7 +645,7 @@ function loadPage(page) {
 
 // ── GitHub API ──
 function githubHeaders() {
-  var tok = sessionStorage.getItem('gh_admin_token') || GITHUB_TOKEN;
+  var tok = localStorage.getItem('gh_admin_token') || GITHUB_TOKEN;
   return {
     'Authorization': 'token ' + tok,
     'Accept': 'application/vnd.github.v3+json',
