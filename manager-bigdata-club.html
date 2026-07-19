@@ -462,7 +462,7 @@ function renderDashboard() {
   pages.forEach(function(p) {
     var cached = fileCache[p];
     var count = cached ? cached.length : '—';
-    html += '<div class="stat-card" onclick="showPage('' + p + '')" style="cursor:pointer;">' +
+    html += '<div class="stat-card" onclick="showPage(\'' + p + '\')" style="cursor:pointer;">' +
       '<div class="num">' + count + '</div>' +
       '<div class="lbl">' + PAGE_CONFIG[p].label + '</div>' +
     '</div>';
@@ -481,7 +481,7 @@ function renderDashboard() {
     html += '<tr><td><strong>' + cfg.label + '</strong></td>' +
       '<td><span class="badge badge-year">' + count + '</span></td>' +
       '<td style="color:var(--muted);font-size:.82em;">' + cfg.repo + '</td>' +
-      '<td><button class="btn btn-secondary btn-sm" onclick="showPage('' + p + '')">Manage →</button></td></tr>';
+      '<td><button class="btn btn-secondary btn-sm" onclick="showPage(\'' + p + '\'')">Manage →</button></td></tr>';
   });
   html += '</tbody></table></div>';
   document.getElementById('mainContent').innerHTML = html;
