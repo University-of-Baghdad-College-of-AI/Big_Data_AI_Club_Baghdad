@@ -178,8 +178,8 @@ var PAGES = [
   { id:'announcements', repo:'Big_Data_AI_Club_Baghdad',   file:'announcements.html', label:'Announcements', icon:'📢', mode:'simple', dataVar:'allAnnouncements' },
   { id:'news',          repo:'Big_Data_AI_Club_Baghdad',   file:'news.html',          label:'News',          icon:'📰', mode:'simple', dataVar:'allNews' },
   { id:'members',       repo:'Big_Data_AI_Club_Baghdad',   file:'members.html',       label:'Members',       icon:'👥', mode:'members', dataVar:'allMembers' },
-  { id:'students',      repo:'Big_Data_AI_Club_Students',  file:'index.html',         label:'Students Submissions', icon:'🎓', hasFiles:true },
-  { id:'professors',    repo:'Big_Data_AI_Club_Professors',file:'index.html',         label:'Professors Submissions', icon:'📚', hasFiles:true },
+  { id:'students',      repo:'Big_Data_AI_Club_Students',  file:'index.html',         label:'Students Submissions', sidebarLabel:'Students', icon:'🎓', hasFiles:true },
+  { id:'professors',    repo:'Big_Data_AI_Club_Professors',file:'index.html',         label:'Professors Submissions', sidebarLabel:'Professors', icon:'📚', hasFiles:true },
 ];
 
 var PAGE_MAP = {};
@@ -268,7 +268,7 @@ function buildSidebar() {
   html += '<div class="sidebar-section">Submissions</div>';
   ['students','professors'].forEach(function(id) {
     var p = PAGE_MAP[id];
-    html += sidebarItem(id, p.icon, p.label);
+    html += sidebarItem(id, p.icon, p.label, p.sidebarLabel);
   });
   sb.innerHTML = html;
   sb.querySelectorAll('.sidebar-item').forEach(function(el) {
@@ -278,9 +278,10 @@ function buildSidebar() {
   });
 }
 
-function sidebarItem(id, icon, label) {
+function sidebarItem(id, icon, label, sidebarLabel) {
+  var display = sidebarLabel || label;
   return '<div class="sidebar-item" data-page="' + id + '" id="nav-' + id + '">' +
-    '<span class="icon">' + icon + '</span> ' + label + '</div>';
+    '<span class="icon">' + icon + '</span> ' + display + '</div>';
 }
 
 // ── Navigation ──
