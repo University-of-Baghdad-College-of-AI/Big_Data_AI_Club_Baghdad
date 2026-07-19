@@ -155,65 +155,9 @@
 
 <div id="toast"></div>
 
-<script src="approved-users.js"></script>
-<script type="module">
-import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js';
-import { getAuth, signInWithPopup, GoogleAuthProvider, signOut as fbSignOut, onAuthStateChanged }
-  from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js';
 
-const firebaseConfig = {
-  apiKey: "AIzaSyArF59_11UVHPo9yZW5zg2RYQWaKjIZXYw",
-  authDomain: "bigdataaiclub.firebaseapp.com",
-  projectId: "bigdataaiclub",
-  storageBucket: "bigdataaiclub.firebasestorage.app",
-  messagingSenderId: "877020220761",
-  appId: "1:877020220761:web:6c6dcc22b63fcd2ec15048"
-};
-const app = initializeApp(firebaseConfig);
-const auth = getAuth(app);
-const provider = new GoogleAuthProvider();
 
-window.doSignIn = function() {
-  document.getElementById('loginSpinner').style.display = 'block';
-  document.getElementById('loginBtn').style.display = 'none';
-  signInWithPopup(auth, provider).catch(function(e) {
-    document.getElementById('loginSpinner').style.display = 'none';
-    document.getElementById('loginBtn').style.display = 'flex';
-    document.getElementById('loginError').style.display = 'block';
-    document.getElementById('loginError').textContent = 'Sign-in failed: ' + e.message;
-  });
-};
 
-window.doSignOut = function() {
-  if (!confirm('Sign out?')) return;
-  fbSignOut(auth);
-};
-
-onAuthStateChanged(auth, function(user) {
-  document.getElementById('loginSpinner').style.display = 'none';
-  document.getElementById('loginBtn').style.display = 'flex';
-  if (!user) {
-    document.getElementById('loginScreen').style.display = 'flex';
-    document.getElementById('appShell').style.display = 'none';
-    return;
-  }
-  var role = window.APPROVED_USERS ? window.APPROVED_USERS[user.email] : null;
-  if (role !== 'admin') {
-    document.getElementById('loginBtn').style.display = 'none';
-    var err = document.getElementById('loginError');
-    err.style.display = 'block';
-    err.innerHTML = '⛔ <strong>Access Denied</strong><br>You do not have permission to access this page.';
-    fbSignOut(auth);
-    return;
-  }
-  document.getElementById('loginScreen').style.display = 'none';
-  document.getElementById('appShell').style.display = 'block';
-  document.getElementById('adminName').textContent = user.displayName;
-  document.getElementById('adminAvatar').src = user.photoURL || '';
-  window.currentUser = user;
-  window.initAdmin();
-});
-</script>
 
 <script>
 // ── Config ──
@@ -911,6 +855,66 @@ window.changeToken = function() {
 
 document.addEventListener('keydown', function(e) {
   if (e.key === 'Escape') { closeModal(); closeConfirm(); }
+});
+</script>
+
+<script src="approved-users.js"></script>
+<script type="module">
+import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js';
+import { getAuth, signInWithPopup, GoogleAuthProvider, signOut as fbSignOut, onAuthStateChanged }
+  from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js';
+
+const firebaseConfig = {
+  apiKey: "AIzaSyArF59_11UVHPo9yZW5zg2RYQWaKjIZXYw",
+  authDomain: "bigdataaiclub.firebaseapp.com",
+  projectId: "bigdataaiclub",
+  storageBucket: "bigdataaiclub.firebasestorage.app",
+  messagingSenderId: "877020220761",
+  appId: "1:877020220761:web:6c6dcc22b63fcd2ec15048"
+};
+const app = initializeApp(firebaseConfig);
+const auth = getAuth(app);
+const provider = new GoogleAuthProvider();
+
+window.doSignIn = function() {
+  document.getElementById('loginSpinner').style.display = 'block';
+  document.getElementById('loginBtn').style.display = 'none';
+  signInWithPopup(auth, provider).catch(function(e) {
+    document.getElementById('loginSpinner').style.display = 'none';
+    document.getElementById('loginBtn').style.display = 'flex';
+    document.getElementById('loginError').style.display = 'block';
+    document.getElementById('loginError').textContent = 'Sign-in failed: ' + e.message;
+  });
+};
+
+window.doSignOut = function() {
+  if (!confirm('Sign out?')) return;
+  fbSignOut(auth);
+};
+
+onAuthStateChanged(auth, function(user) {
+  document.getElementById('loginSpinner').style.display = 'none';
+  document.getElementById('loginBtn').style.display = 'flex';
+  if (!user) {
+    document.getElementById('loginScreen').style.display = 'flex';
+    document.getElementById('appShell').style.display = 'none';
+    return;
+  }
+  var role = window.APPROVED_USERS ? window.APPROVED_USERS[user.email] : null;
+  if (role !== 'admin') {
+    document.getElementById('loginBtn').style.display = 'none';
+    var err = document.getElementById('loginError');
+    err.style.display = 'block';
+    err.innerHTML = '⛔ <strong>Access Denied</strong><br>You do not have permission to access this page.';
+    fbSignOut(auth);
+    return;
+  }
+  document.getElementById('loginScreen').style.display = 'none';
+  document.getElementById('appShell').style.display = 'block';
+  document.getElementById('adminName').textContent = user.displayName;
+  document.getElementById('adminAvatar').src = user.photoURL || '';
+  window.currentUser = user;
+  window.initAdmin();
 });
 </script>
 </body>
