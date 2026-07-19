@@ -224,9 +224,9 @@
       <div class="sidebar-item" onclick="showPage('members')" id="nav-members"><span class="icon">👥</span> Members</div>
       <div class="sidebar-section">Submissions</div>
       <div class="sidebar-item" onclick="showPage('students')" id="nav-students"><span class="icon">🎓</span> Students</div>
-      <div class="sidebar-item" onclick="showPage('students-files')" id="nav-students-files"><span class="icon">📁</span> Student Files</div>
+
       <div class="sidebar-item" onclick="showPage('professors')" id="nav-professors"><span class="icon">📚</span> Professors</div>
-      <div class="sidebar-item" onclick="showPage('professors-files')" id="nav-professors-files"><span class="icon">📁</span> Professor Files</div>
+
     </div>
     <!-- Main -->
     <div class="main" id="mainContent">
@@ -436,16 +436,14 @@ onAuthStateChanged(auth, function(user) {
   }
   var role = window.APPROVED_USERS ? window.APPROVED_USERS[user.email] : null;
   if (role !== 'admin') {
-    // Not admin — stay on login screen, show error, sign out
+    // Not admin — show simple access denied, sign out silently
     document.getElementById('loginScreen').style.display = 'flex';
     document.getElementById('appShell').style.display = 'none';
     document.getElementById('loginBtn').style.display = 'none';
     document.getElementById('tokenSection').style.display = 'none';
     document.getElementById('loginError').style.display = 'block';
     document.getElementById('loginError').innerHTML =
-      '⛔ <strong>Access Denied</strong><br>This panel is for admins only.<br>' +
-      'Your role: <strong>' + (role || 'not approved') + '</strong><br><br>' +
-      '<button onclick="doSignOut()" style="margin-top:8px;padding:8px 18px;background:#C62828;color:#fff;border:none;border-radius:6px;cursor:pointer;font-family:inherit;font-weight:600;">Sign out</button>';
+      '⛔ <strong>Access Denied</strong><br>You do not have permission to access this page.';
     fbSignOut(auth);
     return;
   }
@@ -487,10 +485,9 @@ var PAGE_CONFIG = {
   announcements: { repo:'Big_Data_AI_Club_Baghdad',   file:'announcements.html', label:'Announcements',  dataVar:'allAnnouncements', mode:'simple' },
   news:          { repo:'Big_Data_AI_Club_Baghdad',   file:'news.html',          label:'News',           dataVar:'allNews',          mode:'simple' },
   members:       { repo:'Big_Data_AI_Club_Baghdad',   file:'members.html',       label:'Members',        dataVar:'allMembers',       mode:'members' },
-  students:      { repo:'Big_Data_AI_Club_Students',  file:'index.html',         label:'Student Submissions' },
-  professors:    { repo:'Big_Data_AI_Club_Professors',file:'index.html',         label:'Professor Submissions' },
-  'students-files':   { repo:'Big_Data_AI_Club_Students',  file:'index.html', label:'Student Files',    mode:'files', submissionsRepo:'Big_Data_AI_Club_Students' },
-  'professors-files': { repo:'Big_Data_AI_Club_Professors',file:'index.html', label:'Professor Files',  mode:'files', submissionsRepo:'Big_Data_AI_Club_Professors' },
+  students:      { repo:'Big_Data_AI_Club_Students',  file:'index.html',         label:'Student Submissions', submissionsRepo:'Big_Data_AI_Club_Students' },
+  professors:    { repo:'Big_Data_AI_Club_Professors',file:'index.html',         label:'Professor Submissions', submissionsRepo:'Big_Data_AI_Club_Professors' },
+
 };
 
 var currentPage = 'dashboard';
@@ -535,7 +532,74 @@ function renderDashboard() {
       '<td><button class="btn btn-secondary btn-sm" onclick="showPage(\'' + p + '\')">Manage →</button></td></tr>';
   });
   html += '</tbody></table></div>';
+
+  // For students/professors: also show uploaded files section
+  var cfg4 = PAGE_CONFIG[page];
+  if (cfg4 && cfg4.submissionsRepo && (page === 'students' || page === 'professors')) {
+    html += '<div style="margin-top:24px;">' +
+      '<div style="font-family:'Plus Jakarta Sans',sans-serif;font-weight:700;font-size:1em;color:var(--navy);margin-bottom:12px;">📁 Uploaded Files (submissions folder)</div>' +
+      '<div id="uploadedFilesSection"><p style="color:var(--muted);font-size:.88em;">Loading uploaded files...</p></div>' +
+    '</div>';
+  }
+
   document.getElementById('mainContent').innerHTML = html;
+
+  // Load uploaded files after rendering
+  if (cfg4 && cfg4.submissionsRepo && (page === 'students' || page === 'professors')) {
+    loadUploadedFilesSection(cfg4.submissionsRepo);
+  }
+}
+
+function loadUploadedFilesSection(repo) {
+  var section = document.getElementById('uploadedFilesSection');
+  if (!section) return;
+
+  fetch('https://api.github.com/repos/' + GITHUB_OWNER + '/' + repo + '/contents/submissions',
+    { headers: githubHeaders() })
+    .then(function(r) { return r.ok ? r.json() : []; })
+    .then(function(folders) {
+      if (!Array.isArray(folders) || !folders.length) {
+        section.innerHTML = '<p style="color:var(--muted);font-size:.88em;">No uploaded files found.</p>';
+        return;
+      }
+      var yearFolders = folders.filter(function(f) { return f.type === 'dir'; });
+      var promises = yearFolders.map(function(folder) {
+        return fetch(folder.url, { headers: githubHeaders() })
+          .then(function(r) { return r.ok ? r.json() : []; })
+          .then(function(files) {
+            return { year: folder.name, files: files.filter(function(f) { return f.type === 'file'; }) };
+          });
+      });
+      return Promise.all(promises);
+    })
+    .then(function(yearData) {
+      if (!yearData) return;
+      var html = '';
+      yearData.forEach(function(yd) {
+        if (!yd.files.length) return;
+        html += '<div class="table-wrap" style="margin-bottom:14px;">';
+        html += '<div class="table-toolbar"><span style="font-weight:700;color:var(--navy);">📅 ' + yd.year + '</span><span style="color:var(--muted);font-size:.82em;margin-left:8px;">' + yd.files.length + ' files</span></div>';
+        html += '<table><thead><tr><th>Filename</th><th>Size</th><th>Actions</th></tr></thead><tbody>';
+        yd.files.forEach(function(file) {
+          var sizeKB = file.size ? (file.size/1024).toFixed(1) + ' KB' : '—';
+          var safePath = file.path.replace(/'/g,"\'");
+          var safeSha  = file.sha.replace(/'/g,"\'");
+          var safeName = file.name.replace(/'/g,"\'");
+          html += '<tr>' +
+            '<td><strong>' + file.name + '</strong></td>' +
+            '<td style="color:var(--muted);">' + sizeKB + '</td>' +
+            '<td style="display:flex;gap:6px;">' +
+              '<a href="' + file.download_url + '" target="_blank" class="btn btn-secondary btn-sm">⬇ Download</a>' +
+              '<button class="btn btn-danger btn-sm" onclick="deleteFile('' + repo + '','' + safePath + '','' + safeSha + '','' + safeName + '')">🗑️ Delete</button>' +
+            '</td></tr>';
+        });
+        html += '</tbody></table></div>';
+      });
+      section.innerHTML = html || '<p style="color:var(--muted);font-size:.88em;">No uploaded files found.</p>';
+    })
+    .catch(function() {
+      section.innerHTML = '<p style="color:var(--muted);font-size:.88em;">Could not load uploaded files.</p>';
+    });
 }
 
 // ── Load Page Data ──
@@ -725,7 +789,74 @@ function renderTable(page, data) {
     });
   }
   html += '</tbody></table></div>';
+
+  // For students/professors: also show uploaded files section
+  var cfg4 = PAGE_CONFIG[page];
+  if (cfg4 && cfg4.submissionsRepo && (page === 'students' || page === 'professors')) {
+    html += '<div style="margin-top:24px;">' +
+      '<div style="font-family:'Plus Jakarta Sans',sans-serif;font-weight:700;font-size:1em;color:var(--navy);margin-bottom:12px;">📁 Uploaded Files (submissions folder)</div>' +
+      '<div id="uploadedFilesSection"><p style="color:var(--muted);font-size:.88em;">Loading uploaded files...</p></div>' +
+    '</div>';
+  }
+
   document.getElementById('mainContent').innerHTML = html;
+
+  // Load uploaded files after rendering
+  if (cfg4 && cfg4.submissionsRepo && (page === 'students' || page === 'professors')) {
+    loadUploadedFilesSection(cfg4.submissionsRepo);
+  }
+}
+
+function loadUploadedFilesSection(repo) {
+  var section = document.getElementById('uploadedFilesSection');
+  if (!section) return;
+
+  fetch('https://api.github.com/repos/' + GITHUB_OWNER + '/' + repo + '/contents/submissions',
+    { headers: githubHeaders() })
+    .then(function(r) { return r.ok ? r.json() : []; })
+    .then(function(folders) {
+      if (!Array.isArray(folders) || !folders.length) {
+        section.innerHTML = '<p style="color:var(--muted);font-size:.88em;">No uploaded files found.</p>';
+        return;
+      }
+      var yearFolders = folders.filter(function(f) { return f.type === 'dir'; });
+      var promises = yearFolders.map(function(folder) {
+        return fetch(folder.url, { headers: githubHeaders() })
+          .then(function(r) { return r.ok ? r.json() : []; })
+          .then(function(files) {
+            return { year: folder.name, files: files.filter(function(f) { return f.type === 'file'; }) };
+          });
+      });
+      return Promise.all(promises);
+    })
+    .then(function(yearData) {
+      if (!yearData) return;
+      var html = '';
+      yearData.forEach(function(yd) {
+        if (!yd.files.length) return;
+        html += '<div class="table-wrap" style="margin-bottom:14px;">';
+        html += '<div class="table-toolbar"><span style="font-weight:700;color:var(--navy);">📅 ' + yd.year + '</span><span style="color:var(--muted);font-size:.82em;margin-left:8px;">' + yd.files.length + ' files</span></div>';
+        html += '<table><thead><tr><th>Filename</th><th>Size</th><th>Actions</th></tr></thead><tbody>';
+        yd.files.forEach(function(file) {
+          var sizeKB = file.size ? (file.size/1024).toFixed(1) + ' KB' : '—';
+          var safePath = file.path.replace(/'/g,"\'");
+          var safeSha  = file.sha.replace(/'/g,"\'");
+          var safeName = file.name.replace(/'/g,"\'");
+          html += '<tr>' +
+            '<td><strong>' + file.name + '</strong></td>' +
+            '<td style="color:var(--muted);">' + sizeKB + '</td>' +
+            '<td style="display:flex;gap:6px;">' +
+              '<a href="' + file.download_url + '" target="_blank" class="btn btn-secondary btn-sm">⬇ Download</a>' +
+              '<button class="btn btn-danger btn-sm" onclick="deleteFile('' + repo + '','' + safePath + '','' + safeSha + '','' + safeName + '')">🗑️ Delete</button>' +
+            '</td></tr>';
+        });
+        html += '</tbody></table></div>';
+      });
+      section.innerHTML = html || '<p style="color:var(--muted);font-size:.88em;">No uploaded files found.</p>';
+    })
+    .catch(function() {
+      section.innerHTML = '<p style="color:var(--muted);font-size:.88em;">Could not load uploaded files.</p>';
+    });
 }
 
 function filterTable(query) {
