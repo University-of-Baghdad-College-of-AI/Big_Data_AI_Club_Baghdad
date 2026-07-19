@@ -569,6 +569,24 @@
     <p>The mission of the Big Data Artificial Intelligence Club is to foster innovation, collaboration, and knowledge-sharing among students. We aim to empower members with practical skills in Big Data and AI, encourage research and projects that address real-world challenges, and build a supportive community that inspires creativity and ethical responsibility in technology.</p>
   </section>
 
+  <!-- ── Global Search ── -->
+  <section id="globalSearchSection" style="background:var(--white);padding:48px 24px;border-bottom:1px solid var(--border);">
+    <div style="max-width:720px;margin:0 auto;text-align:center;">
+      <h2 style="font-family:'Plus Jakarta Sans',sans-serif;font-weight:800;color:var(--navy);margin-bottom:8px;font-size:1.6em;">🔍 Search All Activities</h2>
+      <p style="color:var(--text-muted,#5E6E8A);margin-bottom:24px;font-size:.92em;">Search across workshops, courses, projects, researches, lectures, and more</p>
+      <div style="position:relative;text-align:left;">
+        <input type="text" id="globalSearch" placeholder="Type to search activities..." autocomplete="off"
+          style="width:100%;padding:16px 56px 16px 24px;border:2px solid var(--border,#E2E7F0);border-radius:50px;
+          font-family:'Inter',sans-serif;font-size:1em;outline:none;transition:border-color .2s;color:#1A2340;
+          box-shadow:0 2px 12px rgba(0,0,0,.06);">
+        <span style="position:absolute;right:20px;top:50%;transform:translateY(-50%);font-size:1.3em;pointer-events:none;">🔍</span>
+      </div>
+      <div id="globalSearchResults" style="margin-top:12px;display:none;text-align:left;">
+        <div id="globalSearchList"></div>
+      </div>
+    </div>
+  </section>
+
   <section id="announcements">
     <h2>&#128226; Important Announcements</h2>
     <ul id="announcementsList">
