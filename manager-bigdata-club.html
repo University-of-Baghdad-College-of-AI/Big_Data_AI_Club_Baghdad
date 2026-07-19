@@ -270,6 +270,8 @@ function buildSidebar() {
     var p = PAGE_MAP[id];
     html += sidebarItem(id, p.icon, p.label, p.sidebarLabel);
   });
+  html += '<div class="sidebar-section">Settings</div>';
+  html += sidebarItem('users', '👤', 'Approved Users');
   sb.innerHTML = html;
   sb.querySelectorAll('.sidebar-item').forEach(function(el) {
     el.addEventListener('click', function() {
@@ -291,6 +293,7 @@ function showPage(page) {
   var navEl = document.getElementById('nav-' + page);
   if (navEl) navEl.classList.add('active');
   if (page === 'dashboard') { renderDashboard(); return; }
+  if (page === 'users') { loadUsersPage(); return; }
   loadPage(page);
 }
 
@@ -1036,6 +1039,208 @@ window.changeToken = function() {
     showTokenPrompt();
   }
 };
+
+// ── Users Page ──
+function loadUsersPage() {
+  var mc = document.getElementById('mainContent');
+  mc.innerHTML = '<p style="padding:40px;color:var(--muted);">Loading users...</p>';
+
+  var repo = 'Big_Data_AI_Club_Baghdad';
+  var file = 'approved-users.js';
+
+  fetchFile(repo, file, function(rawContent, sha) {
+    shaCache['users'] = sha;
+
+    // Parse APPROVED_USERS object from JS file
+    var m = rawContent.match(/var APPROVED_USERS = \{([\s\S]*?)\};/);
+    var users = [];
+    if (m) {
+      var body = m[1];
+      var re = /'([^']+)'\s*:\s*'([^']+)'/g;
+      var match;
+      while ((match = re.exec(body)) !== null) {
+        users.push({ email: match[1], role: match[2] });
+      }
+    }
+
+    var roles = ['admin','professor','student','employee','test'];
+    var roleColors = { admin:'#C62828', professor:'#1565C0', student:'#2E7D32', employee:'#E65100', test:'#6A1B9A' };
+
+    var html = '<div class="page-header">' +
+      '<div><div class="page-title">👤 Approved Users</div>' +
+      '<div class="page-subtitle">Users who can sign in to the website (' + users.length + ' total)</div></div>' +
+      '<div class="btn-group">' +
+        '<button class="btn btn-secondary" id="refreshUsersBtn">↺ Refresh</button>' +
+        '<button class="btn btn-primary" id="addUserBtn">+ Add User</button>' +
+      '</div>' +
+    '</div>';
+
+    // Add user form
+    html += '<div class="table-wrap" style="margin-bottom:20px;" id="addUserForm" style="display:none;">' +
+      '<div class="table-toolbar"><strong>➕ Add New User</strong></div>' +
+      '<div style="padding:16px;display:grid;grid-template-columns:1fr 1fr auto;gap:12px;align-items:end;">' +
+        '<div><label style="font-size:.78em;font-weight:700;color:var(--muted);text-transform:uppercase;display:block;margin-bottom:4px;">Email</label>' +
+        '<input type="email" id="newUserEmail" placeholder="user@uobaghdad.edu.iq" style="width:100%;padding:9px 12px;border:1.5px solid var(--border);border-radius:8px;font-family:inherit;font-size:.9em;outline:none;"></div>' +
+        '<div><label style="font-size:.78em;font-weight:700;color:var(--muted);text-transform:uppercase;display:block;margin-bottom:4px;">Role</label>' +
+        '<select id="newUserRole" style="width:100%;padding:9px 12px;border:1.5px solid var(--border);border-radius:8px;font-family:inherit;font-size:.9em;">' +
+        roles.map(function(r){ return '<option value="'+r+'">'+r.charAt(0).toUpperCase()+r.slice(1)+'</option>'; }).join('') +
+        '</select></div>' +
+        '<button class="btn btn-primary" id="saveNewUserBtn">Save</button>' +
+      '</div>' +
+      '<div id="addUserError" style="display:none;padding:0 16px 12px;color:#C62828;font-size:.85em;"></div>' +
+    '</div>';
+
+    // Users table
+    html += '<div class="table-wrap">' +
+      '<div class="table-toolbar"><input class="search-input" id="usersSearch" placeholder="🔍 Search users..."></div>' +
+      '<table id="usersTable"><thead><tr><th>#</th><th>Email</th><th>Role</th><th>Actions</th></tr></thead><tbody>';
+
+    users.forEach(function(u, i) {
+      var color = roleColors[u.role] || '#333';
+      html += '<tr>' +
+        '<td style="color:var(--muted);">' + (i+1) + '</td>' +
+        '<td><strong>' + u.email + '</strong></td>' +
+        '<td><span style="background:#f0f4ff;color:'+color+';font-size:.78em;font-weight:700;padding:3px 10px;border-radius:20px;text-transform:uppercase;">' + u.role + '</span></td>' +
+        '<td><div class="btn-group">' +
+          (u.email !== 'jalal.hameed@uobaghdad.edu.iq' ?
+            '<select class="role-select" data-email="'+u.email+'" style="padding:5px 8px;border:1.5px solid var(--border);border-radius:6px;font-family:inherit;font-size:.8em;">' +
+            roles.map(function(r){ return '<option value="'+r+'"'+(r===u.role?' selected':'')+'>'+r+'</option>'; }).join('') +
+            '</select>' +
+            '<button class="btn btn-secondary btn-sm save-role-btn" data-email="'+u.email+'">💾</button>' +
+            '<button class="btn btn-danger btn-sm del-user-btn" data-email="'+u.email+'" data-idx="'+i+'">🗑️</button>'
+          : '<span style="font-size:.8em;color:var(--muted);">Protected</span>') +
+        '</div></td></tr>';
+    });
+
+    html += '</tbody></table></div>';
+    mc.innerHTML = html;
+
+    // Store users for manipulation
+    window._approvedUsers = users;
+    window._approvedRaw = rawContent;
+    window._approvedSha = sha;
+
+    // Search
+    document.getElementById('usersSearch').addEventListener('input', function() {
+      var q = this.value.toLowerCase();
+      document.querySelectorAll('#usersTable tbody tr').forEach(function(row) {
+        row.style.display = row.textContent.toLowerCase().includes(q) ? '' : 'none';
+      });
+    });
+
+    // Refresh
+    document.getElementById('refreshUsersBtn').addEventListener('click', function() { loadUsersPage(); });
+
+    // Toggle add form
+    document.getElementById('addUserBtn').addEventListener('click', function() {
+      var form = document.getElementById('addUserForm');
+      form.style.display = form.style.display === 'none' ? 'block' : 'none';
+    });
+
+    // Save new user
+    document.getElementById('saveNewUserBtn').addEventListener('click', function() {
+      var email = document.getElementById('newUserEmail').value.trim().toLowerCase();
+      var role = document.getElementById('newUserRole').value;
+      var errEl = document.getElementById('addUserError');
+      if (!email || !email.includes('@')) { errEl.style.display='block'; errEl.textContent='Please enter a valid email.'; return; }
+      if (window._approvedUsers.find(function(u){ return u.email===email; })) {
+        errEl.style.display='block'; errEl.textContent='This email is already approved.'; return;
+      }
+      errEl.style.display='none';
+      window._approvedUsers.push({ email: email, role: role });
+      saveUsersFile(window._approvedUsers, 'Add user: ' + email);
+    });
+
+    // Save role change
+    mc.querySelectorAll('.save-role-btn').forEach(function(btn) {
+      btn.addEventListener('click', function() {
+        var email = btn.dataset.email;
+        var select = mc.querySelector('.role-select[data-email="'+email+'"]');
+        var newRole = select ? select.value : null;
+        if (!newRole) return;
+        window._approvedUsers = window._approvedUsers.map(function(u) {
+          return u.email === email ? { email: u.email, role: newRole } : u;
+        });
+        saveUsersFile(window._approvedUsers, 'Update role: ' + email + ' → ' + newRole);
+      });
+    });
+
+    // Delete user
+    mc.querySelectorAll('.del-user-btn').forEach(function(btn) {
+      btn.addEventListener('click', function() {
+        var email = btn.dataset.email;
+        if (!confirm('Remove access for ' + email + '?')) return;
+        window._approvedUsers = window._approvedUsers.filter(function(u) { return u.email !== email; });
+        saveUsersFile(window._approvedUsers, 'Remove user: ' + email);
+      });
+    });
+  });
+}
+
+function saveUsersFile(users, message) {
+  showSaving('Saving users...');
+
+  // Rebuild approved-users.js content
+  var admins = users.filter(function(u){ return u.role==='admin'; });
+  var professors = users.filter(function(u){ return u.role==='professor'; });
+  var students = users.filter(function(u){ return u.role==='student'; });
+  var employees = users.filter(function(u){ return u.role==='employee'; });
+  var tests = users.filter(function(u){ return u.role==='test'; });
+
+  var newContent = '/* ============================================================
+' +
+    '   APPROVED USERS — Edit this file to manage access
+
+' +
+    "   ROLES: 'admin' | 'professor' | 'student' | 'employee' | 'test'
+
+" +
+    '   To APPROVE: add their email and role below, then commit
+' +
+    '   To REVOKE:  delete their line and commit
+' +
+    '   ============================================================ */
+
+' +
+    'var APPROVED_USERS = {
+
+';
+
+  function addGroup(label, group) {
+    if (!group.length) return;
+    newContent += '  /* ── ' + label + ' ── */
+';
+    group.forEach(function(u) {
+      newContent += "  '" + u.email + "': '" + u.role + "',
+";
+    });
+    newContent += '
+';
+  }
+
+  addGroup('Admin', admins);
+  addGroup('Professors', professors);
+  addGroup('Students', students);
+  addGroup('Employees', employees);
+  addGroup('Test accounts', tests);
+
+  newContent += '};
+';
+
+  var sha = window._approvedSha;
+  var repo = 'Big_Data_AI_Club_Baghdad';
+
+  saveFile(repo, 'approved-users.js', newContent, sha, '⚙️ Admin: ' + message, function(err, result) {
+    hideSaving();
+    if (err) {
+      showToast('❌ Save failed: ' + err.message, 'error');
+    } else {
+      window._approvedSha = result.content ? result.content.sha : sha;
+      showToast('✅ Users updated!', 'success');
+      loadUsersPage();
+    }
+  });
+}
 
 document.addEventListener('keydown', function(e) {
   if (e.key === 'Escape') { closeModal(); closeConfirm(); }
