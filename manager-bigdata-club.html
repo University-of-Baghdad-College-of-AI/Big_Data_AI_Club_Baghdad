@@ -382,89 +382,7 @@
 <div id="toast"></div>
 
 <!-- Firebase -->
-<script src="approved-users.js"></script>
-<script type="module">
-import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js';
-import { getAuth, signInWithPopup, GoogleAuthProvider, signOut as fbSignOut, onAuthStateChanged }
-  from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js';
 
-const firebaseConfig = {
-  apiKey: "AIzaSyArF59_11UVHPo9yZW5zg2RYQWaKjIZXYw",
-  authDomain: "bigdataaiclub.firebaseapp.com",
-  projectId: "bigdataaiclub",
-  storageBucket: "bigdataaiclub.firebasestorage.app",
-  messagingSenderId: "877020220761",
-  appId: "1:877020220761:web:6c6dcc22b63fcd2ec15048"
-};
-const app = initializeApp(firebaseConfig);
-const auth = getAuth(app);
-const provider = new GoogleAuthProvider();
-
-window.doSignIn = function() {
-  document.getElementById('loginSpinner').style.display = 'block';
-  document.getElementById('loginBtn').style.display = 'none';
-  signInWithPopup(auth, provider).catch(function(e) {
-    document.getElementById('loginSpinner').style.display = 'none';
-    document.getElementById('loginBtn').style.display = 'flex';
-    document.getElementById('loginError').style.display = 'block';
-    document.getElementById('loginError').textContent = 'Sign-in failed: ' + e.message;
-  });
-};
-
-window.doSignOut = function() {
-  if (!confirm('Sign out of admin panel?')) return;
-  fbSignOut(auth);
-};
-
-window.saveToken = function() {
-  var t = document.getElementById('tokenInput').value.trim();
-  if (!t) { alert('Please enter a token.'); return; }
-  localStorage.setItem('gh_admin_token', t);
-  GITHUB_TOKEN = t;
-  document.getElementById('loginScreen').style.display = 'none';
-  document.getElementById('appShell').style.display = 'block';
-  showPage('dashboard');
-};
-
-onAuthStateChanged(auth, function(user) {
-  document.getElementById('loginSpinner').style.display = 'none';
-  document.getElementById('loginBtn').style.display = 'flex';
-  if (!user) {
-    document.getElementById('loginScreen').style.display = 'flex';
-    document.getElementById('appShell').style.display = 'none';
-    return;
-  }
-  var role = window.APPROVED_USERS ? window.APPROVED_USERS[user.email] : null;
-  if (role !== 'admin') {
-    // Not admin — show simple access denied, sign out silently
-    document.getElementById('loginScreen').style.display = 'flex';
-    document.getElementById('appShell').style.display = 'none';
-    document.getElementById('loginBtn').style.display = 'none';
-    document.getElementById('tokenSection').style.display = 'none';
-    document.getElementById('loginError').style.display = 'block';
-    document.getElementById('loginError').innerHTML =
-      '⛔ <strong>Access Denied</strong><br>You do not have permission to access this page.';
-    fbSignOut(auth);
-    return;
-  }
-  document.getElementById('loginScreen').style.display = 'none';
-  document.getElementById('appShell').style.display = 'block';
-  document.getElementById('adminName').textContent = user.displayName;
-  document.getElementById('adminAvatar').src = user.photoURL || '';
-  window.currentUser = user;
-  // Check if token is stored
-  if (!localStorage.getItem('gh_admin_token')) {
-    document.getElementById('loginScreen').style.display = 'flex';
-    document.getElementById('appShell').style.display = 'none';
-    document.getElementById('tokenSection').style.display = 'block';
-    document.getElementById('loginBtn').style.display = 'none';
-    document.getElementById('loginScreen').querySelector('p').textContent =
-      'Welcome ' + user.displayName + '! Please enter your GitHub token to continue.';
-    return;
-  }
-  showPage('dashboard');
-});
-</script>
 
 <script>
 // ── GitHub API Config ──
@@ -1066,6 +984,81 @@ function showToast(msg, type) {
 
 document.addEventListener('keydown', function(e) {
   if (e.key === 'Escape') { closeModal(); closeConfirm(); }
+});
+</script>
+
+<script src="approved-users.js"></script>
+<script type="module">
+import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js';
+import { getAuth, signInWithPopup, GoogleAuthProvider, signOut as fbSignOut, onAuthStateChanged }
+  from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js';
+
+const firebaseConfig = {
+  apiKey: "AIzaSyArF59_11UVHPo9yZW5zg2RYQWaKjIZXYw",
+  authDomain: "bigdataaiclub.firebaseapp.com",
+  projectId: "bigdataaiclub",
+  storageBucket: "bigdataaiclub.firebasestorage.app",
+  messagingSenderId: "877020220761",
+  appId: "1:877020220761:web:6c6dcc22b63fcd2ec15048"
+};
+const app = initializeApp(firebaseConfig);
+const auth = getAuth(app);
+const provider = new GoogleAuthProvider();
+
+window.doSignIn = function() {
+  document.getElementById('loginSpinner').style.display = 'block';
+  document.getElementById('loginBtn').style.display = 'none';
+  signInWithPopup(auth, provider).catch(function(e) {
+    document.getElementById('loginSpinner').style.display = 'none';
+    document.getElementById('loginBtn').style.display = 'flex';
+    document.getElementById('loginError').style.display = 'block';
+    document.getElementById('loginError').textContent = 'Sign-in failed: ' + e.message;
+  });
+};
+
+window.doSignOut = function() {
+  if (!confirm('Sign out of admin panel?')) return;
+  fbSignOut(auth);
+};
+
+window.saveToken = function() {
+  var t = document.getElementById('tokenInput').value.trim();
+  if (!t) { alert('Please enter a token.'); return; }
+  localStorage.setItem('gh_admin_token', t);
+  GITHUB_TOKEN = t;
+  document.getElementById('loginScreen').style.display = 'none';
+  document.getElementById('appShell').style.display = 'block';
+  showPage('dashboard');
+};
+
+onAuthStateChanged(auth, function(user) {
+  document.getElementById('loginSpinner').style.display = 'none';
+  document.getElementById('loginBtn').style.display = 'flex';
+  if (!user) {
+    document.getElementById('loginScreen').style.display = 'flex';
+    document.getElementById('appShell').style.display = 'none';
+    return;
+  }
+  var role = window.APPROVED_USERS ? window.APPROVED_USERS[user.email] : null;
+  if (role !== 'admin') {
+    // Not admin — show simple access denied, sign out silently
+    document.getElementById('loginScreen').style.display = 'flex';
+    document.getElementById('appShell').style.display = 'none';
+    document.getElementById('loginBtn').style.display = 'none';
+    document.getElementById('tokenSection').style.display = 'none';
+    document.getElementById('loginError').style.display = 'block';
+    document.getElementById('loginError').innerHTML =
+      '⛔ <strong>Access Denied</strong><br>You do not have permission to access this page.';
+    fbSignOut(auth);
+    return;
+  }
+  document.getElementById('loginScreen').style.display = 'none';
+  document.getElementById('appShell').style.display = 'block';
+  document.getElementById('adminName').textContent = user.displayName;
+  document.getElementById('adminAvatar').src = user.photoURL || '';
+  window.currentUser = user;
+  // Token is embedded as fallback — go straight to dashboard
+  showPage('dashboard');
 });
 </script>
 </body>
