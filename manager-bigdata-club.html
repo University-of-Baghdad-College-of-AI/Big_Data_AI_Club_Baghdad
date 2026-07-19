@@ -111,7 +111,7 @@
     <div class="topbar-user">
       <img id="adminAvatar" src="" alt="">
       <span id="adminName"></span>
-      <button class="signout-btn" onclick="doSignOut()">Sign out</button>
+      <button class="signout-btn" onclick="changeToken()" style="margin-right:6px;">🔑 Token</button><button class="signout-btn" onclick="doSignOut()">Sign out</button>
     </div>
   </div>
   <div class="layout">
@@ -217,7 +217,7 @@ onAuthStateChanged(auth, function(user) {
 
 <script>
 // ── Config ──
-var GITHUB_TOKEN = atob('Z2hwX3hPN2NJTlBvMWJhUDR3Rkx2RkZ2cmFPbU1Md1psYjFsb2U3ag==');
+var GITHUB_TOKEN = localStorage.getItem('bdai_gh_token') || '';
 var GITHUB_OWNER = 'University-of-Baghdad-College-of-AI';
 
 var PAGES = [
@@ -251,8 +251,58 @@ var shaCache = {};
 // ── Init ──
 window.initAdmin = function() {
   buildSidebar();
-  showPage('dashboard');
+  // Check if token is saved
+  if (!localStorage.getItem('bdai_gh_token')) {
+    showTokenPrompt();
+  } else {
+    GITHUB_TOKEN = localStorage.getItem('bdai_gh_token');
+    showPage('dashboard');
+  }
 };
+
+function showTokenPrompt() {
+  var mc = document.getElementById('mainContent');
+  mc.innerHTML = '<div style="max-width:480px;margin:60px auto;background:var(--white);border-radius:14px;padding:40px;border:1px solid var(--border);border-top:4px solid var(--gold);box-shadow:var(--shadow);">' +
+    '<div style="font-size:2em;margin-bottom:12px;">🔑</div>' +
+    '<h2 style="font-family:sans-serif;font-weight:800;color:var(--navy);margin-bottom:8px;">GitHub Token Required</h2>' +
+    '<p style="color:var(--muted);font-size:.9em;margin-bottom:20px;line-height:1.6;">Enter your GitHub Personal Access Token (with <strong>repo</strong> scope). It will be saved in your browser only — never uploaded to GitHub.</p>' +
+    '<input type="password" id="tokenInput" placeholder="ghp_..." style="width:100%;padding:10px 14px;border:1.5px solid var(--border);border-radius:8px;font-family:inherit;font-size:.95em;margin-bottom:12px;outline:none;">' +
+    '<p style="font-size:.78em;color:var(--muted);margin-bottom:16px;">Get a token at: <a href="https://github.com/settings/tokens/new" target="_blank" style="color:var(--indigo);">github.com/settings/tokens/new</a> → check <strong>repo</strong> scope</p>' +
+    '<button class="btn btn-primary" id="saveTokenBtn" style="width:100%;">Save Token & Continue</button>' +
+    '<div id="tokenError" style="display:none;margin-top:10px;color:#C62828;font-size:.85em;"></div>' +
+  '</div>';
+
+  document.getElementById('saveTokenBtn').addEventListener('click', function() {
+    var t = document.getElementById('tokenInput').value.trim();
+    if (!t) { document.getElementById('tokenError').style.display='block'; document.getElementById('tokenError').textContent='Please enter a token.'; return; }
+    // Test token
+    document.getElementById('saveTokenBtn').textContent = 'Testing...';
+    document.getElementById('saveTokenBtn').disabled = true;
+    fetch('https://api.github.com/repos/University-of-Baghdad-College-of-AI/Big_Data_AI_Club_Baghdad/contents/conferences.html', {
+      headers: { 'Authorization': 'token ' + t, 'Accept': 'application/vnd.github.v3+json' }
+    }).then(function(r) {
+      if (r.ok) {
+        localStorage.setItem('bdai_gh_token', t);
+        GITHUB_TOKEN = t;
+        showPage('dashboard');
+      } else {
+        document.getElementById('tokenError').style.display='block';
+        document.getElementById('tokenError').textContent = '❌ Invalid token (error ' + r.status + '). Please check and try again.';
+        document.getElementById('saveTokenBtn').textContent = 'Save Token & Continue';
+        document.getElementById('saveTokenBtn').disabled = false;
+      }
+    }).catch(function() {
+      document.getElementById('tokenError').style.display='block';
+      document.getElementById('tokenError').textContent = '❌ Could not connect. Check your internet connection.';
+      document.getElementById('saveTokenBtn').textContent = 'Save Token & Continue';
+      document.getElementById('saveTokenBtn').disabled = false;
+    });
+  });
+
+  document.getElementById('tokenInput').addEventListener('keydown', function(e) {
+    if (e.key === 'Enter') document.getElementById('saveTokenBtn').click();
+  });
+}
 
 // ── Sidebar ──
 function buildSidebar() {
@@ -730,6 +780,14 @@ function showToast(msg, type) {
   t.textContent = msg; t.className = 'show ' + (type||'');
   setTimeout(function() { t.className = ''; }, 3500);
 }
+
+window.changeToken = function() {
+  if (confirm('Reset your GitHub token?')) {
+    localStorage.removeItem('bdai_gh_token');
+    GITHUB_TOKEN = '';
+    showTokenPrompt();
+  }
+};
 
 document.addEventListener('keydown', function(e) {
   if (e.key === 'Escape') { closeModal(); closeConfirm(); }
