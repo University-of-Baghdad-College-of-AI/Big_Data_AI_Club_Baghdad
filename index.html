@@ -568,25 +568,6 @@
     <h2>&#127919; Our Mission</h2>
     <p>The mission of the Big Data Artificial Intelligence Club is to foster innovation, collaboration, and knowledge-sharing among students. We aim to empower members with practical skills in Big Data and AI, encourage research and projects that address real-world challenges, and build a supportive community that inspires creativity and ethical responsibility in technology.</p>
   </section>
-
-  <!-- ── Global Search ── -->
-  <section id="globalSearchSection" style="background:var(--white);padding:48px 24px;border-bottom:1px solid var(--border);">
-    <div style="max-width:720px;margin:0 auto;text-align:center;">
-      <h2 style="font-family:'Plus Jakarta Sans',sans-serif;font-weight:800;color:var(--navy);margin-bottom:8px;font-size:1.6em;">🔍 Search All Activities</h2>
-      <p style="color:var(--text-muted,#5E6E8A);margin-bottom:24px;font-size:.92em;">Search across workshops, courses, projects, researches, lectures, and more</p>
-      <div style="position:relative;text-align:left;">
-        <input type="text" id="globalSearch" placeholder="Type to search activities..." autocomplete="off"
-          style="width:100%;padding:16px 56px 16px 24px;border:2px solid var(--border,#E2E7F0);border-radius:50px;
-          font-family:'Inter',sans-serif;font-size:1em;outline:none;transition:border-color .2s;color:#1A2340;
-          box-shadow:0 2px 12px rgba(0,0,0,.06);">
-        <span style="position:absolute;right:20px;top:50%;transform:translateY(-50%);font-size:1.3em;pointer-events:none;">🔍</span>
-      </div>
-      <div id="globalSearchResults" style="margin-top:12px;display:none;text-align:left;">
-        <div id="globalSearchList"></div>
-      </div>
-    </div>
-  </section>
-
   <section id="announcements">
     <h2>&#128226; Important Announcements</h2>
     <ul id="announcementsList">
@@ -1016,100 +997,6 @@
   <script>
     var fy = document.getElementById('footerYear');
     if (fy) fy.textContent = new Date().getFullYear();
-  </script>
-
-  <script>
-  // ── Global Search ──
-  var SEARCH_INDEX = []; // populated after DOM ready
-  var PAGE_LABELS = {
-    workshops:'Workshops', researches:'Researches', projects:'Projects',
-    lectures:'Lectures', presentations:'Presentations', seminars:'Seminars',
-    conferences:'Conferences', 'field-visits':'Field Visits',
-    internships:'Internships', courses:'Courses'
-  };
-  var PAGE_URLS = {
-    workshops:'workshops.html', researches:'researches.html', projects:'projects.html',
-    lectures:'lectures.html', presentations:'presentations.html', seminars:'seminars.html',
-    conferences:'conferences.html', 'field-visits':'field-visits.html',
-    internships:'internships.html', courses:'courses.html'
-  };
-
-  // Build search index from STATS_DATA after DOM ready
-  function buildSearchIndex() {
-    SEARCH_INDEX = [];
-    if (typeof STATS_DATA !== 'undefined') {
-      Object.keys(STATS_DATA).forEach(function(page) {
-        (STATS_DATA[page]||[]).forEach(function(item) {
-          SEARCH_INDEX.push({
-            page: page,
-            title: item.title || '',
-            desc: item.desc || '',
-            who: item.who || '',
-            year: item.year || '',
-            type: item.type || '',
-            date: item.date || ''
-          });
-        });
-      });
-    }
-  }
-
-  // Build on load
-  if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', buildSearchIndex);
-  } else {
-    buildSearchIndex();
-  }
-
-  var searchTimeout;
-  document.getElementById('globalSearch').addEventListener('input', function() {
-    clearTimeout(searchTimeout);
-    var q = this.value.trim();
-    var results = document.getElementById('globalSearchResults');
-    var list = document.getElementById('globalSearchList');
-    if (q.length < 2) { results.style.display = 'none'; return; }
-    searchTimeout = setTimeout(function() {
-      var ql = q.toLowerCase();
-      var matches = SEARCH_INDEX.filter(function(item) {
-        return (item.title + item.desc + item.who + item.type).toLowerCase().includes(ql);
-      });
-      if (!matches.length) {
-        list.innerHTML = '<p style="color:var(--text-muted);padding:12px 0;">No results found for "' + q + '"</p>';
-      } else {
-        var html = '<p style="font-size:.82em;color:var(--text-muted);margin-bottom:12px;">' + matches.length + ' result(s) found</p>';
-        matches.slice(0, 12).forEach(function(item) {
-          var url = PAGE_URLS[item.page] || '#';
-          var label = PAGE_LABELS[item.page] || item.page;
-          html += '<a href="' + url + '" style="display:block;text-decoration:none;background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:14px 18px;margin-bottom:8px;transition:box-shadow .2s;" onmouseover="this.style.boxShadow='0 4px 12px rgba(0,0,0,.08)'" onmouseout="this.style.boxShadow=''">' +
-            '<div style="display:flex;align-items:center;gap:8px;margin-bottom:4px;">' +
-              '<span style="font-size:.72em;font-weight:700;padding:2px 10px;border-radius:20px;background:#EEF2FF;color:var(--indigo);">' + label + '</span>' +
-              '<span style="font-size:.72em;color:var(--text-muted);">' + item.year + '</span>' +
-            '</div>' +
-            '<div style="font-weight:700;color:var(--navy);font-size:.95em;margin-bottom:2px;">' + item.title + '</div>' +
-            '<div style="font-size:.82em;color:var(--text-muted);">' + (item.desc.length > 100 ? item.desc.substring(0,100)+'...' : item.desc) + '</div>' +
-          '</a>';
-        });
-        if (matches.length > 12) {
-          html += '<p style="font-size:.82em;color:var(--text-muted);text-align:center;padding:8px;">+ ' + (matches.length-12) + ' more results — use page filters for full search</p>';
-        }
-        list.innerHTML = html;
-      }
-      results.style.display = 'block';
-    }, 250);
-  });
-
-  // Close search on click outside
-  document.addEventListener('click', function(e) {
-    if (!document.getElementById('globalSearchSection').contains(e.target)) {
-      document.getElementById('globalSearchResults').style.display = 'none';
-    }
-  });
-
-  document.getElementById('globalSearch').addEventListener('focus', function() {
-    if (this.value.trim().length >= 2) {
-      document.getElementById('globalSearchResults').style.display = 'block';
-    }
-  });
   </script>
 </body>
 </html>
