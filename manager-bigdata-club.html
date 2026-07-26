@@ -1648,9 +1648,19 @@ window.moveSlide = function(idx, dir) {
   saveHeroSlides();
 };
 
+var SLIDE_IMGS = ['1.jfif','2.jpg','3.jpg','4.jpg','5.jpg','6.jpg','7.jpg','8.jpg','9.jpeg'];
+var BASE_HERO = 'https://university-of-baghdad-college-of-ai.github.io/Big_Data_AI_Club_Baghdad/';
+
 window.editSlide = function(idx) {
   var slide = window._heroSlides[idx];
-  // Show edit form in modal
+  var pickerHtml = SLIDE_IMGS.map(function(f) {
+    var sel = f === slide.img;
+    return '<div onclick="selectEditImg(this,\'' + f + '\')" data-img="' + f + '" style="cursor:pointer;border:2px solid ' + (sel?'var(--indigo)':'var(--border)') + ';border-radius:8px;overflow:hidden;' + (sel?'box-shadow:0 0 0 2px var(--indigo);':'') + '">' +
+      '<img src="' + BASE_HERO + f + '" style="width:100%;height:50px;object-fit:cover;display:block;">' +
+      '<div style="font-size:.65em;text-align:center;padding:2px;color:var(--muted);">' + f + '</div>' +
+    '</div>';
+  }).join('');
+
   document.getElementById('modalTitle').textContent = 'Edit Slide';
   document.getElementById('modalBody').innerHTML =
     '<div class="form-grid">' +
@@ -1658,25 +1668,66 @@ window.editSlide = function(idx) {
         '<input type="text" id="eSlideTitle" value="' + (slide.title||'').replace(/"/g,'&quot;') + '"></div>' +
       '<div class="form-group full"><label>Subtitle</label>' +
         '<input type="text" id="eSlideSubtitle" value="' + (slide.subtitle||'').replace(/"/g,'&quot;') + '"></div>' +
-      '<div class="form-group"><label>Image</label>' +
-        '<select id="eSlideImg">' +
-          ['1.jfif','2.jpg','3.jpg','4.jpg','5.jpg','6.jpg','7.jpg','8.jpg','9.jpeg'].map(function(f){
-            return '<option value="'+f+'"'+(f===slide.img?' selected':'')+'>'+f+'</option>';
-          }).join('') +
-        '</select></div>' +
+      '<div class="form-group full"><label>Background Image — select existing or upload new</label>' +
+        '<div style="display:grid;grid-template-columns:repeat(5,1fr);gap:6px;margin:8px 0;" id="editImgPicker">' + pickerHtml + '</div>' +
+        '<input type="hidden" id="eSlideImg" value="' + slide.img + '">' +
+        '<div style="border-top:1px dashed var(--border);padding-top:10px;margin-top:4px;">' +
+          '<label style="font-size:.78em;font-weight:700;color:var(--muted);text-transform:uppercase;">Or upload a new image</label>' +
+          '<input type="file" id="eSlideFile" accept="image/*" style="width:100%;margin-top:6px;padding:6px;border:1.5px solid var(--border);border-radius:8px;font-size:.85em;">' +
+          '<p style="font-size:.75em;color:var(--muted);margin-top:4px;">Will be saved as the selected filename above. Upload first, then it appears in the picker.</p>' +
+        '</div>' +
+      '</div>' +
     '</div>' +
     '<div class="form-actions">' +
       '<button class="btn btn-secondary" onclick="closeModal()">Cancel</button>' +
       '<button class="btn btn-primary" id="saveSlideEditBtn">💾 Save</button>' +
     '</div>';
+
   document.getElementById('entryModal').classList.add('open');
+
   document.getElementById('saveSlideEditBtn').addEventListener('click', function() {
-    window._heroSlides[idx].title = document.getElementById('eSlideTitle').value.trim();
-    window._heroSlides[idx].subtitle = document.getElementById('eSlideSubtitle').value.trim();
-    window._heroSlides[idx].img = document.getElementById('eSlideImg').value;
-    closeModal();
-    saveHeroSlides();
+    var newTitle = document.getElementById('eSlideTitle').value.trim();
+    var newSubtitle = document.getElementById('eSlideSubtitle').value.trim();
+    var newImg = document.getElementById('eSlideImg').value;
+    var fileInput = document.getElementById('eSlideFile');
+
+    function doSave() {
+      window._heroSlides[idx].title = newTitle;
+      window._heroSlides[idx].subtitle = newSubtitle;
+      window._heroSlides[idx].img = newImg;
+      closeModal();
+      saveHeroSlides();
+    }
+
+    // Upload new image if selected
+    if (fileInput && fileInput.files && fileInput.files[0]) {
+      var file = fileInput.files[0];
+      var reader = new FileReader();
+      showSaving('Uploading image...');
+      reader.onload = function(e) {
+        var base64 = e.target.result.split(',')[1];
+        uploadToGitHub('Big_Data_AI_Club_Baghdad', newImg, base64, newImg, function(err) {
+          hideSaving();
+          if (err) { showToast('❌ Image upload failed: ' + err, 'error'); return; }
+          showToast('✅ Image uploaded!', 'success');
+          doSave();
+        });
+      };
+      reader.readAsDataURL(file);
+    } else {
+      doSave();
+    }
   });
+};
+
+window.selectEditImg = function(el, img) {
+  document.querySelectorAll('#editImgPicker > div').forEach(function(d) {
+    d.style.borderColor = 'var(--border)';
+    d.style.boxShadow = '';
+  });
+  el.style.borderColor = 'var(--indigo)';
+  el.style.boxShadow = '0 0 0 2px var(--indigo)';
+  document.getElementById('eSlideImg').value = img;
 };
 
 function saveHeroSlides() {
