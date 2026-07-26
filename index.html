@@ -625,49 +625,37 @@
   <!-- ── PHOTO GALLERY — images 2–8 ── -->
   <div class="gallery-section">
     <div class="gallery-header">&#128247; Club Gallery</div>
-    <div class="gallery-grid">
-
-      <div class="gallery-item" onclick="openLightbox('2.jpg','Big Data')">
-        <img src="2.jpg" alt="Big Data">
-        <div class="gallery-caption">Big Data</div>
-      </div>
-
-      <div class="gallery-item" onclick="openLightbox('3.jpg','Artificial Intelligence')">
-        <img src="3.jpg" alt="Artificial Intelligence">
-        <div class="gallery-caption">Artificial Intelligence</div>
-      </div>
-
-      <div class="gallery-item" onclick="openLightbox('4.jpg','Machine Learning')">
-        <img src="4.jpg" alt="Machine Learning">
-        <div class="gallery-caption">Machine Learning</div>
-      </div>
-
-      <div class="gallery-item" onclick="openLightbox('5.jpg','AI Chip')">
-        <img src="5.jpg" alt="AI Chip">
-        <div class="gallery-caption">AI Chip</div>
-      </div>
-
-      <div class="gallery-item" onclick="openLightbox('6.jpg','Deep Learning')">
-        <img src="6.jpg" alt="Deep Learning">
-        <div class="gallery-caption">Deep Learning</div>
-      </div>
-
-      <div class="gallery-item" onclick="openLightbox('7.jpg','Deep Learning System')">
-        <img src="7.jpg" alt="Deep Learning System">
-        <div class="gallery-caption">Deep Learning System</div>
-      </div>
-
-      <div class="gallery-item" onclick="openLightbox('8.jpg','Data Analytics')">
-        <img src="8.jpg" alt="Data Analytics">
-        <div class="gallery-caption">Data Analytics</div>
-      </div>
-
-      <div class="gallery-item" onclick="openLightbox('9.jpeg','Data Visualization')">
-        <img src="9.jpeg" alt="Data Visualization">
-        <div class="gallery-caption">Data Visualization</div>
-      </div>
-
+    <div class="gallery-grid" id="galleryGrid">
+      <!-- Rendered by JS from GALLERY_ITEMS -->
     </div>
+
+    <script>
+      var GALLERY_ITEMS = [
+        { img: '2.jpg',   caption: 'Big Data' },
+        { img: '3.jpg',   caption: 'Artificial Intelligence' },
+        { img: '4.jpg',   caption: 'Machine Learning' },
+        { img: '5.jpg',   caption: 'AI Chip' },
+        { img: '6.jpg',   caption: 'Deep Learning' },
+        { img: '7.jpg',   caption: 'Deep Learning System' },
+        { img: '8.jpg',   caption: 'Data Analytics' },
+        { img: '9.jpeg',  caption: 'Data Visualization' }
+      ];
+
+      function buildGallery() {
+        var grid = document.getElementById('galleryGrid');
+        if (!grid) return;
+        grid.innerHTML = '';
+        GALLERY_ITEMS.forEach(function(item) {
+          var div = document.createElement('div');
+          div.className = 'gallery-item';
+          div.setAttribute('onclick', "openLightbox('" + item.img + "','" + item.caption + "')");
+          div.innerHTML = '<img src="' + item.img + '" alt="' + item.caption + '">' +
+                          '<div class="gallery-caption">' + item.caption + '</div>';
+          grid.appendChild(div);
+        });
+      }
+      document.addEventListener('DOMContentLoaded', buildGallery);
+    </script>
   </div>
 
   <!-- Lightbox -->
