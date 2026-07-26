@@ -1036,15 +1036,11 @@ function confirmDelete() {
 // ── Commit ──
 function commitData(cfg, originalHtml, message) {
   showSaving('Saving to GitHub...');
-  var sha = shaCache[currentPage];
-  if (!sha) {
-    fetchFile(cfg.repo, cfg.file, function(html, newSha) {
-      shaCache[currentPage] = newSha;
-      doCommit(cfg, html, message, newSha);
-    });
-    return;
-  }
-  doCommit(cfg, originalHtml, message, sha);
+  // Always fetch fresh to get latest SHA and avoid conflicts
+  fetchFile(cfg.repo, cfg.file, function(freshHtml, freshSha) {
+    shaCache[currentPage] = freshSha;
+    doCommit(cfg, freshHtml, message, freshSha);
+  });
 }
 
 function doCommit(cfg, originalHtml, message, sha) {
