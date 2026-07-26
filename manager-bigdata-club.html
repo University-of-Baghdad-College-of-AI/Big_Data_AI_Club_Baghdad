@@ -1561,14 +1561,18 @@ function renderSliderPage(slides, originalHtml) {
   // Add slide form (hidden)
   html += '<div id="addSlideForm" style="display:none;background:var(--white);border:1px solid var(--border);border-radius:var(--radius);padding:20px;margin-bottom:20px;">' +
     '<div class="form-grid">' +
-      '<div class="form-group full"><label>Title</label><input type="text" id="sTitle" placeholder="e.g. Big Data AI Club"></div>' +
-      '<div class="form-group full"><label>Subtitle</label><input type="text" id="sSubtitle" placeholder="e.g. Innovating together..."></div>' +
-      '<div class="form-group"><label>Image File (from repo)</label>' +
-        '<select id="sImg">' +
-          ['1.jfif','2.jpg','3.jpg','4.jpg','5.jpg','6.jpg','7.jpg','8.jpg','9.jpeg'].map(function(f){
-            return '<option value="'+f+'">'+f+'</option>';
+      '<div class="form-group full"><label>Slide Title</label><input type="text" id="sTitle" placeholder="e.g. Big Data AI Club"></div>' +
+      '<div class="form-group full"><label>Slide Subtitle</label><input type="text" id="sSubtitle" placeholder="e.g. Innovating, Collaborating, and Growing Together..."></div>' +
+      '<div class="form-group full"><label>Background Image — pick from existing gallery images</label>' +
+        '<div style="display:grid;grid-template-columns:repeat(5,1fr);gap:8px;margin-top:6px;" id="imgPicker">' +
+          ['1.jfif','2.jpg','3.jpg','4.jpg','5.jpg','6.jpg','7.jpg','8.jpg','9.jpeg'].map(function(f,fi){
+            return '<div onclick="selectSlideImg(this,\'' + f + '\')" data-img="' + f + '" style="cursor:pointer;border:2px solid '+(fi===0?'var(--indigo)':'var(--border)')+';border-radius:8px;overflow:hidden;' + (fi===0?'box-shadow:0 0 0 2px var(--indigo);':'') + '">' +
+              '<img src="https://university-of-baghdad-college-of-ai.github.io/Big_Data_AI_Club_Baghdad/' + f + '" style="width:100%;height:50px;object-fit:cover;display:block;">' +
+              '<div style="font-size:.65em;text-align:center;padding:2px;color:var(--muted);">' + f + '</div>' +
+            '</div>';
           }).join('') +
-        '</select>' +
+        '</div>' +
+        '<input type="hidden" id="sImg" value="1.jfif">' +
       '</div>' +
     '</div>' +
     '<div class="form-actions">' +
@@ -1584,20 +1588,21 @@ function renderSliderPage(slides, originalHtml) {
     html += '<div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:16px;">';
     slides.forEach(function(slide, i) {
       html += '<div style="background:var(--white);border:1px solid var(--border);border-radius:var(--radius);overflow:hidden;">' +
-        '<div style="height:140px;overflow:hidden;background:#020d1f;position:relative;">' +
+        '<div style="height:150px;overflow:hidden;background:#020d1f;position:relative;">' +
           '<img src="' + BASE + slide.img + '?v=' + Date.now() + '" style="width:100%;height:100%;object-fit:cover;opacity:.8;">' +
-          '<div style="position:absolute;bottom:0;left:0;right:0;padding:10px;background:linear-gradient(transparent,rgba(0,0,0,.7));color:#fff;">' +
-            '<div style="font-weight:700;font-size:.85em;">' + slide.title + '</div>' +
+          '<div style="position:absolute;top:8px;left:8px;background:var(--navy);color:#fff;font-size:.72em;font-weight:700;padding:3px 10px;border-radius:20px;">Slide ' + (i+1) + ' of ' + slides.length + '</div>' +
+          '<div style="position:absolute;bottom:0;left:0;right:0;padding:10px;background:linear-gradient(transparent,rgba(0,0,0,.8));color:#fff;">' +
+            '<div style="font-weight:700;font-size:.88em;">' + slide.title + '</div>' +
+            '<div style="font-size:.75em;opacity:.8;">' + slide.subtitle + '</div>' +
           '</div>' +
         '</div>' +
         '<div style="padding:12px;">' +
-          '<div style="font-size:.78em;color:var(--muted);margin-bottom:8px;">' + slide.subtitle + '</div>' +
-          '<div style="font-size:.75em;color:var(--indigo);margin-bottom:10px;">📷 ' + slide.img + '</div>' +
-          '<div class="btn-group">' +
-            (i > 0 ? '<button class="btn btn-secondary btn-sm" onclick="moveSlide(' + i + ',-1)">↑</button>' : '') +
-            (i < slides.length-1 ? '<button class="btn btn-secondary btn-sm" onclick="moveSlide(' + i + ',1)">↓</button>' : '') +
-            '<button class="btn btn-secondary btn-sm" onclick="editSlide(' + i + ')">✏️</button>' +
-            (slides.length > 1 ? '<button class="btn btn-danger btn-sm" onclick="deleteSlide(' + i + ')">🗑️</button>' : '') +
+          '<div style="font-size:.75em;color:var(--indigo);margin-bottom:10px;">📷 Image: ' + slide.img + '</div>' +
+          '<div style="display:grid;grid-template-columns:1fr 1fr;gap:6px;">' +
+            '<button class="btn btn-secondary btn-sm" onclick="editSlide(' + i + ')" style="width:100%;">✏️ Edit Text & Image</button>' +
+            (slides.length > 1 ? '<button class="btn btn-danger btn-sm" onclick="deleteSlide(' + i + ')" style="width:100%;">🗑️ Delete Slide</button>' : '<div></div>') +
+            (i > 0 ? '<button class="btn btn-secondary btn-sm" onclick="moveSlide(' + i + ',-1)" style="width:100%;">⬆ Move Up</button>' : '<div></div>') +
+            (i < slides.length-1 ? '<button class="btn btn-secondary btn-sm" onclick="moveSlide(' + i + ',1)" style="width:100%;">⬇ Move Down</button>' : '<div></div>') +
           '</div>' +
         '</div>' +
       '</div>';
@@ -1691,6 +1696,16 @@ function saveHeroSlides() {
     });
   });
 }
+
+window.selectSlideImg = function(el, img) {
+  document.querySelectorAll('#imgPicker > div').forEach(function(d) {
+    d.style.borderColor = 'var(--border)';
+    d.style.boxShadow = '';
+  });
+  el.style.borderColor = 'var(--indigo)';
+  el.style.boxShadow = '0 0 0 2px var(--indigo)';
+  document.getElementById('sImg').value = img;
+};
 
 window.changeToken = function() {
   if (confirm('Reset your GitHub token?')) {
