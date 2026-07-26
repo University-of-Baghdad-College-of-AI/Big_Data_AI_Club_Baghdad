@@ -329,10 +329,10 @@ function renderDashboard() {
 
   html += '<div class="table-wrap"><div class="table-toolbar" style="font-weight:600;color:var(--navy);">Quick Access' +
     '<span style="font-size:.8em;color:var(--muted);margin-left:auto;">Refreshed: ' + now.toLocaleTimeString('en-GB') + '</span></div>';
-  html += '<table><thead><tr><th>Section</th><th>Entries</th><th>Repo</th><th>Action</th></tr></thead><tbody>';
+  html += '<table id="dashTable"><thead><tr><th>Section</th><th>Entries</th><th>Repo</th><th>Action</th></tr></thead><tbody>';
   PAGES.forEach(function(p) {
     var count = fileCache[p.id] ? fileCache[p.id].length : '—';
-    html += '<tr><td><strong>' + p.icon + ' ' + p.label + '</strong></td>' +
+    html += '<tr data-page="' + p.id + '"><td><strong>' + p.icon + ' ' + p.label + '</strong></td>' +
       '<td><span class="badge">' + count + '</span></td>' +
       '<td style="color:var(--muted);font-size:.82em;">' + p.repo + '</td>' +
       '<td><button class="btn btn-secondary btn-sm" data-page="' + p.id + '">Manage →</button></td></tr>';
@@ -350,8 +350,9 @@ function renderDashboard() {
     showToast('🔄 Refreshed', 'success');
   });
 
-  // Load club summary stats
+  // Load club summary stats + per-page counts
   loadClubSummary();
+  loadDashboardCounts();
 }
 
 // ── Load Page ──
@@ -1131,6 +1132,33 @@ function showToast(msg, type) {
 }
 
 // ── Club Statistics Page ──
+function loadDashboardCounts() {
+  var actPages = ['workshops','researches','projects','lectures','presentations',
+                  'seminars','conferences','field-visits','internships','courses',
+                  'announcements','news','members','students','professors'];
+  actPages.forEach(function(page) {
+    var cfg = PAGE_MAP[page];
+    if (!cfg) return;
+    if (fileCache[page]) {
+      // Already cached - update card
+      var cards = document.querySelectorAll('[data-page="' + page + '"] .num');
+      cards.forEach(function(el) { el.textContent = fileCache[page].length; });
+      return;
+    }
+    fetchFile(cfg.repo, cfg.file, function(html) {
+      var varName = cfg.dataVar || 'allData';
+      var data = extractData(html, varName);
+      fileCache[page] = data;
+      // Update stat cards on dashboard
+      var cards = document.querySelectorAll('[data-page="' + page + '"] .num');
+      cards.forEach(function(el) { el.textContent = data.length; });
+      // Update quick access table
+      var tds = document.querySelectorAll('#dashTable tr[data-page="' + page + '"] .badge');
+      tds.forEach(function(el) { el.textContent = data.length; });
+    });
+  });
+}
+
 function loadClubSummary() {
   var actPages = ['workshops','researches','projects','lectures','presentations',
                   'seminars','conferences','field-visits','internships','courses'];
