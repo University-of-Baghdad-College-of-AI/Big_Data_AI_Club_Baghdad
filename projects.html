@@ -623,19 +623,17 @@
       document.getElementById('modalDesc').textContent  = d.desc||'No description available.';
       document.getElementById('modalWho').textContent   = d.who||'—';
       document.getElementById('modalDate').textContent  = d.date||'—';
-            var lnk = document.getElementById('modalLink');
-      // View Details — only show for real external URLs (not files, not #)
+                  var lnk = document.getElementById('modalLink');
       var linkIsFile = d.link && (d.link.toLowerCase().endsWith('.pdf')||d.link.toLowerCase().endsWith('.zip')||d.link.toLowerCase().endsWith('.docx'));
-      var hasRealLink = d.link && d.link !== '#' && d.link !== '' && !linkIsFile;
+      var fileUrl = (d.file && d.file !== '') ? d.file : (linkIsFile ? d.link : null);
+      var hasRealLink = d.link && d.link !== '#' && d.link !== '' && !linkIsFile && d.link !== fileUrl;
       if (hasRealLink) {
         lnk.href = d.link; lnk.style.display = 'inline-flex'; lnk.onclick = null;
       } else {
         lnk.style.display = 'none';
       }
-      // View File — only show if file attached OR link is a file
       var existingFB = document.getElementById('modalFileBtn');
       if (existingFB) existingFB.remove();
-      var fileUrl = (d.file && d.file !== '') ? d.file : (linkIsFile ? d.link : null);
       if (fileUrl) {
         var fb = document.createElement('a');
         fb.id = 'modalFileBtn'; fb.href = fileUrl; fb.target = '_blank';
