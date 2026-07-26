@@ -194,8 +194,12 @@ var shaCache = {};
 
 // ── Init ──
 window.initAdmin = function() {
-  // Save last access time on sign-in
-  localStorage.setItem('admin_last_access', new Date().toISOString());
+  // Save last access time only if first time or last save was > 30 mins ago
+  var lastSaved = localStorage.getItem('admin_last_access');
+  var now = new Date();
+  if (!lastSaved || (now - new Date(lastSaved)) > 30 * 60 * 1000) {
+    localStorage.setItem('admin_last_access', now.toISOString());
+  }
   buildSidebar();
   // Check if token is saved
   if (!localStorage.getItem('bdai_gh_token')) {
@@ -307,7 +311,6 @@ function showPage(page) {
 function renderDashboard() {
   var now = new Date();
   var lastAccess = localStorage.getItem('admin_last_access');
-  // Don't update lastAccess here - it's updated on sign-in
 
   var mc = document.getElementById('mainContent');
   var html = '<div class="page-header">' +
@@ -325,12 +328,15 @@ function renderDashboard() {
   }
 
   // Summary cards row
+  var cardStyle = 'background:var(--navy);border-color:var(--navy);';
+  var numStyle = 'color:var(--gold);';
+  var lblStyle = 'color:rgba(255,255,255,0.8);';
   html += '<div class="stat-row" style="margin-bottom:16px;">' +
-    '<div class="stat-card"><div class="num" id="csTotalAct">—</div><div class="lbl">Total Activities</div></div>' +
-    '<div class="stat-card"><div class="num" id="csYears">—</div><div class="lbl">Years Active</div></div>' +
-    '<div class="stat-card"><div class="num">10</div><div class="lbl">Activity Pages</div></div>' +
-    '<div class="stat-card" onclick="showPage(\'stats\')" style="cursor:pointer;">' +
-      '<div class="num" id="csTypes">—</div><div class="lbl">Activity Types ↗</div>' +
+    '<div class="stat-card" style="' + cardStyle + '"><div class="num" id="csTotalAct" style="' + numStyle + '">—</div><div class="lbl" style="' + lblStyle + '">Total Activities</div></div>' +
+    '<div class="stat-card" style="' + cardStyle + '"><div class="num" id="csYears" style="' + numStyle + '">—</div><div class="lbl" style="' + lblStyle + '">Years Active</div></div>' +
+    '<div class="stat-card" style="' + cardStyle + '"><div class="num" style="' + numStyle + '">10</div><div class="lbl" style="' + lblStyle + '">Activity Pages</div></div>' +
+    '<div class="stat-card" onclick="showPage(\'stats\')" style="' + cardStyle + 'cursor:pointer;">' +
+      '<div class="num" id="csTypes" style="' + numStyle + '">—</div><div class="lbl" style="' + lblStyle + '">Activity Types ↗</div>' +
     '</div>' +
   '</div>';
 
