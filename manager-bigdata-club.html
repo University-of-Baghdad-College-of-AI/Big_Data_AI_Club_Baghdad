@@ -280,6 +280,8 @@ function buildSidebar() {
   html += sidebarItem('users', '👤', 'Approved Users');
   html += sidebarItem('stats', '📊', 'Club Statistics');
   html += sidebarItem('analytics', '📈', 'Site Analytics');
+  html += sidebarItem('images', '🖼️', 'Site Images');
+  html += sidebarItem('slider', '🎞️', 'Hero Slider');
   sb.innerHTML = html;
   sb.querySelectorAll('.sidebar-item').forEach(function(el) {
     el.addEventListener('click', function() {
@@ -304,6 +306,8 @@ function showPage(page) {
   if (page === 'users') { loadUsersPage(); return; }
   if (page === 'stats') { loadStatsPage(); return; }
   if (page === 'analytics') { loadAnalyticsPage(); return; }
+  if (page === 'images') { loadImagesPage(); return; }
+  if (page === 'slider') { loadSliderPage(); return; }
   loadPage(page);
 }
 
@@ -1355,6 +1359,250 @@ function loadAnalyticsPage() {
         '</div>' +
       '</div>' +
     '</div>';
+}
+
+// ── Site Images Page ──
+function loadImagesPage() {
+  var mc = document.getElementById('mainContent');
+
+  var IMAGES = [
+    { file: '1.jfif', label: 'Hero Banner', desc: 'Main hero image on the homepage' },
+    { file: '2.jpg',  label: 'Gallery 1 — Big Data', desc: 'Gallery image 1' },
+    { file: '3.jpg',  label: 'Gallery 2 — Artificial Intelligence', desc: 'Gallery image 2' },
+    { file: '4.jpg',  label: 'Gallery 3 — Machine Learning', desc: 'Gallery image 3' },
+    { file: '5.jpg',  label: 'Gallery 4 — AI Chip', desc: 'Gallery image 4' },
+    { file: '6.jpg',  label: 'Gallery 5 — Deep Learning', desc: 'Gallery image 5' },
+    { file: '7.jpg',  label: 'Gallery 6 — Deep Learning System', desc: 'Gallery image 6' },
+    { file: '8.jpg',  label: 'Gallery 7 — Data Analytics', desc: 'Gallery image 7' },
+    { file: '9.jpeg', label: 'Gallery 8 — Data Visualization', desc: 'Gallery image 8' },
+  ];
+
+  var BASE_URL = 'https://university-of-baghdad-college-of-ai.github.io/Big_Data_AI_Club_Baghdad/';
+
+  var html = '<div class="page-header">' +
+    '<div><div class="page-title">🖼️ Site Images</div>' +
+    '<div class="page-subtitle">Replace hero banner and gallery images</div></div>' +
+  '</div>';
+
+  html += '<div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:16px;">';
+
+  IMAGES.forEach(function(img) {
+    html += '<div style="background:var(--white);border:1px solid var(--border);border-radius:var(--radius);overflow:hidden;">' +
+      '<div style="position:relative;height:160px;overflow:hidden;background:#f0f0f0;">' +
+        '<img src="' + BASE_URL + img.file + '?v=' + Date.now() + '" ' +
+          'style="width:100%;height:100%;object-fit:cover;" ' +
+          'onerror="this.style.display='none';this.nextSibling.style.display='flex'">' +
+        '<div style="display:none;align-items:center;justify-content:center;height:100%;color:var(--muted);font-size:.85em;">No image</div>' +
+      '</div>' +
+      '<div style="padding:14px;">' +
+        '<div style="font-weight:700;color:var(--navy);font-size:.9em;margin-bottom:2px;">' + img.label + '</div>' +
+        '<div style="font-size:.78em;color:var(--muted);margin-bottom:10px;">' + img.file + '</div>' +
+        '<input type="file" accept="image/*" id="imgInput_' + img.file.replace('.','_') + '" ' +
+          'style="width:100%;font-size:.8em;margin-bottom:8px;">' +
+        '<button class="btn btn-primary btn-sm" style="width:100%;" ' +
+          'data-file="' + img.file + '" onclick="uploadImage(this)">⬆️ Replace Image</button>' +
+        '<div id="imgStatus_' + img.file.replace('.','_') + '" style="font-size:.78em;margin-top:6px;"></div>' +
+      '</div>' +
+    '</div>';
+  });
+
+  html += '</div>';
+  mc.innerHTML = html;
+}
+
+window.uploadImage = function(btn) {
+  var fname = btn.dataset.file;
+  var inputId = 'imgInput_' + fname.replace('.', '_');
+  var statusId = 'imgStatus_' + fname.replace('.', '_');
+  var input = document.getElementById(inputId);
+  var status = document.getElementById(statusId);
+
+  if (!input || !input.files || !input.files[0]) {
+    status.innerHTML = '<span style="color:#C62828;">⚠️ Please select an image first.</span>';
+    return;
+  }
+
+  var file = input.files[0];
+  if (!file.type.startsWith('image/')) {
+    status.innerHTML = '<span style="color:#C62828;">⚠️ Please select an image file.</span>';
+    return;
+  }
+
+  status.innerHTML = '⏳ Uploading...';
+  btn.disabled = true;
+
+  var reader = new FileReader();
+  reader.onload = function(e) {
+    var base64 = e.target.result.split(',')[1];
+    // Get current SHA first
+    var url = 'https://api.github.com/repos/' + GITHUB_OWNER + '/Big_Data_AI_Club_Baghdad/contents/' + fname;
+    fetch(url, { headers: ghHeaders() })
+      .then(function(r) { return r.json(); })
+      .then(function(data) {
+        var sha = data.sha;
+        return fetch(url, {
+          method: 'PUT',
+          headers: ghHeaders(),
+          body: JSON.stringify({
+            message: '🖼️ Admin: Replace ' + fname,
+            content: base64,
+            sha: sha
+          })
+        });
+      })
+      .then(function(r) { return r.json(); })
+      .then(function() {
+        status.innerHTML = '<span style="color:#1B5E20;">✅ Uploaded! Refresh page in ~30 sec to see change.</span>';
+        btn.disabled = false;
+        // Refresh the image preview
+        setTimeout(function() { loadImagesPage(); }, 3000);
+      })
+      .catch(function(e) {
+        status.innerHTML = '<span style="color:#C62828;">❌ Failed: ' + e.message + '</span>';
+        btn.disabled = false;
+      });
+  };
+  reader.readAsDataURL(file);
+};
+
+// ── Hero Slider Page ──
+function loadSliderPage() {
+  var mc = document.getElementById('mainContent');
+  mc.innerHTML = '<p style="padding:40px;color:var(--muted);">Loading slider data...</p>';
+
+  fetchFile('Big_Data_AI_Club_Baghdad', 'index.html', function(html) {
+    // Extract HERO_SLIDES from index.html
+    var m = html.match(/var HERO_SLIDES = (\[[\s\S]*?\]);/);
+    var slides = [];
+    if (m) {
+      try { slides = JSON.parse(m[1]); } catch(e) { slides = []; }
+    }
+    renderSliderPage(slides, html);
+  });
+}
+
+function renderSliderPage(slides, originalHtml) {
+  var mc = document.getElementById('mainContent');
+  var BASE = 'https://university-of-baghdad-college-of-ai.github.io/Big_Data_AI_Club_Baghdad/';
+
+  var html = '<div class="page-header">' +
+    '<div><div class="page-title">🎞️ Hero Slider</div>' +
+    '<div class="page-subtitle">' + slides.length + ' slide(s) — auto-advances every 5 seconds</div></div>' +
+    '<button class="btn btn-primary" id="addSlideBtn">+ Add Slide</button>' +
+  '</div>';
+
+  // Add slide form (hidden)
+  html += '<div id="addSlideForm" style="display:none;background:var(--white);border:1px solid var(--border);border-radius:var(--radius);padding:20px;margin-bottom:20px;">' +
+    '<div class="form-grid">' +
+      '<div class="form-group full"><label>Title</label><input type="text" id="sTitle" placeholder="e.g. Big Data AI Club"></div>' +
+      '<div class="form-group full"><label>Subtitle</label><input type="text" id="sSubtitle" placeholder="e.g. Innovating together..."></div>' +
+      '<div class="form-group"><label>Image File (from repo)</label>' +
+        '<select id="sImg">' +
+          ['1.jfif','2.jpg','3.jpg','4.jpg','5.jpg','6.jpg','7.jpg','8.jpg','9.jpeg'].map(function(f){
+            return '<option value="'+f+'">'+f+'</option>';
+          }).join('') +
+        '</select>' +
+      '</div>' +
+    '</div>' +
+    '<div class="form-actions">' +
+      '<button class="btn btn-secondary" id="cancelSlideBtn">Cancel</button>' +
+      '<button class="btn btn-primary" id="saveSlideBtn">💾 Add Slide</button>' +
+    '</div>' +
+  '</div>';
+
+  // Slides list
+  if (!slides.length) {
+    html += '<p style="color:var(--muted);padding:20px;">No slides yet.</p>';
+  } else {
+    html += '<div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:16px;">';
+    slides.forEach(function(slide, i) {
+      html += '<div style="background:var(--white);border:1px solid var(--border);border-radius:var(--radius);overflow:hidden;">' +
+        '<div style="height:140px;overflow:hidden;background:#020d1f;position:relative;">' +
+          '<img src="' + BASE + slide.img + '?v=' + Date.now() + '" style="width:100%;height:100%;object-fit:cover;opacity:.8;">' +
+          '<div style="position:absolute;bottom:0;left:0;right:0;padding:10px;background:linear-gradient(transparent,rgba(0,0,0,.7));color:#fff;">' +
+            '<div style="font-weight:700;font-size:.85em;">' + slide.title + '</div>' +
+          '</div>' +
+        '</div>' +
+        '<div style="padding:12px;">' +
+          '<div style="font-size:.78em;color:var(--muted);margin-bottom:8px;">' + slide.subtitle + '</div>' +
+          '<div style="font-size:.75em;color:var(--indigo);margin-bottom:10px;">📷 ' + slide.img + '</div>' +
+          '<div class="btn-group">' +
+            (i > 0 ? '<button class="btn btn-secondary btn-sm" onclick="moveSlide(' + i + ',-1)">↑</button>' : '') +
+            (i < slides.length-1 ? '<button class="btn btn-secondary btn-sm" onclick="moveSlide(' + i + ',1)">↓</button>' : '') +
+            '<button class="btn btn-secondary btn-sm" onclick="editSlide(' + i + ')">✏️</button>' +
+            (slides.length > 1 ? '<button class="btn btn-danger btn-sm" onclick="deleteSlide(' + i + ')">🗑️</button>' : '') +
+          '</div>' +
+        '</div>' +
+      '</div>';
+    });
+    html += '</div>';
+  }
+
+  mc.innerHTML = html;
+
+  // Store slides
+  window._heroSlides = slides;
+  window._heroHtml = originalHtml;
+
+  // Add slide toggle
+  document.getElementById('addSlideBtn').addEventListener('click', function() {
+    var f = document.getElementById('addSlideForm');
+    f.style.display = f.style.display === 'none' ? 'block' : 'none';
+  });
+  document.getElementById('cancelSlideBtn').addEventListener('click', function() {
+    document.getElementById('addSlideForm').style.display = 'none';
+  });
+  document.getElementById('saveSlideBtn').addEventListener('click', function() {
+    var title = document.getElementById('sTitle').value.trim();
+    var subtitle = document.getElementById('sSubtitle').value.trim();
+    var img = document.getElementById('sImg').value;
+    if (!title) { alert('Title required.'); return; }
+    window._heroSlides.push({ img: img, title: title, subtitle: subtitle });
+    saveHeroSlides();
+  });
+}
+
+window.deleteSlide = function(idx) {
+  if (!confirm('Delete this slide?')) return;
+  window._heroSlides.splice(idx, 1);
+  saveHeroSlides();
+};
+
+window.moveSlide = function(idx, dir) {
+  var slides = window._heroSlides;
+  var tmp = slides[idx];
+  slides[idx] = slides[idx + dir];
+  slides[idx + dir] = tmp;
+  saveHeroSlides();
+};
+
+window.editSlide = function(idx) {
+  var slide = window._heroSlides[idx];
+  var title = prompt('Title:', slide.title);
+  if (title === null) return;
+  var subtitle = prompt('Subtitle:', slide.subtitle);
+  if (subtitle === null) return;
+  window._heroSlides[idx].title = title;
+  window._heroSlides[idx].subtitle = subtitle;
+  saveHeroSlides();
+};
+
+function saveHeroSlides() {
+  showSaving('Saving slider...');
+  fetchFile('Big_Data_AI_Club_Baghdad', 'index.html', function(freshHtml, freshSha) {
+    var slidesJson = JSON.stringify(window._heroSlides, null, 6);
+    var newHtml = freshHtml.replace(
+      /var HERO_SLIDES = \[[\s\S]*?\];/,
+      'var HERO_SLIDES = ' + slidesJson + ';'
+    );
+    saveFile('Big_Data_AI_Club_Baghdad', 'index.html', newHtml, freshSha,
+      '🎞️ Admin: Update hero slider', function(err) {
+      hideSaving();
+      if (err) { showToast('❌ Failed: ' + err.message, 'error'); return; }
+      showToast('✅ Slider updated!', 'success');
+      loadSliderPage();
+    });
+  });
 }
 
 window.changeToken = function() {
