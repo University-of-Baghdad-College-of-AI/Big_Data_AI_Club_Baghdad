@@ -622,27 +622,26 @@
       document.getElementById('modalDesc').textContent  = d.desc||'No description available.';
       document.getElementById('modalWho').textContent   = d.who||'—';
       document.getElementById('modalDate').textContent  = d.date||'—';
-      var lnk = document.getElementById('modalLink');
+            var lnk = document.getElementById('modalLink');
+      // View Details — only show for real external URLs (not files, not #)
       var linkIsFile = d.link && (d.link.toLowerCase().endsWith('.pdf')||d.link.toLowerCase().endsWith('.zip')||d.link.toLowerCase().endsWith('.docx'));
-      if(d.link && d.link!=='#' && !linkIsFile){
-        lnk.href=d.link; lnk.style.display='inline-flex'; lnk.onclick=null;
+      var hasRealLink = d.link && d.link !== '#' && d.link !== '' && !linkIsFile;
+      if (hasRealLink) {
+        lnk.href = d.link; lnk.style.display = 'inline-flex'; lnk.onclick = null;
       } else {
-        lnk.style.display='none';
+        lnk.style.display = 'none';
       }
-      // View File button
-      var existingFileBtn = document.getElementById('modalFileBtn');
-      if (existingFileBtn) existingFileBtn.remove();
-      var fileUrl2 = d.file || (linkIsFile ? d.link : null);
-      if (fileUrl2) {
-        var fileBtn = document.createElement('a');
-        fileBtn.href = fileUrl2;
-        fileBtn.id = 'modalFileBtn';
-        
-        fileBtn.target = '_blank';
-        fileBtn.className = 'view-btn';
-        fileBtn.style.cssText = 'background:#1B5E20;color:#fff;margin-top:8px;margin-left:8px;text-decoration:none;';
-        fileBtn.innerHTML = '📄 View File';
-        lnk.parentNode.appendChild(fileBtn);
+      // View File — only show if file attached OR link is a file
+      var existingFB = document.getElementById('modalFileBtn');
+      if (existingFB) existingFB.remove();
+      var fileUrl = (d.file && d.file !== '') ? d.file : (linkIsFile ? d.link : null);
+      if (fileUrl) {
+        var fb = document.createElement('a');
+        fb.id = 'modalFileBtn'; fb.href = fileUrl; fb.target = '_blank';
+        fb.className = 'view-btn';
+        fb.style.cssText = 'background:#1B5E20;color:#fff;margin-top:8px;margin-left:8px;text-decoration:none;';
+        fb.innerHTML = '📄 View File';
+        lnk.parentNode.appendChild(fb);
       }
       document.getElementById('modal').classList.add('open');
       document.body.style.overflow='hidden';
