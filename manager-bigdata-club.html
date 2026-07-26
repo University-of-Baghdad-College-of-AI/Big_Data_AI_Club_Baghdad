@@ -1011,6 +1011,21 @@ function saveEntry(cfg, originalHtml) {
   if (editIndex === -1) { currentData.unshift(entry); }
   else { currentData[editIndex] = entry; }
 
+  // Auto-sort announcements and news by date newest first
+  var mode2 = cfg.mode || 'full';
+  if (mode2 === 'simple') {
+    var months2 = {january:1,february:2,march:3,april:4,may:5,june:6,
+                   july:7,august:8,september:9,october:10,november:11,december:12};
+    function parseD2(s) {
+      var p = (s||'').toLowerCase().replace(/,/g,'').split(' ');
+      var yr = parseInt(p.filter(function(x){ return x.length===4; })[0])||0;
+      var mo = months2[p[0]]||0;
+      var dy = parseInt(p[1])||1;
+      return yr*10000 + mo*100 + dy;
+    }
+    currentData.sort(function(a,b){ return parseD2(b.date) - parseD2(a.date); });
+  }
+
   closeModal();
   commitData(cfg, originalHtml, editIndex === -1 ? 'Add: ' + (entry.title||entry.text||entry.name) : 'Edit: ' + (entry.title||entry.text||entry.name));
 }
