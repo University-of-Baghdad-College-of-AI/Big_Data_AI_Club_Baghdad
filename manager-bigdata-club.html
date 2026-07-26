@@ -1378,9 +1378,19 @@ function showAddToActivityModal(title, who, year, pdfUrl, meta) {
     if (!cfg) { showToast('Page not found', 'error'); return; }
 
     var actLink = document.getElementById('actLink').value.trim() || '#';
-    var actFile = pdfUrl || '';
-    // If link and file are same URL, keep only file (avoid duplicate buttons)
-    if (actLink !== '#' && actLink === actFile) { actLink = '#'; }
+    // Only set file field if pdfUrl is an actual hosted file (not external link)
+    function isHostedFile(u) {
+      if (!u || u === '') return false;
+      var lower = u.toLowerCase();
+      return lower.endsWith('.pdf') || lower.endsWith('.zip') ||
+             lower.endsWith('.docx') || lower.endsWith('.pptx') ||
+             lower.includes('github.io') || lower.includes('raw.githubusercontent.com');
+    }
+    var actFile = (pdfUrl && isHostedFile(pdfUrl)) ? pdfUrl : '';
+    // If pdfUrl is external link (not a file), put it as link instead
+    if (pdfUrl && !isHostedFile(pdfUrl) && (actLink === '#' || actLink === '')) {
+      actLink = pdfUrl;
+    }
     var entry = {
       type:  document.getElementById('actType').value,
       year:  document.getElementById('actYear').value,
