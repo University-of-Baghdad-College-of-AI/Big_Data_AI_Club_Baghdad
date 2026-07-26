@@ -1650,13 +1650,33 @@ window.moveSlide = function(idx, dir) {
 
 window.editSlide = function(idx) {
   var slide = window._heroSlides[idx];
-  var title = prompt('Title:', slide.title);
-  if (title === null) return;
-  var subtitle = prompt('Subtitle:', slide.subtitle);
-  if (subtitle === null) return;
-  window._heroSlides[idx].title = title;
-  window._heroSlides[idx].subtitle = subtitle;
-  saveHeroSlides();
+  // Show edit form in modal
+  document.getElementById('modalTitle').textContent = 'Edit Slide';
+  document.getElementById('modalBody').innerHTML =
+    '<div class="form-grid">' +
+      '<div class="form-group full"><label>Title</label>' +
+        '<input type="text" id="eSlideTitle" value="' + (slide.title||'').replace(/"/g,'&quot;') + '"></div>' +
+      '<div class="form-group full"><label>Subtitle</label>' +
+        '<input type="text" id="eSlideSubtitle" value="' + (slide.subtitle||'').replace(/"/g,'&quot;') + '"></div>' +
+      '<div class="form-group"><label>Image</label>' +
+        '<select id="eSlideImg">' +
+          ['1.jfif','2.jpg','3.jpg','4.jpg','5.jpg','6.jpg','7.jpg','8.jpg','9.jpeg'].map(function(f){
+            return '<option value="'+f+'"'+(f===slide.img?' selected':'')+'>'+f+'</option>';
+          }).join('') +
+        '</select></div>' +
+    '</div>' +
+    '<div class="form-actions">' +
+      '<button class="btn btn-secondary" onclick="closeModal()">Cancel</button>' +
+      '<button class="btn btn-primary" id="saveSlideEditBtn">💾 Save</button>' +
+    '</div>';
+  document.getElementById('entryModal').classList.add('open');
+  document.getElementById('saveSlideEditBtn').addEventListener('click', function() {
+    window._heroSlides[idx].title = document.getElementById('eSlideTitle').value.trim();
+    window._heroSlides[idx].subtitle = document.getElementById('eSlideSubtitle').value.trim();
+    window._heroSlides[idx].img = document.getElementById('eSlideImg').value;
+    closeModal();
+    saveHeroSlides();
+  });
 };
 
 function saveHeroSlides() {
