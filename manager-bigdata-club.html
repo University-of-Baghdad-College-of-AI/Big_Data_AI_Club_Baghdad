@@ -272,6 +272,7 @@ function buildSidebar() {
   });
   html += '<div class="sidebar-section">Settings</div>';
   html += sidebarItem('users', '👤', 'Approved Users');
+  html += sidebarItem('stats', '📊', 'Club Statistics');
   sb.innerHTML = html;
   sb.querySelectorAll('.sidebar-item').forEach(function(el) {
     el.addEventListener('click', function() {
@@ -294,6 +295,7 @@ function showPage(page) {
   if (navEl) navEl.classList.add('active');
   if (page === 'dashboard') { renderDashboard(); return; }
   if (page === 'users') { loadUsersPage(); return; }
+  if (page === 'stats') { loadStatsPage(); return; }
   loadPage(page);
 }
 
@@ -1123,6 +1125,117 @@ function showToast(msg, type) {
   var t = document.getElementById('toast');
   t.textContent = msg; t.className = 'show ' + (type||'');
   setTimeout(function() { t.className = ''; }, 3500);
+}
+
+// ── Club Statistics Page ──
+function loadStatsPage() {
+  var mc = document.getElementById('mainContent');
+  mc.innerHTML = '<p style="padding:40px;color:var(--muted);">Loading statistics...</p>';
+
+  var pages = ['workshops','researches','projects','lectures','presentations',
+               'seminars','conferences','field-visits','internships','courses'];
+  var labels = {
+    workshops:'Workshops', researches:'Researches', projects:'Projects',
+    lectures:'Lectures', presentations:'Presentations', seminars:'Seminars',
+    conferences:'Conferences', 'field-visits':'Field Visits',
+    internships:'Internships', courses:'Courses'
+  };
+
+  // Fetch all activity pages
+  var promises = pages.map(function(page) {
+    return new Promise(function(resolve) {
+      fetchFile('Big_Data_AI_Club_Baghdad', page + '.html', function(html) {
+        var data = extractData(html, 'allData');
+        resolve({ page: page, count: data.length, data: data });
+      });
+    });
+  });
+
+  Promise.all(promises).then(function(results) {
+    var total = results.reduce(function(sum, r) { return sum + r.count; }, 0);
+
+    // Count by year
+    var byYear = {};
+    results.forEach(function(r) {
+      r.data.forEach(function(item) {
+        var yr = item.year || 'Unknown';
+        byYear[yr] = (byYear[yr] || 0) + 1;
+      });
+    });
+
+    // Count by type
+    var byType = {};
+    results.forEach(function(r) {
+      r.data.forEach(function(item) {
+        var t = item.type || 'other';
+        byType[t] = (byType[t] || 0) + 1;
+      });
+    });
+
+    var sortedYears = Object.keys(byYear).sort().reverse();
+    var sortedTypes = Object.entries(byType).sort(function(a,b){ return b[1]-a[1]; }).slice(0,10);
+    var maxCount = Math.max.apply(null, results.map(function(r){ return r.count; }));
+
+    var html = '<div class="page-header">' +
+      '<div><div class="page-title">📊 Club Statistics</div>' +
+      '<div class="page-subtitle">Overview of all club activities</div></div>' +
+      '<button class="btn btn-secondary" onclick="loadStatsPage()">↺ Refresh</button>' +
+    '</div>';
+
+    // Summary cards
+    html += '<div class="stat-row" style="margin-bottom:24px;">';
+    html += '<div class="stat-card"><div class="num">' + total + '</div><div class="lbl">Total Activities</div></div>';
+    html += '<div class="stat-card"><div class="num">' + sortedYears.length + '</div><div class="lbl">Years Active</div></div>';
+    html += '<div class="stat-card"><div class="num">' + results.length + '</div><div class="lbl">Activity Pages</div></div>';
+    html += '<div class="stat-card"><div class="num">' + Object.keys(byType).length + '</div><div class="lbl">Activity Types</div></div>';
+    html += '</div>';
+
+    // Activities per page bar chart
+    html += '<div class="table-wrap" style="margin-bottom:20px;">';
+    html += '<div class="table-toolbar"><strong>Activities by Page</strong></div>';
+    html += '<div style="padding:16px;">';
+    results.forEach(function(r) {
+      var pct = maxCount > 0 ? (r.count / maxCount * 100) : 0;
+      html += '<div style="margin-bottom:12px;">';
+      html += '<div style="display:flex;justify-content:space-between;font-size:.85em;margin-bottom:4px;">' +
+        '<span style="font-weight:600;color:var(--navy);">' + labels[r.page] + '</span>' +
+        '<span style="color:var(--muted);">' + r.count + '</span></div>';
+      html += '<div style="background:var(--surface);border-radius:20px;height:10px;overflow:hidden;">' +
+        '<div style="background:var(--indigo);height:100%;width:' + pct + '%;border-radius:20px;transition:width .5s;"></div></div>';
+      html += '</div>';
+    });
+    html += '</div></div>';
+
+    // By year
+    html += '<div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;">';
+    html += '<div class="table-wrap">';
+    html += '<div class="table-toolbar"><strong>By Year</strong></div>';
+    html += '<table><thead><tr><th>Year</th><th>Activities</th><th></th></tr></thead><tbody>';
+    var maxYear = Math.max.apply(null, Object.values(byYear));
+    sortedYears.forEach(function(yr) {
+      var pct = (byYear[yr] / maxYear * 100).toFixed(0);
+      html += '<tr><td><strong>' + yr + '</strong></td><td>' + byYear[yr] + '</td>' +
+        '<td style="width:120px;"><div style="background:var(--surface);border-radius:10px;height:8px;">' +
+        '<div style="background:var(--gold);height:100%;width:' + pct + '%;border-radius:10px;"></div></div></td></tr>';
+    });
+    html += '</tbody></table></div>';
+
+    // By type
+    html += '<div class="table-wrap">';
+    html += '<div class="table-toolbar"><strong>Top Types</strong></div>';
+    html += '<table><thead><tr><th>Type</th><th>Count</th><th></th></tr></thead><tbody>';
+    var maxType = sortedTypes.length > 0 ? sortedTypes[0][1] : 1;
+    sortedTypes.forEach(function(entry) {
+      var pct = (entry[1] / maxType * 100).toFixed(0);
+      html += '<tr><td><span class="badge">' + entry[0] + '</span></td><td>' + entry[1] + '</td>' +
+        '<td style="width:120px;"><div style="background:var(--surface);border-radius:10px;height:8px;">' +
+        '<div style="background:#4361EE;height:100%;width:' + pct + '%;border-radius:10px;"></div></div></td></tr>';
+    });
+    html += '</tbody></table></div>';
+    html += '</div>';
+
+    mc.innerHTML = html;
+  });
 }
 
 window.changeToken = function() {
