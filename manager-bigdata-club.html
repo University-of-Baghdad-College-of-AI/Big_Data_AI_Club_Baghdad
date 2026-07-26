@@ -1621,6 +1621,25 @@ function renderSliderPage(slides, originalHtml) {
     var f = document.getElementById('addSlideForm');
     f.style.display = f.style.display === 'none' ? 'block' : 'none';
   });
+
+  document.getElementById('saveIntervalBtn').addEventListener('click', function() {
+    var sec = parseInt(document.getElementById('sliderInterval').value);
+    if (isNaN(sec) || sec < 2 || sec > 30) { showToast('⚠️ Enter a value between 2 and 30 seconds', 'error'); return; }
+    var ms = sec * 1000;
+    showSaving('Saving interval...');
+    fetchFile('Big_Data_AI_Club_Baghdad', 'index.html', function(freshHtml, freshSha) {
+      var newHtml = freshHtml.replace(
+        /heroTimer = setTimeout\(function\(\)\{ heroNav\(1\); \}, \d+\)/,
+        'heroTimer = setTimeout(function(){ heroNav(1); }, ' + ms + ')'
+      );
+      saveFile('Big_Data_AI_Club_Baghdad', 'index.html', newHtml, freshSha,
+        '⏱️ Admin: Set slider interval to ' + sec + 's', function(err) {
+        hideSaving();
+        if (err) showToast('❌ Failed: ' + err.message, 'error');
+        else { showToast('✅ Interval set to ' + sec + ' seconds!', 'success'); loadSliderPage(); }
+      });
+    });
+  });
   document.getElementById('cancelSlideBtn').addEventListener('click', function() {
     document.getElementById('addSlideForm').style.display = 'none';
   });
