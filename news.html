@@ -429,6 +429,11 @@
       },
 
       {
+        "date"  : "July 26, 2026",
+        "text"  : "New projects published on Big Data Club."
+      },
+
+      {
         "date"  : "July 15, 2026",
         "text"  : "Machine Learning for Data Science Projects (Issued by IBM SkillsBuild)."
       },
@@ -441,11 +446,6 @@
       {
         "date"  : "June 18, 2026",
         "text"  : "Our students attend the National Hackathon."
-      },
-
-      {
-        "date"  : "July 26, 2026",
-        "text"  : "New projects published on Big Data Club."
       }
 
     ];
@@ -453,8 +453,19 @@
     document.addEventListener('DOMContentLoaded', function() {
       var list = document.getElementById('newsList');
       if (!list) return;
-      var ul = document.createElement('ul');
-      allNews.forEach(function(n) {
+      var allItems = allNews.slice();
+        // Sort newest first
+    allItems.sort(function(a, b) {
+      var months = {january:1,february:2,march:3,april:4,may:5,june:6,
+                    july:7,august:8,september:9,october:10,november:11,december:12};
+      function parseD(s) {
+        var p = (s||'').toLowerCase().replace(/,/g,'').split(' ');
+        return (parseInt(p[p.length-1])||0)*100 + (months[p[0]]||0);
+      }
+      return parseD(b.date) - parseD(a.date);
+    });
+    var ul = document.createElement('ul');
+      allItems.forEach(function(n) {
         var li = document.createElement('li');
         li.innerHTML = '<strong>' + n.date + ':</strong> ' + n.text;
         ul.appendChild(li);
