@@ -1377,6 +1377,10 @@ function showAddToActivityModal(title, who, year, pdfUrl, meta) {
     var cfg = PAGE_MAP[page];
     if (!cfg) { showToast('Page not found', 'error'); return; }
 
+    var actLink = document.getElementById('actLink').value.trim() || '#';
+    var actFile = pdfUrl || '';
+    // If link and file are same URL, keep only file (avoid duplicate buttons)
+    if (actLink !== '#' && actLink === actFile) { actLink = '#'; }
     var entry = {
       type:  document.getElementById('actType').value,
       year:  document.getElementById('actYear').value,
@@ -1384,8 +1388,8 @@ function showAddToActivityModal(title, who, year, pdfUrl, meta) {
       desc:  document.getElementById('actDesc').value.trim(),
       who:   document.getElementById('actWho').value.trim(),
       date:  document.getElementById('actDate').value.trim(),
-      link:  document.getElementById('actLink').value.trim() || '#',
-      file:  pdfUrl || ''
+      link:  actLink,
+      file:  actFile
     };
 
     if (!entry.title) { alert('Title is required.'); return; }
