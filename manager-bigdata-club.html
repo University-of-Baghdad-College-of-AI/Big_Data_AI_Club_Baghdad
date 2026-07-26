@@ -1622,7 +1622,8 @@ function renderSliderPage(slides, originalHtml) {
     f.style.display = f.style.display === 'none' ? 'block' : 'none';
   });
 
-  document.getElementById('saveIntervalBtn').addEventListener('click', function() {
+  var saveIntBtn = document.getElementById('saveIntervalBtn');
+  if (saveIntBtn) saveIntBtn.addEventListener('click', function() {
     var sec = parseInt(document.getElementById('sliderInterval').value);
     if (isNaN(sec) || sec < 2 || sec > 30) { showToast('⚠️ Enter a value between 2 and 30 seconds', 'error'); return; }
     var ms = sec * 1000;
