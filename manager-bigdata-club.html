@@ -431,7 +431,8 @@ function injectData(html, data, varName, mode) {
       fmt += '        "desc"  : ' + JSON.stringify(item.desc||'') + ',\n';
       fmt += '        "who"   : ' + JSON.stringify(item.who||'') + ',\n';
       fmt += '        "date"  : ' + JSON.stringify(item.date||'') + ',\n';
-      fmt += '        "link"  : ' + JSON.stringify(item.link||'#') + '\n';
+      fmt += '        "link"  : ' + JSON.stringify(item.link||'#') + ',\n';
+      fmt += '        "file"  : ' + JSON.stringify(item.file||'') + '\n';
     }
     fmt += '      }' + (i < data.length-1 ? ',' : '') + '\n\n';
   });
@@ -840,7 +841,8 @@ function loadFilesList(repo) {
               h += '</div></div>';
               h += '<div class="btn-group" style="flex-shrink:0;">';
               if (pair.pdf) {
-                h += '<a href="' + pair.pdf.download_url + '" target="_blank" class="btn btn-secondary btn-sm">⬇ PDF</a>';
+                var pdfUrl = pair.pdf.download_url.replace('https://raw.githubusercontent.com/University-of-Baghdad-College-of-AI/', 'https://university-of-baghdad-college-of-ai.github.io/').replace('/main/', '/');
+            h += '<a href="' + pdfUrl + '" target="_blank" class="btn btn-secondary btn-sm">⬇ PDF</a>';
                 h += '<button class="btn btn-danger btn-sm" data-repo="' + repo2 + '" data-path="' + pair.pdf.path + '" data-sha="' + pair.pdf.sha + '" data-name="' + pair.pdf.name + '" onclick="deleteFile(this)">🗑️ PDF</button>';
               }
               if (pair.json) {
@@ -899,7 +901,17 @@ function getFormFields(cfg) {
     '<div class="form-group full"><label>Description</label><textarea id="fDesc" placeholder="Description..."></textarea></div>' +
     '<div class="form-group"><label>Author / Who</label><input type="text" id="fWho" placeholder="e.g. Dr. Jalal Hameed"></div>' +
     '<div class="form-group"><label>Date</label><input type="text" id="fDate" placeholder="e.g. June 2026"></div>' +
-    '<div class="form-group full"><label>Link (optional)</label><input type="text" id="fLink" placeholder="https://..."></div>';
+    '<div class="form-group full"><label>Link (optional)</label><input type="text" id="fLink" placeholder="https://..."></div>' +
+    '<div class="form-group full" style="border-top:1px dashed var(--border);padding-top:14px;margin-top:4px;">' +
+      '<label>📎 Attach File (optional — PDF or ZIP)</label>' +
+      '<input type="file" id="fFile" accept=".pdf,.zip" style="width:100%;padding:6px;border:1.5px solid var(--border);border-radius:8px;font-family:inherit;font-size:.85em;margin-top:4px;">' +
+      '<div id="fFileCurrentWrap" style="display:none;margin-top:6px;">' +
+        '<span style="font-size:.8em;color:var(--muted);">Current file: </span>' +
+        '<a id="fFileCurrent" href="#" target="_blank" style="font-size:.8em;color:var(--indigo);">view file</a>' +
+        '<span style="font-size:.78em;color:var(--muted);margin-left:8px;">(upload new to replace)</span>' +
+      '</div>' +
+      '<p style="font-size:.76em;color:var(--muted);margin-top:4px;">Saved to: <code>files/[page]/[year]/[title].[ext]</code></p>' +
+    '</div>';
 }
 
 function openAddModal(cfg, originalHtml) {
@@ -944,6 +956,12 @@ function openEditModal(idx, cfg, originalHtml) {
     document.getElementById('fWho').value = item.who || '';
     document.getElementById('fDate').value = item.date || '';
     document.getElementById('fLink').value = item.link || '#';
+    // Show existing file if any
+    if (item.file) {
+      var wrap = document.getElementById('fFileCurrentWrap');
+      var link = document.getElementById('fFileCurrent');
+      if (wrap && link) { wrap.style.display='block'; link.href=item.file; link.textContent=item.file.split('/').pop(); }
+    }
   }
 
   document.getElementById('entryModal').classList.add('open');
@@ -962,7 +980,7 @@ function saveEntry(cfg, originalHtml) {
     entry = { name: document.getElementById('fName').value.trim(), role: document.getElementById('fRole').value.trim(), dept: document.getElementById('fDept').value.trim(), email: document.getElementById('fEmail').value.trim() };
     if (!entry.name) { alert('Name is required.'); return; }
   } else {
-    entry = { type: document.getElementById('fType').value, year: document.getElementById('fYear').value, title: document.getElementById('fTitle').value.trim(), desc: document.getElementById('fDesc').value.trim(), who: document.getElementById('fWho').value.trim(), date: document.getElementById('fDate').value.trim(), link: document.getElementById('fLink').value.trim() || '#' };
+    entry = { type: document.getElementById('fType').value, year: document.getElementById('fYear').value, title: document.getElementById('fTitle').value.trim(), desc: document.getElementById('fDesc').value.trim(), who: document.getElementById('fWho').value.trim(), date: document.getElementById('fDate').value.trim(), link: document.getElementById('fLink').value.trim() || '#', file: editIndex >= 0 && currentData[editIndex] ? (currentData[editIndex].file || '') : '' };
     if (!entry.title) { alert('Title is required.'); return; }
   }
 
@@ -1006,7 +1024,6 @@ function commitData(cfg, originalHtml, message) {
 }
 
 function doCommit(cfg, originalHtml, message, sha) {
-  // Re-fetch to get fresh content and SHA
   fetchFile(cfg.repo, cfg.file, function(freshHtml, freshSha) {
     var varName = cfg.dataVar || 'allData';
     var newContent = injectData(freshHtml, currentData, varName, cfg.mode);
@@ -1014,8 +1031,49 @@ function doCommit(cfg, originalHtml, message, sha) {
       hideSaving();
       if (err) {
         showToast('❌ Save failed: ' + err.message, 'error');
+        return;
+      }
+      fileCache[currentPage] = currentData;
+
+      // Upload attached file if any
+      var fileInput = document.getElementById('fFile');
+      if (fileInput && fileInput.files && fileInput.files[0]) {
+        var file = fileInput.files[0];
+        var year = (document.getElementById('fYear') ? document.getElementById('fYear').value : '') || new Date().getFullYear();
+        var title = (document.getElementById('fTitle') ? document.getElementById('fTitle').value.trim() : '') || file.name.replace(/\.[^.]+$/,'');
+        var safeName = title.replace(/[^a-zA-Z0-9؀-ۿ\s-]/g,'').replace(/\s+/g,'-');
+        var ext = file.name.split('.').pop();
+        var filePath = 'files/' + currentPage + '/' + year + '/' + safeName + '.' + ext;
+
+        showSaving('Uploading file...');
+        var reader = new FileReader();
+        reader.onload = function(e) {
+          var base64 = e.target.result.split(',')[1];
+          uploadToGitHub(cfg.repo, filePath, base64, file.name, function(uploadErr) {
+            hideSaving();
+            if (uploadErr) {
+              showToast('✅ Entry saved! ⚠️ File upload failed: ' + uploadErr, 'error');
+            } else {
+              var fileUrl = 'https://university-of-baghdad-college-of-ai.github.io/' + cfg.repo + '/' + filePath;
+              // Update the file field of the saved entry
+              fetchFile(cfg.repo, cfg.file, function(html2, sha2) {
+                var varName2 = cfg.dataVar || 'allData';
+                var data2 = extractData(html2, varName2);
+                data2.forEach(function(item) {
+                  if (item.title === title) { item.file = fileUrl; }
+                });
+                var newHtml2 = injectData(html2, data2, varName2, cfg.mode);
+                saveFile(cfg.repo, cfg.file, newHtml2, sha2, '⚙️ Admin: Attach file for ' + title, function() {
+                  fileCache[currentPage] = data2;
+                });
+              });
+              showToast('✅ Entry + file saved!', 'success');
+            }
+            loadPage(currentPage);
+          });
+        };
+        reader.readAsDataURL(file);
       } else {
-        fileCache[currentPage] = currentData;
         showToast('✅ Saved!', 'success');
         loadPage(currentPage);
       }
