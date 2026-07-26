@@ -1558,6 +1558,12 @@ function renderSliderPage(slides, originalHtml) {
   var mc = document.getElementById('mainContent');
   var BASE = 'https://university-of-baghdad-college-of-ai.github.io/Big_Data_AI_Club_Baghdad/';
 
+  // Get current interval
+  var currentInterval = 5000;
+  var intervalMatch = originalHtml ? originalHtml.match(/heroTimer = setTimeout[^,]+,\s*(\d+)/) : null;
+  if (intervalMatch) currentInterval = parseInt(intervalMatch[1]);
+  var intervalSec = Math.round(currentInterval / 1000);
+
   var html = '<div class="page-header">' +
     '<div><div class="page-title">🎞️ Hero Slider</div>' +
     '<div class="page-subtitle">' + slides.length + ' slide(s)</div></div>' +
