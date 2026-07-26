@@ -632,19 +632,21 @@
       document.getElementById('modalWho').textContent   = d.who||'—';
       document.getElementById('modalDate').textContent  = d.date||'—';
       var lnk = document.getElementById('modalLink');
-      if(d.link && d.link!=='#'){
+      var linkIsFile = d.link && (d.link.toLowerCase().endsWith('.pdf')||d.link.toLowerCase().endsWith('.zip')||d.link.toLowerCase().endsWith('.docx'));
+      if(d.link && d.link!=='#' && !linkIsFile){
         lnk.href=d.link; lnk.style.display='inline-flex'; lnk.onclick=null;
       } else {
-        lnk.href='#'; lnk.style.display='inline-flex';
-        lnk.onclick=function(e){ e.preventDefault(); alert('No link available for this item yet.'); };
+        lnk.style.display='none';
       }
       // View File button
       var existingFileBtn = document.getElementById('modalFileBtn');
       if (existingFileBtn) existingFileBtn.remove();
-      if (d.file) {
+      var fileUrl2 = d.file || (linkIsFile ? d.link : null);
+      if (fileUrl2) {
         var fileBtn = document.createElement('a');
+        fileBtn.href = fileUrl2;
         fileBtn.id = 'modalFileBtn';
-        fileBtn.href = d.file;
+        
         fileBtn.target = '_blank';
         fileBtn.className = 'view-btn';
         fileBtn.style.cssText = 'background:#1B5E20;color:#fff;margin-top:8px;margin-left:8px;text-decoration:none;';
