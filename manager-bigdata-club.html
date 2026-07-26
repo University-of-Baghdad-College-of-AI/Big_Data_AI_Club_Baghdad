@@ -1416,11 +1416,12 @@ function loadImagesPage() {
 
   // Load gallery items from index.html
   fetchFile('Big_Data_AI_Club_Baghdad', 'index.html', function(indexHtml) {
-    var m = indexHtml.match(/var GALLERY_ITEMS = (\[[\s\S]*?\]);/);
+    if (!indexHtml) { document.getElementById('galleryBody').innerHTML = '<tr><td colspan="3" style="color:#C62828;">Could not load gallery data.</td></tr>'; return; }
+    var m = indexHtml.match(/var GALLERY_ITEMS = ([\s\S]*?);/);
     var items = [];
     if (m) {
       try {
-        var jsonStr = m[1].replace(/'/g, '"').replace(/([{,]\s*)(\w+)\s*:/g, '$1"$2":');
+        var jsonStr = m[1].trim().replace(/'/g, '"').replace(/([{,]\s*)(\w+)\s*:/g, '$1"$2":');
         items = JSON.parse(jsonStr);
       } catch(e) { items = []; }
     }
