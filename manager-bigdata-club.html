@@ -1417,7 +1417,42 @@ function loadImagesPage() {
   html += '<table id="galleryTable"><thead><tr><th>Image</th><th>Caption</th><th>Action</th></tr></thead><tbody id="galleryBody"></tbody></table>';
   html += '</div></div>';
 
+  // All repo images section
+  html += '<div style="margin-top:28px;">' +
+    '<div style="font-family:sans-serif;font-weight:700;font-size:1em;color:var(--navy);margin-bottom:8px;">🗂️ All Images in Repository</div>' +
+    '<p style="font-size:.82em;color:var(--muted);margin-bottom:12px;">Shows every image file — delete unused ones here.</p>' +
+    '<div id="allImagesGrid" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:12px;"></div>' +
+  '</div>';
+
   mc.innerHTML = html;
+
+  // Load all images from repo
+  fetch('https://api.github.com/repos/' + GITHUB_OWNER + '/Big_Data_AI_Club_Baghdad/contents/', { headers: ghHeaders() })
+    .then(function(r){ return r.json(); })
+    .then(function(files) {
+      var imgs = files.filter(function(f){
+        return /\.(jpg|jpeg|png|gif|webp|jfif|avif)$/i.test(f.name);
+      });
+      var grid = document.getElementById('allImagesGrid');
+      if (!grid) return;
+      var BASE2 = 'https://university-of-baghdad-college-of-ai.github.io/Big_Data_AI_Club_Baghdad/';
+      var html2 = '';
+      imgs.forEach(function(f) {
+        html2 += '<div style="background:var(--white);border:1px solid var(--border);border-radius:8px;overflow:hidden;">' +
+          '<div style="height:100px;overflow:hidden;background:#f0f0f0;">' +
+            '<img src="' + BASE2 + f.name + '" style="width:100%;height:100%;object-fit:cover;" onerror="this.parentNode.style.background='#eee'">' +
+          '</div>' +
+          '<div style="padding:8px;">' +
+            '<div style="font-size:.78em;font-weight:600;color:var(--navy);margin-bottom:6px;word-break:break-all;">' + f.name + '</div>' +
+            '<button class="btn btn-danger btn-sm" style="width:100%;font-size:.75em;" ' +
+              'data-repo="Big_Data_AI_Club_Baghdad" data-path="' + f.name + '" data-sha="' + f.sha + '" data-name="' + f.name + '" ' +
+              'onclick="deleteRepoImage(this)">🗑️ Delete</button>' +
+          '</div>' +
+        '</div>';
+      });
+      grid.innerHTML = html2 || '<p style="color:var(--muted);">No images found.</p>';
+    })
+    .catch(function(){ });
 
   // Load gallery items from index.html
   fetchFile('Big_Data_AI_Club_Baghdad', 'index.html', function(indexHtml) {
@@ -1795,6 +1830,26 @@ window.selectSlideImg = function(el, img) {
   el.style.borderColor = 'var(--indigo)';
   el.style.boxShadow = '0 0 0 2px var(--indigo)';
   document.getElementById('sImg').value = img;
+};
+
+window.deleteRepoImage = function(btn) {
+  var name = btn.dataset.name;
+  var path = btn.dataset.path;
+  var sha = btn.dataset.sha;
+  var repo = btn.dataset.repo;
+  if (!confirm('Delete "' + name + '" from the repository? Make sure it is not used anywhere.')) return;
+  showSaving('Deleting ' + name + '...');
+  fetch('https://api.github.com/repos/' + GITHUB_OWNER + '/' + repo + '/contents/' + path, {
+    method: 'DELETE',
+    headers: ghHeaders(),
+    body: JSON.stringify({ message: '🗑️ Admin: Delete unused image ' + name, sha: sha })
+  })
+  .then(function(r) {
+    hideSaving();
+    if (r.ok) { showToast('✅ ' + name + ' deleted!', 'success'); loadImagesPage(); }
+    else { showToast('❌ Delete failed', 'error'); }
+  })
+  .catch(function(e) { hideSaving(); showToast('❌ ' + e.message, 'error'); });
 };
 
 window.changeToken = function() {
