@@ -1455,10 +1455,7 @@ window.saveCaption = function(idx) {
     var arr = window._galleryItems.map(function(g) {
       return "        { img: '" + g.img + "', caption: '" + g.caption.replace(/'/g,"\'") + "' }";
     });
-    var newItems = '[
-' + arr.join(',
-') + '
-      ]';
+    var newItems = '[' + arr.join(',') + ']';
     var newHtml = freshHtml.replace(/var GALLERY_ITEMS = \[[\s\S]*?\];/, 'var GALLERY_ITEMS = ' + newItems + ';');
     saveFile('Big_Data_AI_Club_Baghdad', 'index.html', newHtml, freshSha,
       '🖼️ Admin: Update gallery caption', function(err) {
