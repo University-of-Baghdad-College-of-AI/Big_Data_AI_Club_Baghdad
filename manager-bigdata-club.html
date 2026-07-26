@@ -1560,8 +1560,15 @@ function renderSliderPage(slides, originalHtml) {
 
   var html = '<div class="page-header">' +
     '<div><div class="page-title">🎞️ Hero Slider</div>' +
-    '<div class="page-subtitle">' + slides.length + ' slide(s) — auto-advances every 5 seconds</div></div>' +
+    '<div class="page-subtitle">' + slides.length + ' slide(s)</div></div>' +
     '<button class="btn btn-primary" id="addSlideBtn">+ Add Slide</button>' +
+  '</div>' +
+  '<div style="background:var(--white);border:1px solid var(--border);border-radius:var(--radius);padding:14px 18px;margin-bottom:20px;display:flex;align-items:center;gap:12px;flex-wrap:wrap;">' +
+    '<span style="font-weight:600;color:var(--navy);">⏱️ Auto-advance every:</span>' +
+    '<input type="number" id="sliderInterval" value="' + intervalSec + '" min="2" max="60" style="width:65px;padding:6px 10px;border:1.5px solid var(--border);border-radius:8px;font-family:inherit;font-size:.9em;text-align:center;">' +
+    '<span style="color:var(--muted);">seconds</span>' +
+    '<button class="btn btn-primary btn-sm" id="saveIntervalBtn">💾 Save</button>' +
+    '<span style="font-size:.82em;color:var(--muted);">(currently ' + intervalSec + 's)</span>' +
   '</div>';
 
   // Add slide form (hidden)
