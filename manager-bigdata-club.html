@@ -1471,10 +1471,21 @@ function loadSliderPage() {
 
   fetchFile('Big_Data_AI_Club_Baghdad', 'index.html', function(html) {
     // Extract HERO_SLIDES from index.html
-    var m = html.match(/var HERO_SLIDES = (\[[\s\S]*?\]);/);
+    // Extract HERO_SLIDES - handles both single and double quotes
     var slides = [];
-    if (m) {
-      try { slides = JSON.parse(m[1]); } catch(e) { slides = []; }
+    try {
+      // Create a temporary script to evaluate HERO_SLIDES
+      var heroMatch = html.match(/var HERO_SLIDES = (\[[\s\S]*?\]);/);
+      if (heroMatch) {
+        // Replace single quotes with double quotes for JSON parsing
+        var jsonStr = heroMatch[1]
+          .replace(/'/g, '"')
+          .replace(/([{,]\s*)(\w+)\s*:/g, '$1"$2":');
+        slides = JSON.parse(jsonStr);
+      }
+    } catch(e) {
+      console.log('Slider parse error:', e);
+      slides = [];
     }
     renderSliderPage(slides, html);
   });
