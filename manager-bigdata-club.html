@@ -194,6 +194,8 @@ var shaCache = {};
 
 // ── Init ──
 window.initAdmin = function() {
+  // Save last access time on sign-in
+  localStorage.setItem('admin_last_access', new Date().toISOString());
   buildSidebar();
   // Check if token is saved
   if (!localStorage.getItem('bdai_gh_token')) {
@@ -273,6 +275,7 @@ function buildSidebar() {
   html += '<div class="sidebar-section">Settings</div>';
   html += sidebarItem('users', '👤', 'Approved Users');
   html += sidebarItem('stats', '📊', 'Club Statistics');
+  html += sidebarItem('analytics', '📈', 'Site Analytics');
   sb.innerHTML = html;
   sb.querySelectorAll('.sidebar-item').forEach(function(el) {
     el.addEventListener('click', function() {
@@ -296,6 +299,7 @@ function showPage(page) {
   if (page === 'dashboard') { renderDashboard(); return; }
   if (page === 'users') { loadUsersPage(); return; }
   if (page === 'stats') { loadStatsPage(); return; }
+  if (page === 'analytics') { loadAnalyticsPage(); return; }
   loadPage(page);
 }
 
@@ -303,7 +307,7 @@ function showPage(page) {
 function renderDashboard() {
   var now = new Date();
   var lastAccess = localStorage.getItem('admin_last_access');
-  localStorage.setItem('admin_last_access', now.toISOString());
+  // Don't update lastAccess here - it's updated on sign-in
 
   var mc = document.getElementById('mainContent');
   var html = '<div class="page-header">' +
@@ -350,9 +354,11 @@ function renderDashboard() {
     showToast('🔄 Refreshed', 'success');
   });
 
-  // Load club summary stats + per-page counts
-  loadClubSummary();
-  loadDashboardCounts();
+  // Load stats after DOM is set
+  setTimeout(function() {
+    loadClubSummary();
+    loadDashboardCounts();
+  }, 100);
 }
 
 // ── Load Page ──
@@ -1296,6 +1302,42 @@ function loadStatsPage() {
 
     mc.innerHTML = html;
   });
+}
+
+// ── Site Analytics Page ──
+function loadAnalyticsPage() {
+  var mc = document.getElementById('mainContent');
+  mc.innerHTML =
+    '<div class="page-header">' +
+      '<div><div class="page-title">📈 Site Analytics</div>' +
+      '<div class="page-subtitle">Powered by Google Analytics (G-9R08DZ0408)</div></div>' +
+    '</div>' +
+    '<div style="background:var(--white);border:1px solid var(--border);border-radius:var(--radius);padding:32px;text-align:center;margin-bottom:20px;">' +
+      '<div style="font-size:3em;margin-bottom:12px;">📊</div>' +
+      '<h3 style="font-family:sans-serif;color:var(--navy);margin-bottom:8px;">View Full Analytics Dashboard</h3>' +
+      '<p style="color:var(--muted);font-size:.9em;margin-bottom:20px;">Real-time visitors, page views, countries, devices and more.</p>' +
+      '<a href="https://analytics.google.com/analytics/web/#/p' + 'XXXXXXXX' + '/reports/intelligenthome" target="_blank" class="btn btn-primary" style="text-decoration:none;">Open Google Analytics ↗</a>' +
+    '</div>' +
+    '<div class="stat-row">' +
+      '<div class="stat-card" style="text-align:left;padding:20px;">' +
+        '<div style="font-size:.8em;color:var(--muted);margin-bottom:8px;font-weight:600;text-transform:uppercase;">Quick Links</div>' +
+        '<div style="display:flex;flex-direction:column;gap:8px;">' +
+          '<a href="https://analytics.google.com" target="_blank" style="color:var(--indigo);font-size:.9em;text-decoration:none;">📊 Main Dashboard</a>' +
+          '<a href="https://analytics.google.com/analytics/web/#/report/visitors-overview" target="_blank" style="color:var(--indigo);font-size:.9em;text-decoration:none;">👥 Audience Overview</a>' +
+          '<a href="https://analytics.google.com/analytics/web/#/report/content-pages" target="_blank" style="color:var(--indigo);font-size:.9em;text-decoration:none;">📄 Top Pages</a>' +
+          '<a href="https://analytics.google.com/analytics/web/#/report/visitors-geo-country" target="_blank" style="color:var(--indigo);font-size:.9em;text-decoration:none;">🌍 Visitor Locations</a>' +
+        '</div>' +
+      '</div>' +
+      '<div class="stat-card" style="text-align:left;padding:20px;">' +
+        '<div style="font-size:.8em;color:var(--muted);margin-bottom:8px;font-weight:600;text-transform:uppercase;">Tracking Status</div>' +
+        '<div style="display:flex;flex-direction:column;gap:8px;">' +
+          '<div style="display:flex;align-items:center;gap:8px;"><span style="color:#1B5E20;font-size:1.2em;">✅</span><span style="font-size:.88em;">Tracking ID: G-9R08DZ0408</span></div>' +
+          '<div style="display:flex;align-items:center;gap:8px;"><span style="color:#1B5E20;font-size:1.2em;">✅</span><span style="font-size:.88em;">Added to all 19 pages</span></div>' +
+          '<div style="display:flex;align-items:center;gap:8px;"><span style="color:#1B5E20;font-size:1.2em;">✅</span><span style="font-size:.88em;">Data starts collecting now</span></div>' +
+          '<div style="display:flex;align-items:center;gap:8px;"><span style="color:var(--muted);font-size:1.2em;">⏳</span><span style="font-size:.88em;color:var(--muted);">First report in ~24 hours</span></div>' +
+        '</div>' +
+      '</div>' +
+    '</div>';
 }
 
 window.changeToken = function() {
