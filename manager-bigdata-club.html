@@ -349,6 +349,9 @@ function renderDashboard() {
     renderDashboard();
     showToast('🔄 Refreshed', 'success');
   });
+
+  // Load club summary stats
+  loadClubSummary();
 }
 
 // ── Load Page ──
@@ -1128,6 +1131,35 @@ function showToast(msg, type) {
 }
 
 // ── Club Statistics Page ──
+function loadClubSummary() {
+  var actPages = ['workshops','researches','projects','lectures','presentations',
+                  'seminars','conferences','field-visits','internships','courses'];
+  var promises = actPages.map(function(page) {
+    return new Promise(function(resolve) {
+      fetchFile('Big_Data_AI_Club_Baghdad', page + '.html', function(html) {
+        var data = extractData(html, 'allData');
+        resolve(data);
+      });
+    });
+  });
+  Promise.all(promises).then(function(results) {
+    var total = 0, years = {}, types = {};
+    results.forEach(function(data) {
+      total += data.length;
+      data.forEach(function(item) {
+        if (item.year) years[item.year] = true;
+        if (item.type) types[item.type] = true;
+      });
+    });
+    var t = document.getElementById('csTotalAct');
+    var y = document.getElementById('csYears');
+    var tp = document.getElementById('csTypes');
+    if (t) t.textContent = total;
+    if (y) y.textContent = Object.keys(years).length;
+    if (tp) tp.textContent = Object.keys(types).length;
+  }).catch(function() {});
+}
+
 function loadStatsPage() {
   var mc = document.getElementById('mainContent');
   mc.innerHTML = '<p style="padding:40px;color:var(--muted);">Loading statistics...</p>';
