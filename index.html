@@ -10,7 +10,7 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
   <style>
-    /* ── HERO BANNER ── */
+    /* ── HERO SLIDER ── */
     .hero {
       position: relative;
       width: 100%;
@@ -18,6 +18,13 @@
       overflow: hidden;
       background: #020d1f;
     }
+    .hero-slide {
+      position: absolute;
+      inset: 0;
+      opacity: 0;
+      transition: opacity 1s ease-in-out;
+    }
+    .hero-slide.active { opacity: 1; }
     .hero-img {
       width: 100%;
       height: 100%;
@@ -32,6 +39,51 @@
       background: linear-gradient(to top, rgba(10,20,50,0.80) 0%, rgba(10,20,50,0.25) 55%, transparent 100%);
       pointer-events: none;
     }
+    .hero-dots {
+      position: absolute;
+      bottom: 16px;
+      left: 50%;
+      transform: translateX(-50%);
+      display: flex;
+      gap: 8px;
+      z-index: 10;
+    }
+    .hero-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: rgba(255,255,255,0.4);
+      cursor: pointer;
+      transition: background .3s, transform .3s;
+    }
+    .hero-dot.active {
+      background: var(--gold, #F8C200);
+      transform: scale(1.3);
+    }
+    .hero-arrows {
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 100%;
+      display: flex;
+      justify-content: space-between;
+      padding: 0 16px;
+      z-index: 10;
+      pointer-events: none;
+    }
+    .hero-arrow {
+      background: rgba(255,255,255,0.15);
+      border: none;
+      color: #fff;
+      font-size: 1.4em;
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      cursor: pointer;
+      pointer-events: all;
+      transition: background .2s;
+    }
+    .hero-arrow:hover { background: rgba(255,255,255,0.3); }
     .hero-caption {
       position: absolute;
       bottom: 32px;
@@ -487,14 +539,76 @@
   </nav>
 
   <!-- ── HERO BANNER — image 1.jfif ── -->
-  <div class="hero">
-    <img src="1.jfif" alt="Big Data visualization" class="hero-img">
-    <div class="hero-overlay"></div>
-    <div class="hero-caption">
-      <h2>Big Data Artificial Intelligence Club</h2>
-      <p>Innovating, Collaborating, and Growing Together at the College of AI | University of Baghdad</p>
+  <div class="hero" id="heroSlider">
+    <!-- Slides rendered by JS from HERO_SLIDES data -->
+    <div class="hero-arrows">
+      <button class="hero-arrow" onclick="heroNav(-1)">&#8249;</button>
+      <button class="hero-arrow" onclick="heroNav(1)">&#8250;</button>
     </div>
+    <div class="hero-dots" id="heroDots"></div>
   </div>
+
+  <script>
+    var HERO_SLIDES = [
+      { img: '1.jfif', title: 'Big Data Artificial Intelligence Club', subtitle: 'Innovating, Collaborating, and Growing Together at the College of AI | University of Baghdad' }
+    ];
+
+    var heroIdx = 0;
+    var heroTimer;
+
+    function buildHero() {
+      var slider = document.getElementById('heroSlider');
+      var dots = document.getElementById('heroDots');
+      // Remove old slides
+      slider.querySelectorAll('.hero-slide').forEach(function(el){ el.remove(); });
+      dots.innerHTML = '';
+
+      HERO_SLIDES.forEach(function(slide, i) {
+        var div = document.createElement('div');
+        div.className = 'hero-slide' + (i === 0 ? ' active' : '');
+        div.innerHTML =
+          '<img src="' + slide.img + '" alt="" class="hero-img">' +
+          '<div class="hero-overlay"></div>' +
+          '<div class="hero-caption">' +
+            '<h2>' + slide.title + '</h2>' +
+            '<p>' + slide.subtitle + '</p>' +
+          '</div>';
+        // Insert before arrows
+        slider.insertBefore(div, slider.querySelector('.hero-arrows'));
+
+        var dot = document.createElement('div');
+        dot.className = 'hero-dot' + (i === 0 ? ' active' : '');
+        dot.addEventListener('click', function(){ heroGo(i); });
+        dots.appendChild(dot);
+      });
+      startHeroTimer();
+    }
+
+    function heroGo(idx) {
+      var slides = document.querySelectorAll('.hero-slide');
+      var dots = document.querySelectorAll('.hero-dot');
+      slides[heroIdx].classList.remove('active');
+      dots[heroIdx].classList.remove('active');
+      heroIdx = (idx + HERO_SLIDES.length) % HERO_SLIDES.length;
+      slides[heroIdx].classList.add('active');
+      dots[heroIdx].classList.add('active');
+    }
+
+    function heroNav(dir) {
+      clearTimeout(heroTimer);
+      heroGo(heroIdx + dir);
+      startHeroTimer();
+    }
+
+    function startHeroTimer() {
+      clearTimeout(heroTimer);
+      if (HERO_SLIDES.length > 1) {
+        heroTimer = setTimeout(function(){ heroNav(1); }, 5000);
+      }
+    }
+
+    document.addEventListener('DOMContentLoaded', buildHero);
+  </script>
 
   <!-- ── NEWS BAR ── -->
   <div class="news-bar">
