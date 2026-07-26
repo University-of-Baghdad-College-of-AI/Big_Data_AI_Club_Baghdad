@@ -1406,8 +1406,68 @@ function loadImagesPage() {
   });
 
   html += '</div>';
+  // Gallery captions section
+  html += '<div style="margin-top:28px;"><div style="font-family:sans-serif;font-weight:700;font-size:1em;color:var(--navy);margin-bottom:12px;">📝 Edit Gallery Captions</div>';
+  html += '<div class="table-wrap"><div class="table-toolbar"><span style="font-size:.85em;color:var(--muted);">Hover text shown on each gallery image</span></div>';
+  html += '<table id="galleryTable"><thead><tr><th>Image</th><th>Caption</th><th>Action</th></tr></thead><tbody id="galleryBody"></tbody></table>';
+  html += '</div></div>';
+
   mc.innerHTML = html;
+
+  // Load gallery items from index.html
+  fetchFile('Big_Data_AI_Club_Baghdad', 'index.html', function(indexHtml) {
+    var m = indexHtml.match(/var GALLERY_ITEMS = (\[[\s\S]*?\]);/);
+    var items = [];
+    if (m) {
+      try {
+        var jsonStr = m[1].replace(/'/g, '"').replace(/([{,]\s*)(\w+)\s*:/g, '$1"$2":');
+        items = JSON.parse(jsonStr);
+      } catch(e) { items = []; }
+    }
+    window._galleryItems = items;
+    window._indexHtml = indexHtml;
+
+    var tbody = document.getElementById('galleryBody');
+    if (!tbody) return;
+    var rows = '';
+    items.forEach(function(item, i) {
+      rows += '<tr>' +
+        '<td style="display:flex;align-items:center;gap:8px;">' +
+          '<img src="https://university-of-baghdad-college-of-ai.github.io/Big_Data_AI_Club_Baghdad/' + item.img + '" style="width:50px;height:35px;object-fit:cover;border-radius:4px;">' +
+          '<span style="font-size:.82em;color:var(--muted);">' + item.img + '</span>' +
+        '</td>' +
+        '<td><input type="text" value="' + item.caption + '" id="gc_' + i + '" style="width:100%;padding:6px 10px;border:1.5px solid var(--border);border-radius:6px;font-family:inherit;font-size:.88em;"></td>' +
+        '<td><button class="btn btn-primary btn-sm" onclick="saveCaption(' + i + ')">💾 Save</button></td>' +
+      '</tr>';
+    });
+    tbody.innerHTML = rows;
+  });
 }
+
+window.saveCaption = function(idx) {
+  var input = document.getElementById('gc_' + idx);
+  if (!input) return;
+  window._galleryItems[idx].caption = input.value.trim();
+
+  showSaving('Saving gallery...');
+  fetchFile('Big_Data_AI_Club_Baghdad', 'index.html', function(freshHtml, freshSha) {
+    // Rebuild GALLERY_ITEMS with single quotes
+    var arr = window._galleryItems.map(function(g) {
+      return "        { img: '" + g.img + "', caption: '" + g.caption.replace(/'/g,"\'") + "' }";
+    });
+    var newItems = '[
+' + arr.join(',
+') + '
+      ]';
+    var newHtml = freshHtml.replace(/var GALLERY_ITEMS = \[[\s\S]*?\];/, 'var GALLERY_ITEMS = ' + newItems + ';');
+    saveFile('Big_Data_AI_Club_Baghdad', 'index.html', newHtml, freshSha,
+      '🖼️ Admin: Update gallery caption', function(err) {
+      hideSaving();
+      if (err) showToast('❌ Failed: ' + err.message, 'error');
+      else showToast('✅ Caption saved!', 'success');
+    });
+  });
+};
 
 window.uploadImage = function(btn) {
   var fname = btn.dataset.file;
