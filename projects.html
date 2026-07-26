@@ -630,6 +630,19 @@
         lnk.href='#'; lnk.style.display='inline-flex';
         lnk.onclick=function(e){ e.preventDefault(); alert('No link available for this item yet.'); };
       }
+      // View File button
+      var existingFileBtn = document.getElementById('modalFileBtn');
+      if (existingFileBtn) existingFileBtn.remove();
+      if (d.file) {
+        var fileBtn = document.createElement('a');
+        fileBtn.id = 'modalFileBtn';
+        fileBtn.href = d.file;
+        fileBtn.target = '_blank';
+        fileBtn.className = 'view-btn';
+        fileBtn.style.cssText = 'background:#1B5E20;color:#fff;margin-top:8px;margin-left:8px;text-decoration:none;';
+        fileBtn.innerHTML = '📄 View File';
+        lnk.parentNode.appendChild(fileBtn);
+      }
       document.getElementById('modal').classList.add('open');
       document.body.style.overflow='hidden';
     }

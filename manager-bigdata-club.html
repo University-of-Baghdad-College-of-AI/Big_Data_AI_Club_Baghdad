@@ -495,6 +495,12 @@ function renderTable(page, data, originalHtml) {
         '<button class="btn btn-secondary btn-sm edit-btn" data-idx="' + i + '">✏️</button>' +
         '<button class="btn btn-danger btn-sm del-btn" data-idx="' + i + '">🗑️</button>' +
       '</div></td>';
+    } else if (page === 'students' || page === 'professors') {
+      html += '<td><div class="btn-group">' +
+        '<button class="btn btn-secondary btn-sm edit-btn" data-idx="' + i + '">✏️</button>' +
+        '<button class="btn btn-danger btn-sm del-btn" data-idx="' + i + '">🗑️</button>' +
+        '<button class="btn btn-secondary btn-sm act-btn" data-idx="' + i + '" style="background:#EEF2FF;color:var(--indigo);border-color:var(--indigo);">➕ Activity</button>' +
+      '</div></td>';
     } else {
       html += '<td><div class="btn-group">' +
         '<button class="btn btn-secondary btn-sm edit-btn" data-idx="' + i + '">✏️ Edit</button>' +
@@ -545,6 +551,20 @@ function renderTable(page, data, originalHtml) {
       });
     });
   }
+
+  // Add to Activity from inline entry
+  mc.querySelectorAll('.act-btn').forEach(function(btn) {
+    btn.addEventListener('click', function() {
+      var item = currentData[parseInt(btn.dataset.idx)];
+      showAddToActivityModal(
+        item.title || '',
+        item.who || '',
+        item.year || '',
+        item.link && item.link !== '#' ? item.link : (item.file || ''),
+        item
+      );
+    });
+  });
 
   mc.querySelectorAll('.mu-btn').forEach(function(btn) {
     btn.addEventListener('click', function() {
@@ -777,14 +797,18 @@ function loadFilesList(repo) {
             html += '</div></div>';
 
             // Right: actions
-            html += '<div class="btn-group" style="flex-shrink:0;">';
+            html += '<div class="btn-group" style="flex-shrink:0;flex-wrap:wrap;">';
             if (pair.pdf) {
-              html += '<a href="' + pair.pdf.download_url + '" target="_blank" class="btn btn-secondary btn-sm">⬇ PDF</a>';
-              html += '<button class="btn btn-danger btn-sm" data-repo="' + repo + '" data-path="' + pair.pdf.path + '" data-sha="' + pair.pdf.sha + '" data-name="' + pair.pdf.name + '" onclick="deleteFile(this)">🗑️ PDF</button>';
+              var pdfUrl = pair.pdf.download_url.replace('https://raw.githubusercontent.com/University-of-Baghdad-College-of-AI/','https://university-of-baghdad-college-of-ai.github.io/').replace('/main/','/');
+              html += '<a href="' + pdfUrl + '" target="_blank" class="btn btn-secondary btn-sm">📄 View</a>';
+              html += '<button class="btn btn-danger btn-sm" data-repo="' + repo + '" data-path="' + pair.pdf.path + '" data-sha="' + pair.pdf.sha + '" data-name="' + pair.pdf.name + '" onclick="deleteFile(this)">🗑️</button>';
             }
             if (pair.json) {
-              html += '<a href="' + pair.json.download_url + '" target="_blank" class="btn btn-secondary btn-sm">⬇ JSON</a>';
+              html += '<button class="btn btn-secondary btn-sm" data-repo="' + repo + '" data-base="' + pair.base + '" data-year="' + pair.year + '" data-who="' + who + '" data-title="' + title + '" data-pdfurl="' + (pair.pdf ? pair.pdf.download_url.replace('https://raw.githubusercontent.com/University-of-Baghdad-College-of-AI/','https://university-of-baghdad-college-of-ai.github.io/').replace('/main/','/') : '') + '" data-jsonurl="' + pair.json.download_url + '" onclick="addToActivity(this)" style="background:#EEF2FF;color:var(--indigo);border-color:var(--indigo);">➕ Add to Activity</button>';
               html += '<button class="btn btn-danger btn-sm" data-repo="' + repo + '" data-path="' + pair.json.path + '" data-sha="' + pair.json.sha + '" data-name="' + pair.json.name + '" onclick="deleteFile(this)">🗑️ JSON</button>';
+            } else {
+              // No JSON - still allow adding with basic info
+              html += '<button class="btn btn-secondary btn-sm" data-repo="' + repo + '" data-base="' + pair.base + '" data-year="' + pair.year + '" data-who="' + who + '" data-title="' + title + '" data-pdfurl="' + (pair.pdf ? pair.pdf.download_url.replace('https://raw.githubusercontent.com/University-of-Baghdad-College-of-AI/','https://university-of-baghdad-college-of-ai.github.io/').replace('/main/','/') : '') + '" data-jsonurl="" onclick="addToActivity(this)" style="background:#EEF2FF;color:var(--indigo);border-color:var(--indigo);">➕ Add to Activity</button>';
             }
             html += '</div></div></div>';
           });
@@ -1292,6 +1316,99 @@ function saveUsersFile(users, message) {
       // Just re-render the users table without full page reload
       setTimeout(function() { loadUsersPage(); }, 500);
     }
+  });
+}
+
+// ── Add Submission to Activity Page ──
+window.addToActivity = function(btn) {
+  var title = btn.dataset.title;
+  var who = btn.dataset.who;
+  var year = btn.dataset.year;
+  var pdfUrl = btn.dataset.pdfurl;
+  var jsonUrl = btn.dataset.jsonurl;
+
+  // If JSON available, fetch it for metadata
+  if (jsonUrl) {
+    fetch(jsonUrl)
+      .then(function(r) { return r.ok ? r.json() : null; })
+      .then(function(meta) { showAddToActivityModal(title, who, year, pdfUrl, meta); })
+      .catch(function() { showAddToActivityModal(title, who, year, pdfUrl, null); });
+  } else {
+    showAddToActivityModal(title, who, year, pdfUrl, null);
+  }
+};
+
+function showAddToActivityModal(title, who, year, pdfUrl, meta) {
+  var activityPages = [
+    'conferences','courses','field-visits','internships','lectures',
+    'presentations','projects','researches','seminars','workshops'
+  ];
+  var typeOptions = ['research','project','software','ai','ml','nlp','bigdata','data',
+    'publication','lecture','workshop','seminar','conference','presentation',
+    'tech','industry','academic','gov','programming','tools','ethics','career',
+    'national','international','local','organized','other'];
+
+  document.getElementById('modalTitle').textContent = 'Add to Activity Page';
+  document.getElementById('modalBody').innerHTML =
+    '<p style="color:var(--muted);font-size:.88em;margin-bottom:16px;">Add <strong>' + title + '</strong> to a main activity page.</p>' +
+    '<div class="form-grid">' +
+      '<div class="form-group"><label>Activity Page</label>' +
+        '<select id="actPage">' + activityPages.map(function(p){ return '<option value="'+p+'">'+ p.charAt(0).toUpperCase()+p.slice(1).replace(/-/g,' ') +'</option>'; }).join('') + '</select>' +
+      '</div>' +
+      '<div class="form-group"><label>Type</label>' +
+        '<select id="actType">' + typeOptions.map(function(t){ return '<option value="'+t+'"'+(meta&&meta.type===t?' selected':'')+'>' + t + '</option>'; }).join('') + '</select>' +
+      '</div>' +
+      '<div class="form-group full"><label>Title</label><input type="text" id="actTitle" value="' + (meta&&meta.title||title) + '"></div>' +
+      '<div class="form-group full"><label>Description</label><textarea id="actDesc">' + (meta&&meta.desc||'') + '</textarea></div>' +
+      '<div class="form-group"><label>Author / Who</label><input type="text" id="actWho" value="' + (meta&&meta.who||who) + '"></div>' +
+      '<div class="form-group"><label>Year</label><input type="text" id="actYear" value="' + (meta&&meta.year||year) + '"></div>' +
+      '<div class="form-group"><label>Date</label><input type="text" id="actDate" value="' + (meta&&meta.date||year) + '"></div>' +
+      '<div class="form-group"><label>Link</label><input type="text" id="actLink" value="' + (meta&&meta.link&&meta.link!=='#'?meta.link:(pdfUrl||'#')) + '"></div>' +
+    '</div>' +
+    '<div class="form-actions">' +
+      '<button class="btn btn-secondary" onclick="closeModal()">Cancel</button>' +
+      '<button class="btn btn-primary" id="saveActBtn">➕ Add to Activity</button>' +
+    '</div>';
+
+  document.getElementById('entryModal').classList.add('open');
+
+  document.getElementById('saveActBtn').addEventListener('click', function() {
+    var page = document.getElementById('actPage').value;
+    var cfg = PAGE_MAP[page];
+    if (!cfg) { showToast('Page not found', 'error'); return; }
+
+    var entry = {
+      type:  document.getElementById('actType').value,
+      year:  document.getElementById('actYear').value,
+      title: document.getElementById('actTitle').value.trim(),
+      desc:  document.getElementById('actDesc').value.trim(),
+      who:   document.getElementById('actWho').value.trim(),
+      date:  document.getElementById('actDate').value.trim(),
+      link:  document.getElementById('actLink').value.trim() || '#',
+      file:  pdfUrl || ''
+    };
+
+    if (!entry.title) { alert('Title is required.'); return; }
+    closeModal();
+    showSaving('Adding to ' + page + '...');
+
+    fetchFile(cfg.repo, cfg.file, function(html, sha) {
+      var data = extractData(html, 'allData');
+      // Check if already exists
+      var exists = data.some(function(d) { return d.title === entry.title; });
+      if (exists) {
+        hideSaving();
+        showToast('⚠️ Entry already exists in ' + page, 'error');
+        return;
+      }
+      data.unshift(entry);
+      var newHtml = injectData(html, data, 'allData', null);
+      saveFile(cfg.repo, cfg.file, newHtml, sha, '⚙️ Admin: Add from submission - ' + entry.title, function(err) {
+        hideSaving();
+        if (err) showToast('❌ Failed: ' + err.message, 'error');
+        else showToast('✅ Added to ' + page + '!', 'success');
+      });
+    });
   });
 }
 
